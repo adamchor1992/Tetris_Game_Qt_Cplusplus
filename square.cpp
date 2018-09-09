@@ -1,9 +1,27 @@
 #include "square.h"
 
-Square::Square(QObject *parent) : QObject(parent)
+Square::Square(int x, int y, QObject *parent) : QObject(parent)
 {
+    x_coordinate = x;
+    y_coordinate = y;
+
     fillPossibleSquarePositions();
 }
+
+//Square::Square()
+//{
+//     qDebug() << "GOWNO3";
+//}
+
+//Square::Square(const Square &)
+//{
+//    qDebug() << "GOWNO";
+//}
+
+//Square& Square::Square::operator=(const Square &)
+//{
+//    qDebug() << "GOWNO2";
+//}
 
 void Square::fillPossibleSquarePositions()
 {
@@ -15,4 +33,14 @@ void Square::fillPossibleSquarePositions()
             possibleSquarePositions_Paint.append(QPoint(6+(i-1)*29,(j-1)*29));
         }
     }
+}
+
+bool Square::isMovePossible(int x, int y)
+{
+    QPoint new_coordinates(x,y);
+
+    if(possibleSquarePositions_XY.contains(new_coordinates))
+        return true;
+    else
+        return false;
 }

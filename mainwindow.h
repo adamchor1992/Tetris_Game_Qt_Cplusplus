@@ -6,7 +6,11 @@
 #include <QGraphicsRectItem>
 #include <QDebug>
 #include <QTimer>
-#include <square.h>
+#include <QKeyEvent>
+#include "square.h"
+#include "block.h"
+#include "drawer.h"
+#include "placedblocks.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +26,9 @@ public:
 
     void drawAllPossibleSquares();
 
+    void drawGameArena();
+
+
 private:
     Ui::MainWindow *ui;
 
@@ -29,6 +36,16 @@ private:
     QTimer dropTimer;
 
     QGraphicsRectItem *square;
+    Drawer *drawer;
+    Block *current_block;
+    QVector<QGraphicsRectItem*> current_block_graphics_items_ptrs;
+    PlacedBlocks *placedblocks;
+
+    bool paused;
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+
 
 public slots:
     void dropBlock();

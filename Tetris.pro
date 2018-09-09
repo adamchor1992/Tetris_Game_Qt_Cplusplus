@@ -27,12 +27,30 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     square.cpp \
-    block.cpp
+    block.cpp \
+    drawer.cpp \
+    placedblocks.cpp \
+    tblock.cpp \
+    sblock.cpp \
+    zblock.cpp \
+    jblock.cpp \
+    lblock.cpp \
+    oblock.cpp \
+    iblock.cpp
 
 HEADERS += \
         mainwindow.h \
     square.h \
-    block.h
+    block.h \
+    drawer.h \
+    placedblocks.h \
+    tblock.h \
+    sblock.h \
+    zblock.h \
+    jblock.h \
+    lblock.h \
+    oblock.h \
+    iblock.h
 
 FORMS += \
         mainwindow.ui
