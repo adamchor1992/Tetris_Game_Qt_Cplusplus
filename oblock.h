@@ -5,7 +5,12 @@
 class OBlock : public Block
 {
 public:
-    OBlock();
+    explicit OBlock();
+
+    void rotateBlock();
+
+private:
+    int current_rotation;
 };
 
 #endif // OBLOCK_H

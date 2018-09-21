@@ -5,7 +5,12 @@
 class LBlock : public Block
 {
 public:
-    LBlock();
+    explicit LBlock();
+
+    void rotateBlock();
+
+private:
+    int current_rotation;
 };
 
 #endif // LBLOCK_H

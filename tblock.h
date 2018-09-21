@@ -5,7 +5,12 @@
 class TBlock : public Block
 {
 public:
-    TBlock();
+    explicit TBlock();
+
+    void rotateBlock();
+
+private:
+    int current_rotation;
 };
 
 #endif // TBLOCK_H

@@ -5,7 +5,12 @@
 class JBlock : public Block
 {
 public:
-    JBlock();
+    explicit JBlock();
+
+    void rotateBlock();
+
+private:
+    int current_rotation;
 };
 
 #endif // JBLOCK_H

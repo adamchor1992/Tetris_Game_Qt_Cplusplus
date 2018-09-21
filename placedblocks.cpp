@@ -6,16 +6,11 @@ PlacedBlocks::PlacedBlocks(QObject *parent) : QObject(parent)
     {
         for(int row=1; row<=20; row++)
         {
-            placedBlocksArray.insert(QPair<int,int>(column,row),0);
+            placedBlocksArray.insert(QPair<int,int>(column,row),nullptr);
         }
     }
 
     qDebug() << "Rozmiar placedblocksarray: " << placedBlocksArray.size();
-
-//    for(auto item : placedBlocksArray)
-//    {
-//        qDebug() << item;
-//    }
 }
 
 void PlacedBlocks::addSquare(int x, int y, QGraphicsRectItem* square_graphic_ptr)

@@ -8,6 +8,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QVector>
+#include <QColor>
 #include <placedblocks.h>
 
 class Drawer : public QObject
@@ -18,13 +19,12 @@ public:
 
     bool checkCoordinatesValidity(int x, int y);
     bool checkCoordinatesValidity(QVector<int> block_coordinates);
-    void paintSquare(int x, int y);
+    void paintSquare(int x, int y, QBrush brush);
     void paintPlacedBlocks(const PlacedBlocks *placedblocks);
-    QVector<QGraphicsRectItem*> paintBlock(QVector<int> block_coordinates);
+    QVector<QGraphicsRectItem*> paintBlock(QVector<int> block_coordinates, QColor random_color);
     void deleteSquare(int x, int y);
     void deleteBlock(QVector<int> block_coordinates);
     void deleteBlock(QVector<QGraphicsRectItem*> block_rect_graphic_pointers);
-    void deleteRow(QVector<int> rowsToDelete);
 
 private:
     QGraphicsScene *scene;

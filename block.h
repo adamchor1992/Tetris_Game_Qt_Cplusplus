@@ -2,36 +2,50 @@
 #define BLOCK_H
 
 #include <vector>
-#include "square.h"
 #include "placedblocks.h"
 
 class Block : public QObject
 {
     Q_OBJECT
 public:
-    explicit Block(QString _shape = "S", QObject *parent = nullptr);
-    int getLowestBlockPosition() {return lowestBlockPosition;}
+    explicit Block(QString _shape = "I", QObject *parent = nullptr);
 
-    //void dropBlock();
     void moveBlock(int direction);
-    void rotateBlock();
-
     QVector<int> getBlockCoordinates();
+
     bool isSquaresLeftOfBlock(const PlacedBlocks *placed_blocks);
     bool isSquaresRightOfBlock(const PlacedBlocks *placed_blocks);
     bool isSquaresUnderBlock(const PlacedBlocks *placed_blocks);
 
-private:
+    void setBlockPresentOnScreen(bool present);
+    bool isBlockPresentOnScreen() {return blockIsPresentOnScreen;}
+
+    QColor getColor();
+
+    virtual void rotateBlock() = 0; //pure virtual
+
+    virtual ~Block();
+
+protected:
     QString shape;
-    int lowestBlockPosition;
-    QVector<Square*> blockSquares;
-    int central_square_x;
-    int central_square_y;
-    Square *centralsquare;
-    Square *square1;
-    Square *square2;
-    Square *square3;
+
+    int central_square_x = 0;
+    int central_square_y = 0;
+    int square1posx = 0;
+    int square1posy = 0;
+    int square2posx = 0;
+    int square2posy = 0;
+    int square3posx = 0;
+    int square3posy = 0;
+
     QVector<int> blockCoordinates;
+    QVector<QGraphicsRectItem*> block_graphics_items_ptrs;
+
+private:
+    QVector<QGraphicsRectItem*> graphicalPointersVector;
+    bool blockIsPresentOnScreen;
+    QVector<QColor> colors = {Qt::red, Qt::blue, Qt::white, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
+    QColor blockColor;
 
 signals:
 

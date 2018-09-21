@@ -5,14 +5,9 @@ Block::Block(QString _shape, QObject *parent) : QObject(parent)
     shape = _shape;
     central_square_x = 5;
     central_square_y = 1;
-    int square1posx = 0;
-    int square1posy = 0;
-    int square2posx = 0;
-    int square2posy = 0;
-    int square3posx = 0;
-    int square3posy = 0;
 
-    centralsquare = new Square(central_square_x, central_square_y, this);
+    std::srand(std::time(nullptr)); //seed based on time
+    blockColor = colors.at(std::rand() % colors.size());
 
     if(shape == "S")
     {
@@ -83,22 +78,16 @@ Block::Block(QString _shape, QObject *parent) : QObject(parent)
         return;
     }
 
-    square1 = new Square(square1posx, square1posy, this);
-    square2 = new Square(square2posx, square2posy, this);
-    square3 = new Square(square3posx, square3posy, this);
+    //pozycje są napisane w intach
 
-    blockSquares.append(square1);
-    blockSquares.append(square2);
-    blockSquares.append(square3);
-
+    blockCoordinates.append(square1posx);
+    blockCoordinates.append(square1posy);
     blockCoordinates.append(central_square_x);
     blockCoordinates.append(central_square_y);
-
-    for(Square* item : blockSquares)
-    {
-        blockCoordinates.append(item->getX());
-        blockCoordinates.append(item->getY());
-    }
+    blockCoordinates.append(square2posx);
+    blockCoordinates.append(square2posy);
+    blockCoordinates.append(square3posx);
+    blockCoordinates.append(square3posy);
 }
 
 void Block::moveBlock(int direction)
@@ -142,39 +131,7 @@ void Block::moveBlock(int direction)
 
 void Block::rotateBlock()
 {
-    //first two coordinates is central square
-    if(shape == "S")
-    {
-
-    }
-    else if(shape == "Z")
-    {
-
-    }
-    else if(shape == "I")
-    {
-
-    }
-    else if(shape == "J")
-    {
-
-    }
-    else if(shape == "L")
-    {
-
-    }
-    else if(shape == "O")
-    {
-        return;
-    }
-    else if(shape == "T")
-    {
-
-    }
-    else
-    {
-        qDebug() << "Rotate block error";
-    }
+    qDebug() << "BASE CLASS rotateBlock() METHOD CALLED";
 }
 
 bool Block::isSquaresLeftOfBlock(const PlacedBlocks *placed_blocks)
@@ -196,7 +153,7 @@ bool Block::isSquaresLeftOfBlock(const PlacedBlocks *placed_blocks)
         QPair<int,int> left_of_block_coordinates_pair(left_block_x,left_block_y);
 
         //check if there is some block to the left of current block
-        if(placed_blocks->placedBlocksArray.value(left_of_block_coordinates_pair) != 0)
+        if(placed_blocks->placedBlocksArray.value(left_of_block_coordinates_pair) != nullptr)
         {
             return true;
         }
@@ -224,7 +181,7 @@ bool Block::isSquaresRightOfBlock(const PlacedBlocks *placed_blocks)
         QPair<int,int> right_of_block_coordinates_pair(right_block_x,right_block_y);
 
         //check if there is some block to the right of current block
-        if(placed_blocks->placedBlocksArray.value(right_of_block_coordinates_pair) != 0)
+        if(placed_blocks->placedBlocksArray.value(right_of_block_coordinates_pair) != nullptr)
         {
             return true;
         }
@@ -253,12 +210,17 @@ bool Block::isSquaresUnderBlock(const PlacedBlocks *placed_blocks)
         QPair<int,int> below_block_coordinates_pair(below_block_x,below_block_y);
 
         //check if there is some block below current block
-        if(placed_blocks->placedBlocksArray.value(below_block_coordinates_pair) != 0)
+        if(placed_blocks->placedBlocksArray.value(below_block_coordinates_pair) != nullptr)
         {
             return true;
         }
     }
     return false;
+}
+
+QColor Block::getColor()
+{
+    return blockColor;
 }
 
 void Block::dropBlockCoordinates()
@@ -272,4 +234,9 @@ void Block::dropBlockCoordinates()
 QVector<int> Block::getBlockCoordinates()
 {
     return blockCoordinates;
+}
+
+Block::~Block()
+{
+
 }

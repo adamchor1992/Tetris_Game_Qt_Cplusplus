@@ -5,7 +5,12 @@
 class ZBlock : public Block
 {
 public:
-    ZBlock();
+    explicit ZBlock();
+
+    void rotateBlock();
+
+private:
+    int current_rotation;
 };
 
 #endif // ZBLOCK_H

@@ -87,14 +87,14 @@ bool Drawer::checkCoordinatesValidity(QVector<int> block_coordinates)
     return true;
 }
 
-void Drawer::paintSquare(int x, int y)
+void Drawer::paintSquare(int x, int y, QBrush brush)
 {
     if(checkCoordinatesValidity(x,y))
     {
         int xposition = 6 + (x-1) * 29;
         int yposition = (y-1) * 29;
 
-        scene->addRect(xposition, yposition, square_size, square_size, red_pen, red_brush);
+        scene->addRect(xposition, yposition, square_size, square_size, red_pen, brush);
     }
 }
 
@@ -110,21 +110,24 @@ void Drawer::paintPlacedBlocks(const PlacedBlocks *placedblocks)
     scene->addLine(299,0,299,585,side_walls_pen);
     scene->addLine(3,582,298,582,bottom_wall_pen);
 
-    for(auto item : placedblocks->placedBlocksArray.keys())
+    for(auto item : placedblocks->placedBlocksArray.keys()) //item is key
     {
-        if(placedblocks->placedBlocksArray.value(item) != 0)
+        if(placedblocks->placedBlocksArray.value(item) != nullptr)
         {
             int x = item.first;
             int y = item.second;
 
-            paintSquare(x,y);
+            paintSquare(x,y,Qt::white);
         }
     }
 }
 
-QVector<QGraphicsRectItem*> Drawer::paintBlock(QVector<int> block_coordinates)
+QVector<QGraphicsRectItem*> Drawer::paintBlock(QVector<int> block_coordinates, QColor random_color)
 {
     QVector<QGraphicsRectItem*> squares_graphic_pointers;
+
+    QPen random_color_pen(random_color);
+    QBrush random_color_brush(random_color);
 
     if(checkCoordinatesValidity(block_coordinates))
     {
@@ -133,7 +136,7 @@ QVector<QGraphicsRectItem*> Drawer::paintBlock(QVector<int> block_coordinates)
             int xposition = 6 + (block_coordinates.at(i)-1) * 29;
             int yposition = (block_coordinates.at(i+1) - 1) * 29;
 
-            squares_graphic_pointers.append(scene->addRect(xposition, yposition, square_size, square_size, red_pen, red_brush));
+            squares_graphic_pointers.append(scene->addRect(xposition, yposition, square_size, square_size, random_color_pen, random_color_brush));
         }
     }
     return squares_graphic_pointers;
@@ -157,13 +160,7 @@ void Drawer::deleteBlock(QVector<QGraphicsRectItem*> block_rect_graphic_pointers
 {
     for(QGraphicsRectItem *item : block_rect_graphic_pointers)
     {
-        //qDebug() << item;
         scene->removeItem(item);
     }
-}
-
-void Drawer::deleteRow(QVector<int> rowsToDelete)
-{
-    //scene->removeItem(1);
 }
 

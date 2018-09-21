@@ -5,7 +5,12 @@
 class IBlock : public Block
 {
 public:
-    IBlock();
+    explicit IBlock();
+
+    void rotateBlock();
+
+private:
+    int current_rotation;
 };
 
 #endif // IBLOCK_H
