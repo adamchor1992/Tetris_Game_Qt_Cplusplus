@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "placed_blocks.h"
+#include "utilities.h"
 
 class Block
 {
@@ -9,7 +10,7 @@ public:
     explicit Block(QString shape = "I");
     virtual ~Block();
 
-    void MoveBlock(int direction);
+    void MoveBlock(Direction direction);
     QVector<int> GetBlockCoordinates();
     bool IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks);
     bool IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks);

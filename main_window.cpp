@@ -117,7 +117,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         if(!(m_pCurrentBlock->IsSquaresLeftOfBlock(m_pPlacedBlocks)))
         {
-            m_pCurrentBlock->MoveBlock(0);
+            m_pCurrentBlock->MoveBlock(Direction::left);
             RedrawBlock();
         }
         break;
@@ -125,7 +125,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_D:
         if(!(m_pCurrentBlock->IsSquaresRightOfBlock(m_pPlacedBlocks)))
         {
-            m_pCurrentBlock->MoveBlock(1);
+            m_pCurrentBlock->MoveBlock(Direction::right);
             RedrawBlock();
         }
         break;

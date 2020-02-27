@@ -48,7 +48,8 @@ HEADERS += \
         j_block.h \
         l_block.h \
         o_block.h \
-        i_block.h
+        i_block.h \
+        utilities.h
 
 FORMS += \
         main_window.ui

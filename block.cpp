@@ -95,12 +95,9 @@ Block::~Block()
 
 }
 
-void Block::MoveBlock(int direction)
+void Block::MoveBlock(Direction direction)
 {
-    //direction 0 is left, 1 is right
-    //block has 4 pairs of coordinates {1,1,2,2,3,3,4,4}
-
-    if(direction == 0) // move to the left
+    if(direction == Direction::left)
     {
         for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
         {
@@ -114,7 +111,7 @@ void Block::MoveBlock(int direction)
             m_BlockCoordinates[i+1] = newY;
         }
     }
-    else if(direction == 1) // move to the right
+    else if(direction == Direction::right)
     {
         for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
         {
@@ -128,15 +125,17 @@ void Block::MoveBlock(int direction)
             m_BlockCoordinates[i+1] = newY;
         }
     }
-    else //wrong direction
+    else
     {
         qDebug() << "WRONG DIRECTION";
+        assert(false);
     }
 }
 
 void Block::RotateBlock()
 {
     qDebug() << "BASE CLASS RotateBlock() METHOD CALLED";
+    assert(false);
 }
 
 bool Block::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
