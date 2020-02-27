@@ -1,17 +1,17 @@
-#include "drawer.h"
+#include "Drawer.h"
 
-Drawer::Drawer(QGraphicsScene *_scene, QObject *parent) : QObject(parent)
+Drawer::Drawer(QGraphicsScene* pScene)
 {
-    scene = _scene; //now this class has direct access to main window scene
-    square_size = 28;
+    m_pScene = pScene; //now this class has direct access to main window m_Scene
+    m_SquareSize = 28;
 
-    red_pen = QPen(Qt::red);
-    red_brush = QBrush(Qt::red);
-    black_pen = QPen(Qt::black);
-    black_brush = QBrush(Qt::black);
+    m_RedPen = QPen(Qt::red);
+    m_RedBrush = QBrush(Qt::red);
+    m_BlackPen = QPen(Qt::black);
+    m_BlackBrush = QBrush(Qt::black);
 }
 
-bool Drawer::checkCoordinatesValidity(int x, int y)
+bool Drawer::CheckCoordinatesValidity(int x, int y)
 {
     try
     {
@@ -35,7 +35,7 @@ bool Drawer::checkCoordinatesValidity(int x, int y)
             qDebug() << "Wrong y coordinate";
             return false;
         default:
-            qDebug() << "Unknown exception in checkCoordinatesValidity method";
+            qDebug() << "Unknown exception in CheckCoordinatesValidity method";
             return false;
         }
     }
@@ -43,9 +43,9 @@ bool Drawer::checkCoordinatesValidity(int x, int y)
     return true;
 }
 
-bool Drawer::checkCoordinatesValidity(QVector<int> block_coordinates)
+bool Drawer::CheckCoordinatesValidity(QVector<int> blockCoordinates)
 {
-    if(block_coordinates.size() != 8)
+    if(blockCoordinates.size() != 8)
     {
         qDebug() << "Bad block coordinates, it should be 4 pairs of values";
         return false;
@@ -53,8 +53,8 @@ bool Drawer::checkCoordinatesValidity(QVector<int> block_coordinates)
 
     for(int i=0; i<4; i=i+2)
     {
-        int x = block_coordinates.at(i);
-        int y = block_coordinates.at(i+1);
+        int x = blockCoordinates.at(i);
+        int y = blockCoordinates.at(i+1);
 
         try
         {
@@ -78,7 +78,7 @@ bool Drawer::checkCoordinatesValidity(QVector<int> block_coordinates)
                 qDebug() << "Wrong y coordinate";
                 return false;
             default:
-                qDebug() << "Unknown exception in checkCoordinatesValidity method";
+                qDebug() << "Unknown exception in CheckCoordinatesValidity method";
                 return false;
             }
         }
@@ -87,80 +87,79 @@ bool Drawer::checkCoordinatesValidity(QVector<int> block_coordinates)
     return true;
 }
 
-void Drawer::paintSquare(int x, int y, QBrush brush)
+void Drawer::PaintSquare(int x, int y, QBrush brush)
 {
-    if(checkCoordinatesValidity(x,y))
+    if(CheckCoordinatesValidity(x,y))
     {
         int xposition = 6 + (x-1) * 29;
         int yposition = (y-1) * 29;
 
-        scene->addRect(xposition, yposition, square_size, square_size, red_pen, brush);
+        m_pScene->addRect(xposition, yposition, m_SquareSize, m_SquareSize, m_RedPen, brush);
     }
 }
 
-void Drawer::paintPlacedBlocks(const PlacedBlocks *placedblocks)
+void Drawer::PaintPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
 {
-    scene->clear();
+    m_pScene->clear();
 
-    QBrush white_brush(Qt::white);
-    QPen side_walls_pen(white_brush, 6);
-    QPen bottom_wall_pen(white_brush, 5);
+    QBrush whiteBrush(Qt::white);
+    QPen sideWallsPen(whiteBrush, 6);
+    QPen bottomWallPen(whiteBrush, 5);
 
-    scene->addLine(3,0,3,585,side_walls_pen);
-    scene->addLine(299,0,299,585,side_walls_pen);
-    scene->addLine(3,582,298,582,bottom_wall_pen);
+    m_pScene->addLine(3,0,3,585,sideWallsPen);
+    m_pScene->addLine(299,0,299,585,sideWallsPen);
+    m_pScene->addLine(3,582,298,582,bottomWallPen);
 
-    for(auto item : placedblocks->placedBlocksArray.keys()) //item is key
+    for(auto item : p_PlacedBlocks->m_PlacedBlocksArray.keys()) //item is key
     {
-        if(placedblocks->placedBlocksArray.value(item) != nullptr)
+        if(p_PlacedBlocks->m_PlacedBlocksArray.value(item) != nullptr)
         {
             int x = item.first;
             int y = item.second;
 
-            paintSquare(x,y,Qt::white);
+            PaintSquare(x,y,Qt::white);
         }
     }
 }
 
-QVector<QGraphicsRectItem*> Drawer::paintBlock(QVector<int> block_coordinates, QColor random_color)
+QVector<QGraphicsRectItem*> Drawer::paintBlock(QVector<int> blockCoordinates, QColor randomColor)
 {
-    QVector<QGraphicsRectItem*> squares_graphic_pointers;
+    QVector<QGraphicsRectItem*> squaresGraphicPointers;
 
-    QPen random_color_pen(random_color);
-    QBrush random_color_brush(random_color);
+    QPen randomColorPen(randomColor);
+    QBrush randomColorBrush(randomColor);
 
-    if(checkCoordinatesValidity(block_coordinates))
+    if(CheckCoordinatesValidity(blockCoordinates))
     {
         for(int i=0 ; i<8; i=i+2)
         {
-            int xposition = 6 + (block_coordinates.at(i)-1) * 29;
-            int yposition = (block_coordinates.at(i+1) - 1) * 29;
+            int positionX = 6 + (blockCoordinates.at(i)-1) * 29;
+            int positionY = (blockCoordinates.at(i+1) - 1) * 29;
 
-            squares_graphic_pointers.append(scene->addRect(xposition, yposition, square_size, square_size, random_color_pen, random_color_brush));
+            squaresGraphicPointers.append(m_pScene->addRect(positionX, positionY, m_SquareSize, m_SquareSize, randomColorPen, randomColorBrush));
         }
     }
-    return squares_graphic_pointers;
+    return squaresGraphicPointers;
 }
 
-void Drawer::deleteBlock(QVector<int> block_coordinates)
+void Drawer::DeleteBlock(QVector<int> blockCoordinates)
 {
-    if(checkCoordinatesValidity(block_coordinates))
+    if(CheckCoordinatesValidity(blockCoordinates))
     {
         for(int i=0 ; i<8; i=i+2)
         {
-            int xposition = 6 + (block_coordinates.at(i)-1) * 29;
-            int yposition = (block_coordinates.at(i+1) - 1) * 29;
+            int positionX = 6 + (blockCoordinates.at(i)-1) * 29;
+            int positionY = (blockCoordinates.at(i+1) - 1) * 29;
 
-            scene->addRect(xposition, yposition, square_size, square_size, black_pen, black_brush);
+            m_pScene->addRect(positionX, positionY, m_SquareSize, m_SquareSize, m_BlackPen, m_BlackBrush);
         }
     }
 }
 
-void Drawer::deleteBlock(QVector<QGraphicsRectItem*> block_rect_graphic_pointers)
+void Drawer::DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
 {
-    for(QGraphicsRectItem *item : block_rect_graphic_pointers)
+    for(QGraphicsRectItem *item : blockRectGraphicPointers)
     {
-        scene->removeItem(item);
+        m_pScene->removeItem(item);
     }
 }
-

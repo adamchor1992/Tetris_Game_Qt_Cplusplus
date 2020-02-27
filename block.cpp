@@ -1,76 +1,76 @@
 #include "block.h"
 
-Block::Block(QString _shape, QObject *parent) : QObject(parent)
+Block::Block(QString shape)
 {
-    shape = _shape;
-    central_square_x = 5;
-    central_square_y = 1;
+    m_Shape = shape;
+    m_CentralSquareX = 5;
+    m_CentralSquareY = 1;
 
-    std::srand(std::time(nullptr)); //seed based on time
-    blockColor = colors.at(std::rand() % colors.size());
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
+    m_BlockColor = m_Colors.at(std::rand() % m_Colors.size());
 
-    if(shape == "S")
+    if(m_Shape == "S")
     {
-        square1posx = central_square_x - 1;
-        square1posy = central_square_y + 1;
-        square2posx = central_square_x;
-        square2posy = central_square_y + 1;
-        square3posx = central_square_x + 1;
-        square3posy = central_square_y;
+        m_Square1PositionX = m_CentralSquareX - 1;
+        m_Square1PositionY = m_CentralSquareY + 1;
+        m_Square2PositionX = m_CentralSquareX;
+        m_Square2PositionY = m_CentralSquareY + 1;
+        m_Square3PositionX = m_CentralSquareX + 1;
+        m_Square3PositionY = m_CentralSquareY;
     }
-    else if(shape == "Z")
+    else if(m_Shape == "Z")
     {
-        square1posx = central_square_x - 1;
-        square1posy = central_square_y;
-        square2posx = central_square_x;
-        square2posy = central_square_y + 1;
-        square3posx = central_square_x + 1;
-        square3posy = central_square_y + 1;
+        m_Square1PositionX = m_CentralSquareX - 1;
+        m_Square1PositionY = m_CentralSquareY;
+        m_Square2PositionX = m_CentralSquareX;
+        m_Square2PositionY = m_CentralSquareY + 1;
+        m_Square3PositionX = m_CentralSquareX + 1;
+        m_Square3PositionY = m_CentralSquareY + 1;
     }
-    else if(shape == "I")
+    else if(m_Shape == "I")
     {
-        square1posx = central_square_x - 1;
-        square1posy = central_square_y;
-        square2posx = central_square_x + 1;
-        square2posy = central_square_y;
-        square3posx = central_square_x + 2;
-        square3posy = central_square_y;
+        m_Square1PositionX = m_CentralSquareX - 1;
+        m_Square1PositionY = m_CentralSquareY;
+        m_Square2PositionX = m_CentralSquareX + 1;
+        m_Square2PositionY = m_CentralSquareY;
+        m_Square3PositionX = m_CentralSquareX + 2;
+        m_Square3PositionY = m_CentralSquareY;
     }
-    else if(shape == "J")
+    else if(m_Shape == "J")
     {
-        square1posx = central_square_x - 1;
-        square1posy = central_square_y;
-        square2posx = central_square_x + 1;
-        square2posy = central_square_y;
-        square3posx = central_square_x + 1;
-        square3posy = central_square_y + 1;
+        m_Square1PositionX = m_CentralSquareX - 1;
+        m_Square1PositionY = m_CentralSquareY;
+        m_Square2PositionX = m_CentralSquareX + 1;
+        m_Square2PositionY = m_CentralSquareY;
+        m_Square3PositionX = m_CentralSquareX + 1;
+        m_Square3PositionY = m_CentralSquareY + 1;
     }
-    else if(shape == "L")
+    else if(m_Shape == "L")
     {
-        square1posx = central_square_x - 1;
-        square1posy = central_square_y + 1;
-        square2posx = central_square_x - 1;
-        square2posy = central_square_y;
-        square3posx = central_square_x + 1;
-        square3posy = central_square_y;
+        m_Square1PositionX = m_CentralSquareX - 1;
+        m_Square1PositionY = m_CentralSquareY + 1;
+        m_Square2PositionX = m_CentralSquareX - 1;
+        m_Square2PositionY = m_CentralSquareY;
+        m_Square3PositionX = m_CentralSquareX + 1;
+        m_Square3PositionY = m_CentralSquareY;
     }
-    else if(shape == "O")
+    else if(m_Shape == "O")
     {
-        square1posx = central_square_x;
-        square1posy = central_square_y + 1;
-        square2posx = central_square_x + 1;
-        square2posy = central_square_y + 1;
-        square3posx = central_square_x + 1;
-        square3posy = central_square_y;
+        m_Square1PositionX = m_CentralSquareX;
+        m_Square1PositionY = m_CentralSquareY + 1;
+        m_Square2PositionX = m_CentralSquareX + 1;
+        m_Square2PositionY = m_CentralSquareY + 1;
+        m_Square3PositionX = m_CentralSquareX + 1;
+        m_Square3PositionY = m_CentralSquareY;
     }
-    else if(shape == "T")
+    else if(m_Shape == "T")
     {
-        square1posx = central_square_x - 1;
-        square1posy = central_square_y;
-        square2posx = central_square_x;
-        square2posy = central_square_y + 1;
-        square3posx = central_square_x + 1;
-        square3posy = central_square_y;
+        m_Square1PositionX = m_CentralSquareX - 1;
+        m_Square1PositionY = m_CentralSquareY;
+        m_Square2PositionX = m_CentralSquareX;
+        m_Square2PositionY = m_CentralSquareY + 1;
+        m_Square3PositionX = m_CentralSquareX + 1;
+        m_Square3PositionY = m_CentralSquareY;
     }
     else
     {
@@ -80,47 +80,52 @@ Block::Block(QString _shape, QObject *parent) : QObject(parent)
 
     //pozycje są napisane w intach
 
-    blockCoordinates.append(square1posx);
-    blockCoordinates.append(square1posy);
-    blockCoordinates.append(central_square_x);
-    blockCoordinates.append(central_square_y);
-    blockCoordinates.append(square2posx);
-    blockCoordinates.append(square2posy);
-    blockCoordinates.append(square3posx);
-    blockCoordinates.append(square3posy);
+    m_BlockCoordinates.append(m_Square1PositionX);
+    m_BlockCoordinates.append(m_Square1PositionY);
+    m_BlockCoordinates.append(m_CentralSquareX);
+    m_BlockCoordinates.append(m_CentralSquareY);
+    m_BlockCoordinates.append(m_Square2PositionX);
+    m_BlockCoordinates.append(m_Square2PositionY);
+    m_BlockCoordinates.append(m_Square3PositionX);
+    m_BlockCoordinates.append(m_Square3PositionY);
 }
 
-void Block::moveBlock(int direction)
+Block::~Block()
+{
+
+}
+
+void Block::MoveBlock(int direction)
 {
     //direction 0 is left, 1 is right
     //block has 4 pairs of coordinates {1,1,2,2,3,3,4,4}
 
     if(direction == 0) // move to the left
     {
-        for(int i=0; i < blockCoordinates.size(); i=i+2)
+        for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
         {
-            int current_x = blockCoordinates.at(i); //x coordinate
-            int current_y = blockCoordinates.at(i+1); //y coordinate
+            int currentX = m_BlockCoordinates.at(i); //x coordinate
+            int currentY = m_BlockCoordinates.at(i+1); //y coordinate
 
-            int new_x = current_x - 1; //x decreases
-            int new_y = current_y; //y does not change
+            int newX = currentX - 1; //x decreases
+            int newY = currentY; //y does not change
 
-            blockCoordinates[i] = new_x;
-            blockCoordinates[i+1] = new_y;
+            m_BlockCoordinates[i] = newX;
+            m_BlockCoordinates[i+1] = newY;
         }
     }
     else if(direction == 1) // move to the right
     {
-        for(int i=0; i < blockCoordinates.size(); i=i+2)
+        for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
         {
-            int current_x = blockCoordinates.at(i); //x coordinate
-            int current_y = blockCoordinates.at(i+1); //y coordinate
+            int currentX = m_BlockCoordinates.at(i); //x coordinate
+            int currentY = m_BlockCoordinates.at(i+1); //y coordinate
 
-            int new_x = current_x + 1; //x increases
-            int new_y = current_y; //y does not change
+            int newX = currentX + 1; //x increases
+            int newY = currentY; //y does not change
 
-            blockCoordinates[i] = new_x;
-            blockCoordinates[i+1] = new_y;
+            m_BlockCoordinates[i] = newX;
+            m_BlockCoordinates[i+1] = newY;
         }
     }
     else //wrong direction
@@ -129,31 +134,30 @@ void Block::moveBlock(int direction)
     }
 }
 
-void Block::rotateBlock()
+void Block::RotateBlock()
 {
-    qDebug() << "BASE CLASS rotateBlock() METHOD CALLED";
+    qDebug() << "BASE CLASS RotateBlock() METHOD CALLED";
 }
 
-bool Block::isSquaresLeftOfBlock(const PlacedBlocks *placed_blocks)
+bool Block::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
 {
-    for(int i=0; i<blockCoordinates.size(); i=i+2)
+    for(int i=0; i<m_BlockCoordinates.size(); i=i+2)
     {
-        int current_x = blockCoordinates.at(i); //x coordinate
-        int current_y = blockCoordinates.at(i+1); //y coordinate
+        int currentX = m_BlockCoordinates.at(i); //x coordinate
+        int currentY = m_BlockCoordinates.at(i+1); //y coordinate
 
-        int left_block_x = current_x - 1; // x is decreased
-        int left_block_y = current_y; // y does not change
+        int leftBlockX = currentX - 1; // x is decreased
+        int leftBlockY = currentY; // y does not change
 
-        if(left_block_x < 1) // if there is left wall next to the block
+        if(leftBlockX < 1) // if there is left wall next to the block
         {
             return true;
         }
 
-        //QPair<int,int> current_coordinates_pair(current_x,current_y);
-        QPair<int,int> left_of_block_coordinates_pair(left_block_x,left_block_y);
+        QPair<int,int> leftOfBlockCoordinatesPair(leftBlockX,leftBlockY);
 
-        //check if there is some block to the left of current block
-        if(placed_blocks->placedBlocksArray.value(left_of_block_coordinates_pair) != nullptr)
+        //check if there is any block to the left of current block
+        if(p_PlacedBlocks->m_PlacedBlocksArray.value(leftOfBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -162,26 +166,25 @@ bool Block::isSquaresLeftOfBlock(const PlacedBlocks *placed_blocks)
     return false;
 }
 
-bool Block::isSquaresRightOfBlock(const PlacedBlocks *placed_blocks)
+bool Block::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
 {
-    for(int i=0; i<blockCoordinates.size(); i=i+2)
+    for(int i=0; i<m_BlockCoordinates.size(); i=i+2)
     {
-        int current_x = blockCoordinates.at(i); //x coordinate
-        int current_y = blockCoordinates.at(i+1); //y coordinate
+        int currentX = m_BlockCoordinates.at(i); //x coordinate
+        int currentY = m_BlockCoordinates.at(i+1); //y coordinate
 
-        int right_block_x = current_x + 1; // x is increased
-        int right_block_y = current_y; // y does not change
+        int rightBlockX = currentX + 1; // x is increased
+        int rightBlockY = currentY; // y does not change
 
-        if(right_block_x > 10) // if there is left wall next to the block
+        if(rightBlockX > 10) // if there is left wall next to the block
         {
             return true;
         }
 
-        //QPair<int,int> current_coordinates_pair(current_x,current_y);
-        QPair<int,int> right_of_block_coordinates_pair(right_block_x,right_block_y);
+        QPair<int,int> rightOfBlockCoordinatesPair(rightBlockX,rightBlockY);
 
-        //check if there is some block to the right of current block
-        if(placed_blocks->placedBlocksArray.value(right_of_block_coordinates_pair) != nullptr)
+        //check if there is any block to the right of current block
+        if(p_PlacedBlocks->m_PlacedBlocksArray.value(rightOfBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -190,27 +193,25 @@ bool Block::isSquaresRightOfBlock(const PlacedBlocks *placed_blocks)
     return false;
 }
 
-bool Block::isSquaresUnderBlock(const PlacedBlocks *placed_blocks)
+bool Block::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
 {
-    //block has 4 pairs of coordinates {1,1,2,2,3,3,4,4}
-    for(int i=0; i < blockCoordinates.size(); i=i+2)
+    for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
     {
-        int current_x = blockCoordinates.at(i); //x coordinate
-        int current_y = blockCoordinates.at(i+1); //y coordinate
+        int currentX = m_BlockCoordinates.at(i); //x coordinate
+        int currentY = m_BlockCoordinates.at(i+1); //y coordinate
 
-        int below_block_x = current_x; // x does not change
-        int below_block_y = current_y + 1; // y is increased
+        int belowBlockX = currentX; // x does not change
+        int belowBlockY = currentY + 1; // y is increased
 
-        if(below_block_y > 20) // if there is bottom under block
+        if(belowBlockY > 20) // if there is bottom under block
         {
             return true;
         }
 
-        //QPair<int,int> current_coordinates_pair(current_x,current_y);
-        QPair<int,int> below_block_coordinates_pair(below_block_x,below_block_y);
+        QPair<int,int> belowBlockCoordinatesPair(belowBlockX,belowBlockY);
 
-        //check if there is some block below current block
-        if(placed_blocks->placedBlocksArray.value(below_block_coordinates_pair) != nullptr)
+        //check if there is any block below current block
+        if(p_PlacedBlocks->m_PlacedBlocksArray.value(belowBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -218,25 +219,20 @@ bool Block::isSquaresUnderBlock(const PlacedBlocks *placed_blocks)
     return false;
 }
 
-QColor Block::getColor()
+QColor Block::GetColor()
 {
-    return blockColor;
+    return m_BlockColor;
 }
 
-void Block::dropBlockCoordinates()
+void Block::DropBlockCoordinates()
 {
-    for(int i=1; i<blockCoordinates.size(); i=i+2)
+    for(int i=1; i<m_BlockCoordinates.size(); i=i+2)
     {
-        blockCoordinates[i]++;
+        m_BlockCoordinates[i]++;
     }
 }
 
-QVector<int> Block::getBlockCoordinates()
+QVector<int> Block::GetBlockCoordinates()
 {
-    return blockCoordinates;
-}
-
-Block::~Block()
-{
-
+    return m_BlockCoordinates;
 }

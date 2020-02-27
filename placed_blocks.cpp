@@ -1,33 +1,33 @@
-#include "placedblocks.h"
+#include "placed_blocks.h"
 
-PlacedBlocks::PlacedBlocks(QObject *parent) : QObject(parent)
+PlacedBlocks::PlacedBlocks()
 {
     for(int column=1; column<=10; column++)
     {
         for(int row=1; row<=20; row++)
         {
-            placedBlocksArray.insert(QPair<int,int>(column,row),nullptr);
+            m_PlacedBlocksArray.insert(QPair<int,int>(column,row),nullptr);
         }
     }
 
-    qDebug() << "Rozmiar placedblocksarray: " << placedBlocksArray.size();
+    qDebug() << "Size of placedblocksarray: " << m_PlacedBlocksArray.size();
 }
 
-void PlacedBlocks::addSquare(int x, int y, QGraphicsRectItem* square_graphic_ptr)
+void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem)
 {
     //ATTENTION, THIS METHOD DOES NOT CHECK ANYTHING!!!
-    QPair<int,int> coordinates_pair(x,y);
-    placedBlocksArray[coordinates_pair] = square_graphic_ptr;
+    QPair<int,int> coordinatesPair(x,y);
+    m_PlacedBlocksArray[coordinatesPair] = p_SquareGraphicsItem;
 }
 
-int PlacedBlocks::findFullRows() const
+int PlacedBlocks::FindFullRows() const
 {
     //go through all elements' keys
     for(int row = 1; row <= 20; row++)
     {
         for(int column = 1; column <= 10; column++)
         {
-            if(placedBlocksArray.value(QPair<int,int>(column,row)) == 0)
+            if(m_PlacedBlocksArray.value(QPair<int,int>(column,row)) == nullptr)
             {
                 break;
             }
@@ -41,7 +41,7 @@ int PlacedBlocks::findFullRows() const
     return 0;
 }
 
-void PlacedBlocks::dropRowsAbove(int deletedRow)
+void PlacedBlocks::DropRowsAbove(int deletedRow)
 {
     //drop all rows above deleted row
     QMap<QPair<int,int>,QGraphicsRectItem*> temporaryPlacedBlocksArray;
@@ -50,7 +50,7 @@ void PlacedBlocks::dropRowsAbove(int deletedRow)
     {
         for(int row=1; row<=20; row++)
         {
-            temporaryPlacedBlocksArray.insert(QPair<int,int>(column,row),0);
+            temporaryPlacedBlocksArray.insert(QPair<int,int>(column,row), nullptr);
         }
     }
 
@@ -60,7 +60,7 @@ void PlacedBlocks::dropRowsAbove(int deletedRow)
         for(int column = 1; column <= 10; column++)
         {
             //insert key-value pairs
-            temporaryPlacedBlocksArray.insert(QPair<int,int>(column,row),placedBlocksArray.value(QPair<int,int>(column,row)));
+            temporaryPlacedBlocksArray.insert(QPair<int,int>(column,row), m_PlacedBlocksArray.value(QPair<int,int>(column,row)));
         }
     }
 
@@ -69,14 +69,14 @@ void PlacedBlocks::dropRowsAbove(int deletedRow)
         for(int column = 1; column <= 10; column++)
         {
             //drop all rows by one
-            temporaryPlacedBlocksArray.insert(QPair<int,int>(column,row),placedBlocksArray.value(QPair<int,int>(column,row-1)));
+            temporaryPlacedBlocksArray.insert(QPair<int,int>(column,row),m_PlacedBlocksArray.value(QPair<int,int>(column,row-1)));
         }
     }
 
-    placedBlocksArray = temporaryPlacedBlocksArray;
+    m_PlacedBlocksArray = temporaryPlacedBlocksArray;
 }
 
-void PlacedBlocks::deleteSquare(int x, int y)
+void PlacedBlocks::DeleteSquare(int x, int y)
 {
     try
     {
@@ -100,31 +100,31 @@ void PlacedBlocks::deleteSquare(int x, int y)
             qDebug() << "Wrong y coordinate";
             return;
         default:
-            qDebug() << "Unknown exception in checkCoordinatesValidity method";
+            qDebug() << "Unknown exception in CheckCoordinatesValidity method";
             return;
         }
     }
 
     QPair<int,int> coordinates(x,y);
 
-    if(placedBlocksArray.value(coordinates) == 0)
+    if(m_PlacedBlocksArray.value(coordinates) == nullptr)
     {
         qDebug() << "Element is already 0!";
         return;
     }
 
-    placedBlocksArray[coordinates] = 0;
+    m_PlacedBlocksArray[coordinates] = nullptr;
 }
 
-void PlacedBlocks::deleteRow(int row_number)
+void PlacedBlocks::DeleteRow(int rowNumber)
 {
-    if(row_number < 1)
+    if(rowNumber < 1)
     {
         qDebug() << "Row number smaller than 1, error! ";
         exit(-1);
     }
 
-    if(row_number > 20)
+    if(rowNumber > 20)
     {
         qDebug() << "Row number bigger than 20, error!";
         exit(-1);
@@ -133,6 +133,6 @@ void PlacedBlocks::deleteRow(int row_number)
     //delete all squares belonging to row_number row
     for(int column = 1; column<=10; column++)
     {
-        deleteSquare(column, row_number);
+        DeleteSquare(column, rowNumber);
     }
 }

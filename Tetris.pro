@@ -25,30 +25,30 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-    block.cpp \
-    drawer.cpp \
-    placedblocks.cpp \
-    tblock.cpp \
-    sblock.cpp \
-    zblock.cpp \
-    jblock.cpp \
-    lblock.cpp \
-    oblock.cpp \
-    iblock.cpp
+        main_window.cpp \
+        block.cpp \
+        drawer.cpp \
+        placed_blocks.cpp \
+        t_block.cpp \
+        s_block.cpp \
+        z_block.cpp \
+        j_block.cpp \
+        l_block.cpp \
+        o_block.cpp \
+        i_block.cpp
 
 HEADERS += \
-        mainwindow.h \
-    block.h \
-    drawer.h \
-    placedblocks.h \
-    tblock.h \
-    sblock.h \
-    zblock.h \
-    jblock.h \
-    lblock.h \
-    oblock.h \
-    iblock.h
+        main_window.h \
+        block.h \
+        drawer.h \
+        placed_blocks.h \
+        t_block.h \
+        s_block.h \
+        z_block.h \
+        j_block.h \
+        l_block.h \
+        o_block.h \
+        i_block.h
 
 FORMS += \
-        mainwindow.ui
+        main_window.ui

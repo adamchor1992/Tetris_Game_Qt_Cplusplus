@@ -1,11 +1,11 @@
-#include "oblock.h"
+#include "o_block.h"
 
 OBlock::OBlock() : Block(QString("O"))
 {
-    current_rotation = 0;
+    m_CurrentRotation = 0;
 }
 
-void OBlock::rotateBlock()
+void OBlock::RotateBlock()
 {
     //this block does not rotate
 }

@@ -1,5 +1,4 @@
-#ifndef DRAWER_H
-#define DRAWER_H
+#pragma once
 
 #include <QObject>
 #include <QGraphicsScene>
@@ -9,34 +8,27 @@
 #include <QBrush>
 #include <QVector>
 #include <QColor>
-#include <placedblocks.h>
+#include <placed_blocks.h>
 
-class Drawer : public QObject
+class Drawer
 {
-    Q_OBJECT
 public:
-    explicit Drawer(QGraphicsScene *_scene, QObject *parent = nullptr);
+    explicit Drawer(QGraphicsScene* pScene);
 
-    bool checkCoordinatesValidity(int x, int y);
-    bool checkCoordinatesValidity(QVector<int> block_coordinates);
-    void paintSquare(int x, int y, QBrush brush);
-    void paintPlacedBlocks(const PlacedBlocks *placedblocks);
-    QVector<QGraphicsRectItem*> paintBlock(QVector<int> block_coordinates, QColor random_color);
-    void deleteSquare(int x, int y);
-    void deleteBlock(QVector<int> block_coordinates);
-    void deleteBlock(QVector<QGraphicsRectItem*> block_rect_graphic_pointers);
+    bool CheckCoordinatesValidity(int x, int y);
+    bool CheckCoordinatesValidity(QVector<int> blockCoordinates);
+    void PaintSquare(int x, int y, QBrush brush);
+    void PaintPlacedBlocks(PlacedBlocks const* p_PlacedBlocks);
+    QVector<QGraphicsRectItem*> paintBlock(QVector<int> blockCoordinates, QColor randomColor);
+    void DeleteSquare(int x, int y);
+    void DeleteBlock(QVector<int> blockCoordinates);
+    void DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
 
 private:
-    QGraphicsScene *scene;
-    int square_size;
-    QPen red_pen;
-    QBrush red_brush;
-    QPen black_pen;
-    QBrush black_brush;
-
-signals:
-
-public slots:
+    QGraphicsScene* m_pScene;
+    int m_SquareSize;
+    QPen m_RedPen;
+    QBrush m_RedBrush;
+    QPen m_BlackPen;
+    QBrush m_BlackBrush;
 };
-
-#endif // DRAWER_H
