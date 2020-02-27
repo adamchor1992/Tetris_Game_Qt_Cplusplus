@@ -20,7 +20,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_MainWindow
+class Ui_GameWindow
 {
 public:
     QWidget *centralWidget;
@@ -142,9 +142,10 @@ public:
 
 };
 
-namespace Ui {
-    class MainWindow: public Ui_MainWindow {};
-} // namespace Ui
+namespace Ui
+{
+    class GameWindow: public Ui_GameWindow {};
+}
 
 QT_END_NAMESPACE
 

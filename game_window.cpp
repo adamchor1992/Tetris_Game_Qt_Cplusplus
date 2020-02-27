@@ -1,39 +1,58 @@
-#include "main_window.h"
+#include "game_window.h"
 #include "ui_main_window.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::GameWindow)
 {
     ui->setupUi(this);
 
-    m_Scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(m_Scene);
-    ui->graphicsView->setSceneRect(0,0,302,585);
+    m_GameState = GameState::BeforeFirstRun;
 
+    InitializeGameplayAreaScene();
     DrawGameArena();
+    PrepareFirstGameRun();
+}
 
-    m_pDrawer = new Drawer(m_Scene);
+void GameWindow::InitializeGameplayAreaScene()
+{
+    m_Scene.setParent(this);
+    ui->graphicsView->setScene(&m_Scene);
+    ui->graphicsView->setSceneRect(0,0,302,585);
+}
+
+void GameWindow::DrawGameArena()
+{
+    int const sideWallsThickness = 6;
+    int const bottomWallThickness = 5;
+
+    QBrush whiteBrush(Qt::white);
+    QPen sideWallsPen(whiteBrush, sideWallsThickness);
+    QPen bottomWallPen(whiteBrush, bottomWallThickness);
+
+    int const leftBorderX = 3;
+    int const rightBorderX = 299;
+    int const topY = 0;
+    int const bottomY = 585;
+
+    m_Scene.addLine(leftBorderX, bottomY, leftBorderX, topY, sideWallsPen);
+    m_Scene.addLine(rightBorderX, bottomY, rightBorderX, topY, sideWallsPen);
+
+    /*-3 factor is minor line adjustment*/
+    m_Scene.addLine(leftBorderX, bottomY-3, rightBorderX, bottomY-3, bottomWallPen);
+}
+
+void GameWindow::PrepareFirstGameRun()
+{
+    m_pDrawer = new Drawer(&m_Scene);
     m_pPlacedBlocks = new PlacedBlocks();
 
     QFont font( "Arial", 16, QFont::Bold);
     ui->m_ScoreDisplayLabel->setFont(font);
     ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
 
-    connect(&m_DropTimer, &QTimer::timeout, this, &MainWindow::GameTick);
-    m_DropTimer.start(140);
+    connect(&m_DropTimer, &QTimer::timeout, this, &GameWindow::GameTick);
 }
 
-void MainWindow::DrawGameArena()
-{
-    QBrush whiteBrush(Qt::white);
-    QPen sideWallsPen(whiteBrush, 6);
-    QPen bottomWallPen(whiteBrush, 5);
-
-    m_Scene->addLine(3, 0, 3, 585, sideWallsPen);
-    m_Scene->addLine(299, 0, 299, 585, sideWallsPen);
-    m_Scene->addLine(3, 582, 298, 582, bottomWallPen);
-}
-
-void MainWindow::GenerateBlock(QString shape)
+void GameWindow::GenerateBlock(QString shape)
 {
     if(shape == nullptr)
     {
@@ -74,7 +93,7 @@ void MainWindow::GenerateBlock(QString shape)
     }
 }
 
-void MainWindow::GenerateRandomBlock()
+void GameWindow::GenerateRandomBlock()
 {
     std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
 
@@ -110,10 +129,11 @@ void MainWindow::GenerateRandomBlock()
     m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->paintBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event)
+void GameWindow::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
     {
+    case Qt::Key_Left:
     case Qt::Key_A:
         if(!(m_pCurrentBlock->IsSquaresLeftOfBlock(m_pPlacedBlocks)))
         {
@@ -122,6 +142,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         break;
 
+    case Qt::Key_Right:
     case Qt::Key_D:
         if(!(m_pCurrentBlock->IsSquaresRightOfBlock(m_pPlacedBlocks)))
         {
@@ -130,6 +151,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         break;
 
+    case Qt::Key_Up:
     case Qt::Key_W:
         m_pCurrentBlock->RotateBlock();
         break;
@@ -139,23 +161,29 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         break;
 
     case Qt::Key_P:
-        qDebug() << "Pause";
-        if(m_Paused == false)
+        if(m_GameState == GameState::GameRunning)
         {
+            qDebug() << "Pause";
             m_DropTimer.stop();
-            m_Paused = true;
+            m_GameState = GameState::GamePaused;
         }
-        else
+        else if(m_GameState == GameState::GamePaused)
         {
+            qDebug() << "Unpause";
             m_DropTimer.start();
-            m_Paused = false;
+            m_GameState = GameState::GameRunning;
         }
         break;
 
     case Qt::Key_Space:
-        qDebug() << "Restart game";
-        if(m_ReadyToRestart)
+        if(m_GameState == GameState::BeforeFirstRun)
         {
+            qDebug() << "Start game";
+            StartGame();
+        }
+        else if(m_GameState == GameState::GameStopped)
+        {
+            qDebug() << "Restart game";
             RestartGame();
         }
         break;
@@ -165,7 +193,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void MainWindow::DrawAllPossibleSquares()
+void GameWindow::DrawAllPossibleSquares()
 {
     QPen redPen(Qt::red);
     QPen bluePen(Qt::blue);
@@ -184,29 +212,29 @@ void MainWindow::DrawAllPossibleSquares()
             if(order%2 == 0) //every second row
             {
                 if(i%2 == 0)
-                    m_Scene->addRect(6 + i * 29, j*29, squareSize, squareSize, redPen, redBrush);
+                    m_Scene.addRect(6 + i * 29, j*29, squareSize, squareSize, redPen, redBrush);
                 else
-                    m_Scene->addRect(6 + i * 29, j*29, squareSize, squareSize, bluePen, blueBrush);
+                    m_Scene.addRect(6 + i * 29, j*29, squareSize, squareSize, bluePen, blueBrush);
             }
             else
             {
                 if(i%2 != 0)
-                    m_Scene->addRect(6 + i * 29, j*29, squareSize, squareSize, redPen, redBrush);
+                    m_Scene.addRect(6 + i * 29, j*29, squareSize, squareSize, redPen, redBrush);
                 else
-                    m_Scene->addRect(6 + i * 29, j*29, squareSize, squareSize, bluePen, blueBrush);
+                    m_Scene.addRect(6 + i * 29, j*29, squareSize, squareSize, bluePen, blueBrush);
             }
         }
         order++;
     }
 }
 
-void MainWindow::RedrawBlock()
+void GameWindow::RedrawBlock()
 {
     m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
     m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->paintBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
-void MainWindow::PlaceCurrentBlock()
+void GameWindow::PlaceCurrentBlock()
 {
     QVector<int> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
@@ -216,7 +244,7 @@ void MainWindow::PlaceCurrentBlock()
     }
 }
 
-void MainWindow::EndGame()
+void GameWindow::EndGame()
 {
     qDebug() << "GAME OVER";
 
@@ -225,16 +253,19 @@ void MainWindow::EndGame()
 
     m_DropTimer.stop();
 
-    m_ReadyToRestart = true;
+    m_GameState = GameState::GameStopped;
 }
 
-void MainWindow::RestartGame()
+void GameWindow::StartGame()
 {
-    m_ReadyToRestart = false;
+    m_DropTimer.start(140);
+}
 
+void GameWindow::RestartGame()
+{
     m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
     delete m_pPlacedBlocks;
-    m_Scene->clear();
+    m_Scene.clear();
 
     m_pPlacedBlocks = new PlacedBlocks();
     m_pDrawer->PaintPlacedBlocks(m_pPlacedBlocks);
@@ -243,9 +274,10 @@ void MainWindow::RestartGame()
     ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
 
     m_DropTimer.start();
+    m_GameState = GameState::GameRunning;
 }
 
-void MainWindow::GameTick()
+void GameWindow::GameTick()
 {
     //create initial block
     if(m_pCurrentBlock == nullptr)
@@ -330,7 +362,7 @@ void MainWindow::GameTick()
     m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->paintBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
-MainWindow::~MainWindow()
+GameWindow::~GameWindow()
 {
     delete ui;
     delete m_pDrawer;

@@ -25,7 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        main_window.cpp \
+        game_window.cpp \
         block.cpp \
         drawer.cpp \
         placed_blocks.cpp \
@@ -38,7 +38,7 @@ SOURCES += \
         i_block.cpp
 
 HEADERS += \
-        main_window.h \
+        game_window.h \
         block.h \
         drawer.h \
         placed_blocks.h \
@@ -52,4 +52,4 @@ HEADERS += \
         utilities.h
 
 FORMS += \
-        main_window.ui
+        game_window.ui
