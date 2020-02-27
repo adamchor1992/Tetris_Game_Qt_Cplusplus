@@ -1,12 +1,14 @@
-#include "s_block.h"
+#include "i_block.h"
 
-SBlock::SBlock() : Block(QString("S"))
+IBlock::IBlock() : BlockBase(QString("I"))
 {
     m_CurrentRotation = 0;
 }
 
-void SBlock::RotateBlock()
+void IBlock::RotateBlock()
 {
+    //block has 4 pairs of coordinates {1,1,2,2,3,3,4,4}
+
     m_CentralSquareX = m_BlockCoordinates.at(2);
     m_CentralSquareY = m_BlockCoordinates.at(3);
 
@@ -16,10 +18,10 @@ void SBlock::RotateBlock()
         int newSquare1Y = m_CentralSquareY - 1;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
-        int newSquare2X = m_CentralSquareX + 1;
-        int newSquare2Y = m_CentralSquareY;
-        int newSquare3X = m_CentralSquareX + 1;
-        int newSquare3Y = m_CentralSquareY + 1;
+        int newSquare2X = m_CentralSquareX;
+        int newSquare2Y = m_CentralSquareY + 1;
+        int newSquare3X = m_CentralSquareX;
+        int newSquare3Y = m_CentralSquareY + 2;
 
         if(newSquare1X > 10 || newSquare1X < 1)
         {
@@ -68,14 +70,14 @@ void SBlock::RotateBlock()
     }
     else if(m_CurrentRotation == 1)
     {
-        int newSquare1X = m_CentralSquareX + 1;
+        int newSquare1X = m_CentralSquareX - 1;
         int newSquare1Y = m_CentralSquareY;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
-        int newSquare2X = m_CentralSquareX;
-        int newSquare2Y = m_CentralSquareY + 1;
-        int newSquare3X = m_CentralSquareX - 1;
-        int newSquare3Y = m_CentralSquareY + 1;
+        int newSquare2X = m_CentralSquareX + 1;
+        int newSquare2Y = m_CentralSquareY;
+        int newSquare3X = m_CentralSquareX + 2;
+        int newSquare3Y = m_CentralSquareY;
 
         if(newSquare1X > 10 || newSquare1X < 1)
         {

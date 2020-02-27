@@ -22,34 +22,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
 SOURCES += \
         main.cpp \
         game_window.cpp \
-        block.cpp \
+        block_base.cpp \
         drawer.cpp \
         placed_blocks.cpp \
-        t_block.cpp \
-        s_block.cpp \
-        z_block.cpp \
-        j_block.cpp \
-        l_block.cpp \
-        o_block.cpp \
-        i_block.cpp
+        blocks/i_block.cpp \
+        blocks/j_block.cpp \
+        blocks/l_block.cpp \
+        blocks/o_block.cpp \
+        blocks/s_block.cpp \
+        blocks/t_block.cpp \
+        blocks/z_block.cpp
 
 HEADERS += \
         game_window.h \
-        block.h \
+        block_base.h \
         drawer.h \
         placed_blocks.h \
-        t_block.h \
-        s_block.h \
-        z_block.h \
-        j_block.h \
-        l_block.h \
-        o_block.h \
-        i_block.h \
-        utilities.h
+        utilities.h \
+        blocks/i_block.h \
+        blocks/j_block.h \
+        blocks/l_block.h \
+        blocks/o_block.h \
+        blocks/s_block.h \
+        blocks/t_block.h \
+        blocks/z_block.h
 
 FORMS += \
         game_window.ui

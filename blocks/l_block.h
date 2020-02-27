@@ -1,11 +1,11 @@
 #pragma once
 
-#include "block.h"
+#include "block_base.h"
 
-class ZBlock : public Block
+class LBlock : public BlockBase
 {
 public:
-    explicit ZBlock();
+    explicit LBlock();
     void RotateBlock() override;
 
 private:

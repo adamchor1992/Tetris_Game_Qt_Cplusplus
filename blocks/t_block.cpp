@@ -1,25 +1,25 @@
-#include "l_block.h"
+#include "t_block.h"
 
-LBlock::LBlock() : Block(QString("L"))
+TBlock::TBlock() : BlockBase(QString("T"))
 {
     m_CurrentRotation = 0;
 }
 
-void LBlock::RotateBlock()
+void TBlock::RotateBlock()
 {
     m_CentralSquareX = m_BlockCoordinates.at(2);
     m_CentralSquareY = m_BlockCoordinates.at(3);
 
     if(m_CurrentRotation == 0)
     {
-        int newSquare1X = m_CentralSquareX - 1;
-        int newSquare1Y = m_CentralSquareY;
+        int newSquare1X = m_CentralSquareX;
+        int newSquare1Y = m_CentralSquareY - 1;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
-        int newSquare2X = m_CentralSquareX;
-        int newSquare2Y = m_CentralSquareY + 1;
+        int newSquare2X = m_CentralSquareX - 1;
+        int newSquare2Y = m_CentralSquareY;
         int newSquare3X = m_CentralSquareX;
-        int newSquare3Y = m_CentralSquareY + 2;
+        int newSquare3Y = m_CentralSquareY + 1;
 
         if(newSquare1X > 10 || newSquare1X < 1)
         {
@@ -68,13 +68,13 @@ void LBlock::RotateBlock()
     }
     else if(m_CurrentRotation == 1)
     {
-        int newSquare1X = m_CentralSquareX;
-        int newSquare1Y = m_CentralSquareY - 1;
+        int newSquare1X = m_CentralSquareX + 1;
+        int newSquare1Y = m_CentralSquareY;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
-        int newSquare2X = m_CentralSquareX - 1;
-        int newSquare2Y = m_CentralSquareY;
-        int newSquare3X = m_CentralSquareX - 2;
+        int newSquare2X = m_CentralSquareX;
+        int newSquare2Y = m_CentralSquareY - 1;
+        int newSquare3X = m_CentralSquareX - 1;
         int newSquare3Y = m_CentralSquareY;
 
         if(newSquare1X > 10 || newSquare1X < 1)
@@ -124,14 +124,14 @@ void LBlock::RotateBlock()
     }
     else if(m_CurrentRotation == 2)
     {
-        int newSquare1X = m_CentralSquareX + 1;
-        int newSquare1Y = m_CentralSquareY;
+        int newSquare1X = m_CentralSquareX;
+        int newSquare1Y = m_CentralSquareY + 1;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
-        int newSquare2X = m_CentralSquareX;
-        int newSquare2Y = m_CentralSquareY - 1;
+        int newSquare2X = m_CentralSquareX + 1;
+        int newSquare2Y = m_CentralSquareY;
         int newSquare3X = m_CentralSquareX;
-        int newSquare3Y = m_CentralSquareY - 2;
+        int newSquare3Y = m_CentralSquareY - 1;
 
         if(newSquare1X > 10 || newSquare1X < 1)
         {
@@ -180,13 +180,13 @@ void LBlock::RotateBlock()
     }
     else if(m_CurrentRotation == 3)
     {
-        int newSquare1X = m_CentralSquareX;
-        int newSquare1Y = m_CentralSquareY + 1;
+        int newSquare1X = m_CentralSquareX - 1;
+        int newSquare1Y = m_CentralSquareY;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
-        int newSquare2X = m_CentralSquareX + 1;
-        int newSquare2Y = m_CentralSquareY;
-        int newSquare3X = m_CentralSquareX + 2;
+        int newSquare2X = m_CentralSquareX;
+        int newSquare2Y = m_CentralSquareY + 1;
+        int newSquare3X = m_CentralSquareX + 1;
         int newSquare3Y = m_CentralSquareY;
 
         if(newSquare1X > 10 || newSquare1X < 1)

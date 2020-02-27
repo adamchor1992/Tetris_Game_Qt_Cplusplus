@@ -4,11 +4,11 @@
 #include "placed_blocks.h"
 #include "utilities.h"
 
-class Block
+class BlockBase
 {
 public:
-    explicit Block(QString shape = "I");
-    virtual ~Block();
+    explicit BlockBase(QString shape = "I");
+    virtual ~BlockBase();
 
     void MoveBlock(Direction direction);
     QVector<int> GetBlockCoordinates();

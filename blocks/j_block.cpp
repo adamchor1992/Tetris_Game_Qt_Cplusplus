@@ -1,6 +1,6 @@
 #include "j_block.h"
 
-JBlock::JBlock() : Block(QString("J"))
+JBlock::JBlock() : BlockBase(QString("J"))
 {
     m_CurrentRotation = 0;
 }

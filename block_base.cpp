@@ -1,6 +1,6 @@
-#include "block.h"
+#include "block_base.h"
 
-Block::Block(QString shape)
+BlockBase::BlockBase(QString shape)
 {
     m_Shape = shape;
     m_CentralSquareX = 5;
@@ -90,12 +90,12 @@ Block::Block(QString shape)
     m_BlockCoordinates.append(m_Square3PositionY);
 }
 
-Block::~Block()
+BlockBase::~BlockBase()
 {
 
 }
 
-void Block::MoveBlock(Direction direction)
+void BlockBase::MoveBlock(Direction direction)
 {
     if(direction == Direction::left)
     {
@@ -132,13 +132,13 @@ void Block::MoveBlock(Direction direction)
     }
 }
 
-void Block::RotateBlock()
+void BlockBase::RotateBlock()
 {
     qDebug() << "BASE CLASS RotateBlock() METHOD CALLED";
     assert(false);
 }
 
-bool Block::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
+bool BlockBase::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
 {
     for(int i=0; i<m_BlockCoordinates.size(); i=i+2)
     {
@@ -165,7 +165,7 @@ bool Block::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
     return false;
 }
 
-bool Block::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
+bool BlockBase::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
 {
     for(int i=0; i<m_BlockCoordinates.size(); i=i+2)
     {
@@ -192,7 +192,7 @@ bool Block::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
     return false;
 }
 
-bool Block::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
+bool BlockBase::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
 {
     for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
     {
@@ -218,12 +218,12 @@ bool Block::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
     return false;
 }
 
-QColor Block::GetColor()
+QColor BlockBase::GetColor()
 {
     return m_BlockColor;
 }
 
-void Block::DropBlockCoordinates()
+void BlockBase::DropBlockCoordinates()
 {
     for(int i=1; i<m_BlockCoordinates.size(); i=i+2)
     {
@@ -231,7 +231,7 @@ void Block::DropBlockCoordinates()
     }
 }
 
-QVector<int> Block::GetBlockCoordinates()
+QVector<int> BlockBase::GetBlockCoordinates()
 {
     return m_BlockCoordinates;
 }

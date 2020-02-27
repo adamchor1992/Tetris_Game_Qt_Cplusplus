@@ -9,16 +9,17 @@
 #include <QKeyEvent>
 #include <random>
 
-#include "block.h"
+#include "block_base.h"
 #include "drawer.h"
 #include "placed_blocks.h"
-#include "i_block.h"
-#include "s_block.h"
-#include "z_block.h"
-#include "j_block.h"
-#include "l_block.h"
-#include "o_block.h"
-#include "t_block.h"
+#include "blocks/i_block.h"
+#include "blocks/i_block.h"
+#include "blocks/s_block.h"
+#include "blocks/z_block.h"
+#include "blocks/j_block.h"
+#include "blocks/l_block.h"
+#include "blocks/o_block.h"
+#include "blocks/t_block.h"
 
 namespace Ui
 {
@@ -42,7 +43,7 @@ private:
     QTimer m_DropTimer;
     QGraphicsRectItem* m_pSquare = nullptr;
     Drawer* m_pDrawer = nullptr;
-    Block* m_pCurrentBlock = nullptr;
+    BlockBase* m_pCurrentBlock = nullptr;
     QVector<QGraphicsRectItem*> m_CurrentBlockGraphicsItemsPtrs;
     PlacedBlocks* m_pPlacedBlocks = nullptr;
     int m_Score = 0;

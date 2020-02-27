@@ -1,8 +1,8 @@
 #pragma once
 
-#include "block.h"
+#include "block_base.h"
 
-class OBlock : public Block
+class OBlock : public BlockBase
 {
 public:
     explicit OBlock();
