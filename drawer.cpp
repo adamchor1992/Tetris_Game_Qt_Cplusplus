@@ -87,18 +87,20 @@ bool Drawer::CheckCoordinatesValidity(QVector<int> blockCoordinates)
     return true;
 }
 
-void Drawer::PaintSquare(int x, int y, QBrush brush)
+void Drawer::DrawSquare(int x, int y, QBrush brush)
 {
+    int const squareSize = 29;
+
     if(CheckCoordinatesValidity(x,y))
     {
-        int xposition = 6 + (x-1) * 29;
-        int yposition = (y-1) * 29;
+        int xposition = 6 + (x-1) * squareSize;
+        int yposition = (y-1) * squareSize;
 
         m_pScene->addRect(xposition, yposition, m_SquareSize, m_SquareSize, m_RedPen, brush);
     }
 }
 
-void Drawer::PaintPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
+void Drawer::DrawPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
 {
     m_pScene->clear();
 
@@ -117,12 +119,12 @@ void Drawer::PaintPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
             int x = item.first;
             int y = item.second;
 
-            PaintSquare(x,y,Qt::white);
+            DrawSquare(x, y, Qt::white);
         }
     }
 }
 
-QVector<QGraphicsRectItem*> Drawer::paintBlock(QVector<int> blockCoordinates, QColor randomColor)
+QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QColor randomColor)
 {
     QVector<QGraphicsRectItem*> squaresGraphicPointers;
 

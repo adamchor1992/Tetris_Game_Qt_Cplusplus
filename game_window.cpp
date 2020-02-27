@@ -126,7 +126,7 @@ void GameWindow::GenerateRandomBlock()
         qDebug() << "BAD RANDOM NUMBER";
     }
 
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->paintBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
@@ -231,7 +231,7 @@ void GameWindow::DrawAllPossibleSquares()
 void GameWindow::RedrawBlock()
 {
     m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->paintBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
 void GameWindow::PlaceCurrentBlock()
@@ -268,7 +268,7 @@ void GameWindow::RestartGame()
     m_Scene.clear();
 
     m_pPlacedBlocks = new PlacedBlocks();
-    m_pDrawer->PaintPlacedBlocks(m_pPlacedBlocks);
+    m_pDrawer->DrawPlacedBlocks(m_pPlacedBlocks);
 
     m_Score = 0;
     ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
@@ -332,7 +332,7 @@ void GameWindow::GameTick()
         }
 
         //repaint all already placed blocks
-        m_pDrawer->PaintPlacedBlocks(m_pPlacedBlocks);
+        m_pDrawer->DrawPlacedBlocks(m_pPlacedBlocks);
 
         //update m_Score label
         ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
@@ -359,7 +359,7 @@ void GameWindow::GameTick()
 
     m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
     m_pCurrentBlock->DropBlockCoordinates();
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->paintBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
 GameWindow::~GameWindow()

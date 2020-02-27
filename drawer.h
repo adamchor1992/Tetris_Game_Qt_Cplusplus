@@ -17,9 +17,9 @@ public:
 
     bool CheckCoordinatesValidity(int x, int y);
     bool CheckCoordinatesValidity(QVector<int> blockCoordinates);
-    void PaintSquare(int x, int y, QBrush brush);
-    void PaintPlacedBlocks(PlacedBlocks const* p_PlacedBlocks);
-    QVector<QGraphicsRectItem*> paintBlock(QVector<int> blockCoordinates, QColor randomColor);
+    void DrawSquare(int x, int y, QBrush brush);
+    void DrawPlacedBlocks(PlacedBlocks const* p_PlacedBlocks);
+    QVector<QGraphicsRectItem*> DrawBlock(QVector<int> blockCoordinates, QColor randomColor);
     void DeleteSquare(int x, int y);
     void DeleteBlock(QVector<int> blockCoordinates);
     void DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
