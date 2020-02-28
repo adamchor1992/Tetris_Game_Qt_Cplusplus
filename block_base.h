@@ -10,13 +10,13 @@ public:
     explicit BlockBase(QString shape = "I");
     virtual ~BlockBase();
 
-    void MoveBlock(Direction direction);
     QVector<int> GetBlockCoordinates();
+    QColor GetColor();
+    bool IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks);
+    void DropBlockCoordinates();
+    void MoveBlock(Direction direction);
     bool IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks);
     bool IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks);
-    bool IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks);
-    QColor GetColor();
-    void DropBlockCoordinates();
 
     virtual void RotateBlock() = 0;
 

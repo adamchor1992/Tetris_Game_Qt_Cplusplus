@@ -58,25 +58,6 @@ private:
 
     GameState m_GameState;
 
-    struct GameArenaParameters
-    {
-        static int const leftBorderX = 0;
-        static int const leftBorderXOffset = +2;
-        static int const rightBorderX = 305;
-        static int const rightBorderXOffset = +2;
-        static int const bottomY = 610;
-        static int const bottomYOffset = -3;
-        static int const topY = 0;
-        static int const topYOffset = +2;
-
-        static int const MAX_BLOCK_ROWS = 20;
-        static int const MAX_BLOCK_COLUMNS = 10;
-        static int const BLOCK_SQUARE_SIZE = 30;
-    };
-
-    //GameArenaParameters m_GameArena;
-    //GameArenaParameters m_GameArena2;
-
     void InitializeGameplayAreaScene();
     void DrawGameArena();
     void PrepareFirstGameRun();
