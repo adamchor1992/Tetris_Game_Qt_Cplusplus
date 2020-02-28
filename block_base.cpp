@@ -2,14 +2,16 @@
 
 BlockBase::BlockBase(QString shape)
 {
-    m_Shape = shape;
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
+
+    int randomNumber = std::rand();
+
+    m_BlockColor = m_Colors.at(randomNumber % m_Colors.size());
+
     m_CentralSquareX = 5;
     m_CentralSquareY = 1;
 
-    std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
-    m_BlockColor = m_Colors.at(std::rand() % m_Colors.size());
-
-    if(m_Shape == "S")
+    if(shape == "S")
     {
         m_Square1PositionX = m_CentralSquareX - 1;
         m_Square1PositionY = m_CentralSquareY + 1;
@@ -18,7 +20,7 @@ BlockBase::BlockBase(QString shape)
         m_Square3PositionX = m_CentralSquareX + 1;
         m_Square3PositionY = m_CentralSquareY;
     }
-    else if(m_Shape == "Z")
+    else if(shape == "Z")
     {
         m_Square1PositionX = m_CentralSquareX - 1;
         m_Square1PositionY = m_CentralSquareY;
@@ -27,7 +29,7 @@ BlockBase::BlockBase(QString shape)
         m_Square3PositionX = m_CentralSquareX + 1;
         m_Square3PositionY = m_CentralSquareY + 1;
     }
-    else if(m_Shape == "I")
+    else if(shape == "I")
     {
         m_Square1PositionX = m_CentralSquareX - 1;
         m_Square1PositionY = m_CentralSquareY;
@@ -36,7 +38,7 @@ BlockBase::BlockBase(QString shape)
         m_Square3PositionX = m_CentralSquareX + 2;
         m_Square3PositionY = m_CentralSquareY;
     }
-    else if(m_Shape == "J")
+    else if(shape == "J")
     {
         m_Square1PositionX = m_CentralSquareX - 1;
         m_Square1PositionY = m_CentralSquareY;
@@ -45,7 +47,7 @@ BlockBase::BlockBase(QString shape)
         m_Square3PositionX = m_CentralSquareX + 1;
         m_Square3PositionY = m_CentralSquareY + 1;
     }
-    else if(m_Shape == "L")
+    else if(shape == "L")
     {
         m_Square1PositionX = m_CentralSquareX - 1;
         m_Square1PositionY = m_CentralSquareY + 1;
@@ -54,7 +56,7 @@ BlockBase::BlockBase(QString shape)
         m_Square3PositionX = m_CentralSquareX + 1;
         m_Square3PositionY = m_CentralSquareY;
     }
-    else if(m_Shape == "O")
+    else if(shape == "O")
     {
         m_Square1PositionX = m_CentralSquareX;
         m_Square1PositionY = m_CentralSquareY + 1;
@@ -63,7 +65,7 @@ BlockBase::BlockBase(QString shape)
         m_Square3PositionX = m_CentralSquareX + 1;
         m_Square3PositionY = m_CentralSquareY;
     }
-    else if(m_Shape == "T")
+    else if(shape == "T")
     {
         m_Square1PositionX = m_CentralSquareX - 1;
         m_Square1PositionY = m_CentralSquareY;
@@ -75,10 +77,8 @@ BlockBase::BlockBase(QString shape)
     else
     {
         qDebug() << "UNKNOWN SHAPE, ABORTING";
-        return;
+        assert(false);
     }
-
-    //pozycje są napisane w intach
 
     m_BlockCoordinates.append(m_Square1PositionX);
     m_BlockCoordinates.append(m_Square1PositionY);

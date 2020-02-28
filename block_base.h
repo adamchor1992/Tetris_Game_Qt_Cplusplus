@@ -21,8 +21,6 @@ public:
     virtual void RotateBlock() = 0;
 
 protected:
-    QString m_Shape;
-
     int m_CentralSquareX = 0;
     int m_CentralSquareY = 0;
     int m_Square1PositionX = 0;
@@ -33,10 +31,10 @@ protected:
     int m_Square3PositionY = 0;
 
     QVector<int> m_BlockCoordinates;
-    QVector<QGraphicsRectItem*> m_BlockGraphicsItemsPtrs;
 
 private:
-    QVector<QGraphicsRectItem*> m_GraphicalPointersVector;
+    /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/
+    QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItems;
     bool m_BlockIsPresentOnScreen;
     QVector<QColor> m_Colors = {Qt::red, Qt::blue, Qt::white, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
     QColor m_BlockColor;

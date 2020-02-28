@@ -40,7 +40,7 @@ public:
 private:
     Ui::GameWindow *ui = nullptr;
     QGraphicsScene m_Scene;
-    QTimer m_DropTimer;
+    QTimer m_GameTickTimer;
     QGraphicsRectItem* m_pSquare = nullptr;
     Drawer* m_pDrawer = nullptr;
     BlockBase* m_pCurrentBlock = nullptr;
@@ -61,9 +61,9 @@ private:
     void InitializeGameplayAreaScene();
     void DrawGameArena();
     void PrepareFirstGameRun();
+    void GenerateInitialBlock();
     void DrawAllPossibleSquares();
-    void GenerateBlock(QString shape = "0"); //if no argument, then generate random shape
-    void GenerateRandomBlock();
+    BlockBase* GenerateBlock(QString shape = "random");
     void PlaceBlock();
     void FindAndDeleteFullRows();
     void RedrawBlock();

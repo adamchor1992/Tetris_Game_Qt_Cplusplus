@@ -47,7 +47,5 @@ private:
     bool CheckCoordinatesValidity(int x, int y);
     bool CheckCoordinatesValidity(QVector<int> blockCoordinates);
     void DrawSquare(int x, int y, QBrush brush);
-    void DeleteSquare(int x, int y);
-    void DeleteBlock(QVector<int> blockCoordinates);
     void DrawAllPossibleSquares();
 };

@@ -1,5 +1,6 @@
 #include "game_window.h"
 #include "ui_game_window.h"
+#include <map>
 
 GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::GameWindow)
 {
@@ -39,84 +40,71 @@ void GameWindow::PrepareFirstGameRun()
     ui->m_ScoreDisplayLabel->setFont(font);
     ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
 
-    connect(&m_DropTimer, &QTimer::timeout, this, &GameWindow::GameTick);
+    connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTick);
 }
 
-void GameWindow::GenerateBlock(QString shape)
+void GameWindow::GenerateInitialBlock()
 {
-    if(shape == nullptr)
+    if(m_pCurrentBlock == nullptr)
     {
-        //random shape
+        m_pCurrentBlock = GenerateBlock();
+
+        m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
     }
-    else if(shape == "S")
+}
+
+BlockBase* GameWindow::GenerateBlock(QString shape)
+{
+    delete m_pCurrentBlock; //free previously allocated memory
+
+    BlockBase* block = nullptr;
+
+    if(shape == "random")
     {
-        m_pCurrentBlock = new SBlock;
+        static std::map<int, QString> numberToShapeMapping = { {0,"S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
+
+        std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
+
+        int randomNumber = std::rand();
+
+        shape = numberToShapeMapping.at(randomNumber % static_cast<int>(numberToShapeMapping.size()));
+    }
+
+    if(shape == "S")
+    {
+        block = new SBlock;
     }
     else if(shape == "Z")
     {
-        m_pCurrentBlock = new ZBlock;
+        block = new ZBlock;
     }
     else if(shape == "I")
     {
-        m_pCurrentBlock = new IBlock;
+        block = new IBlock;
     }
     else if(shape == "J")
     {
-        m_pCurrentBlock = new JBlock;
+        block = new JBlock;
     }
     else if(shape == "L")
     {
-        m_pCurrentBlock = new LBlock;
+        block = new LBlock;
     }
     else if(shape == "O")
     {
-        m_pCurrentBlock = new OBlock;
+        block = new OBlock;
     }
     else if(shape == "T")
     {
-        m_pCurrentBlock = new TBlock;
+        block = new TBlock;
     }
     else
     {
         qDebug() << "UNKNOWN SHAPE TO BE GENERATED, ABORTING";
-        return;
-    }
-}
-
-void GameWindow::GenerateRandomBlock()
-{
-    std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
-
-    delete m_pCurrentBlock; //free previously allocated memory
-
-    switch(std::rand() % 7) //choose random shape from 0 to 6
-    {
-    case 0:
-        m_pCurrentBlock = new OBlock;
-        break;
-    case 1:
-        m_pCurrentBlock = new JBlock;
-        break;
-    case 2:
-        m_pCurrentBlock = new LBlock;
-        break;
-    case 3:
-        m_pCurrentBlock = new SBlock;
-        break;
-    case 4:
-        m_pCurrentBlock = new ZBlock;
-        break;
-    case 5:
-        m_pCurrentBlock = new TBlock;
-        break;
-    case 6:
-        m_pCurrentBlock = new IBlock;
-        break;
-    default:
-        qDebug() << "BAD RANDOM NUMBER";
+        assert(false);
     }
 
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    return block;
 }
 
 void GameWindow::RedrawBlock()
@@ -142,20 +130,24 @@ void GameWindow::EndGame()
     //ui->statusBar->showMessage("GAME OVER, FINAL SCORE: " + QString::number(m_Score), 4000);
     //ui->statusBar->showMessage("PRESS SPACE TO RESTART");
 
-    m_DropTimer.stop();
+    m_GameTickTimer.stop();
 
     m_GameState = GameState::GameStopped;
 }
 
 void GameWindow::StartGame()
 {
-    m_DropTimer.start(140);
+    GenerateInitialBlock();
+
+    m_GameTickTimer.start(140);
 
     m_GameState = GameState::GameRunning;
 }
 
 void GameWindow::RestartGame()
 {
+    GenerateInitialBlock();
+
     m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
     delete m_pPlacedBlocks;
     m_Scene.clear();
@@ -166,20 +158,13 @@ void GameWindow::RestartGame()
     m_Score = 0;
     ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
 
-    m_DropTimer.start();
+    m_GameTickTimer.start();
     m_GameState = GameState::GameRunning;
 }
 
 void GameWindow::GameTick()
 {
-    //create initial block
-    if(m_pCurrentBlock == nullptr)
-    {
-        GenerateRandomBlock();
-        return;
-    }
-
-    //check if there is something under any of block square
+    /*Check if there is something under any of block square*/
     if(m_pCurrentBlock->IsSquaresUnderBlock(m_pPlacedBlocks))
     {
         //place block
@@ -188,7 +173,7 @@ void GameWindow::GameTick()
         //clear current block
         m_pCurrentBlock = nullptr;
 
-        int howManyFullRows = 0;
+        int fullRowsCount = 0;
 
         //look for full rows and delete them
         while(m_pPlacedBlocks->FindFullRows() != 0)
@@ -196,10 +181,10 @@ void GameWindow::GameTick()
             int fullRow = m_pPlacedBlocks->FindFullRows();
             m_pPlacedBlocks->DeleteRow(fullRow);
             m_pPlacedBlocks->DropRowsAbove(fullRow);
-            ++howManyFullRows;
+            ++fullRowsCount;
         }
 
-        switch(howManyFullRows)
+        switch(fullRowsCount)
         {
         case 0:
             qDebug() << "NO FULL ROWS";
@@ -234,7 +219,9 @@ void GameWindow::GameTick()
     //generate new block and return immediately so it is not lowered just after creation!
     if(m_pCurrentBlock == nullptr)
     {
-        GenerateRandomBlock();
+        m_pCurrentBlock = GenerateBlock();
+
+        m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 
         QVector<int> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
@@ -310,13 +297,13 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         if(m_GameState == GameState::GameRunning)
         {
             qDebug() << "Pause";
-            m_DropTimer.stop();
+            m_GameTickTimer.stop();
             m_GameState = GameState::GamePaused;
         }
         else if(m_GameState == GameState::GamePaused)
         {
             qDebug() << "Unpause";
-            m_DropTimer.start();
+            m_GameTickTimer.start();
             m_GameState = GameState::GameRunning;
         }
         break;

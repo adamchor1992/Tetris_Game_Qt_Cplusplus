@@ -170,22 +170,6 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QCo
     return squaresGraphicPointers;
 }
 
-void Drawer::DeleteBlock(QVector<int> blockCoordinates)
-{
-    if(CheckCoordinatesValidity(blockCoordinates))
-    {
-        for(int i=0 ; i<8; i=i+2)
-        {
-            m_Scene.addRect((blockCoordinates.at(i)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                            (blockCoordinates.at(i+1)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                            GameArenaParameters::BLOCK_SQUARE_SIZE,
-                            GameArenaParameters::BLOCK_SQUARE_SIZE,
-                            m_BlackPen,
-                            m_BlackBrush);
-        }
-    }
-}
-
 void Drawer::DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
 {
     for(QGraphicsRectItem *item : blockRectGraphicPointers)
