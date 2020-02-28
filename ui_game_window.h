@@ -14,25 +14,23 @@
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_MainWindow
+class Ui_GameWindow
 {
 public:
     QWidget *centralWidget;
-    QGraphicsView *graphicsView;
+    QGraphicsView *m_GraphicsView;
     QLabel *m_ScoreDisplayLabel;
-    QMenuBar *menuBar;
 
-    void setupUi(QMainWindow *MainWindow)
+    void setupUi(QMainWindow *GameWindow)
     {
-        if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(350, 680);
-        MainWindow->setMinimumSize(QSize(350, 680));
+        if (GameWindow->objectName().isEmpty())
+            GameWindow->setObjectName(QString::fromUtf8("GameWindow"));
+        GameWindow->resize(350, 700);
+        GameWindow->setMinimumSize(QSize(350, 680));
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -100,45 +98,45 @@ public:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
 #endif
-        MainWindow->setPalette(palette);
-        centralWidget = new QWidget(MainWindow);
+        GameWindow->setPalette(palette);
+        centralWidget = new QWidget(GameWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        graphicsView = new QGraphicsView(centralWidget);
-        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(23, 5, 304, 587));
+        m_GraphicsView = new QGraphicsView(centralWidget);
+        m_GraphicsView->setObjectName(QString::fromUtf8("m_GraphicsView"));
+        m_GraphicsView->setGeometry(QRect(20, 20, 310, 610));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(graphicsView->sizePolicy().hasHeightForWidth());
-        graphicsView->setSizePolicy(sizePolicy);
-        graphicsView->setMinimumSize(QSize(304, 587));
-        graphicsView->setMaximumSize(QSize(304, 587));
-        graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        sizePolicy.setHeightForWidth(m_GraphicsView->sizePolicy().hasHeightForWidth());
+        m_GraphicsView->setSizePolicy(sizePolicy);
+        m_GraphicsView->setMinimumSize(QSize(310, 610));
+        m_GraphicsView->setMaximumSize(QSize(1000, 1000));
+        m_GraphicsView->setFrameShape(QFrame::NoFrame);
+        m_GraphicsView->setFrameShadow(QFrame::Sunken);
+        m_GraphicsView->setLineWidth(0);
+        m_GraphicsView->setMidLineWidth(0);
+        m_GraphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        m_GraphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         m_ScoreDisplayLabel = new QLabel(centralWidget);
         m_ScoreDisplayLabel->setObjectName(QString::fromUtf8("m_ScoreDisplayLabel"));
-        m_ScoreDisplayLabel->setGeometry(QRect(30, 590, 151, 41));
-        MainWindow->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 350, 26));
-        MainWindow->setMenuBar(menuBar);
+        m_ScoreDisplayLabel->setGeometry(QRect(10, 630, 311, 41));
+        GameWindow->setCentralWidget(centralWidget);
 
-        retranslateUi(MainWindow);
+        retranslateUi(GameWindow);
 
-        QMetaObject::connectSlotsByName(MainWindow);
+        QMetaObject::connectSlotsByName(GameWindow);
     } // setupUi
 
-    void retranslateUi(QMainWindow *MainWindow)
+    void retranslateUi(QMainWindow *GameWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        m_ScoreDisplayLabel->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
+        GameWindow->setWindowTitle(QCoreApplication::translate("GameWindow", "MainWindow", nullptr));
+        m_ScoreDisplayLabel->setText(QCoreApplication::translate("GameWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class MainWindow: public Ui_MainWindow {};
+    class GameWindow: public Ui_GameWindow {};
 } // namespace Ui
 
 QT_END_NAMESPACE

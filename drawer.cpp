@@ -108,9 +108,9 @@ void Drawer::DrawPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
     QPen sideWallsPen(whiteBrush, 6);
     QPen bottomWallPen(whiteBrush, 5);
 
-    m_pScene->addLine(3,0,3,585,sideWallsPen);
-    m_pScene->addLine(299,0,299,585,sideWallsPen);
-    m_pScene->addLine(3,582,298,582,bottomWallPen);
+    //m_pScene->addLine(3,0,3,585,sideWallsPen);
+    //m_pScene->addLine(299,0,299,585,sideWallsPen);
+    //m_pScene->addLine(3,582,298,582,bottomWallPen);
 
     for(auto item : p_PlacedBlocks->m_PlacedBlocksArray.keys()) //item is key
     {
