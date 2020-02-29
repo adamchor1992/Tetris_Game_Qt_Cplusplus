@@ -16,7 +16,8 @@ public:
     explicit Drawer(QGraphicsScene& pScene);
     void DrawGameArena();
     QVector<QGraphicsRectItem*> DrawBlock(QVector<int> blockCoordinates, QColor randomColor);
-    void DrawPlacedBlocks(PlacedBlocks const* p_PlacedBlocks);
+    void DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
+    void RemoveAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
     void DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
 
 private:
@@ -44,8 +45,9 @@ private:
         static int const BLOCK_SQUARE_SIZE = 30;
     };
 
-    bool CheckCoordinatesValidity(int x, int y);
-    bool CheckCoordinatesValidity(QVector<int> blockCoordinates);
     void DrawSquare(int x, int y, QBrush brush);
+    void DeletePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks);
     void DrawAllPossibleSquares();
+    bool ValidateCoordinates(int x, int y);
+    bool ValidateCoordinates(QVector<int> blockCoordinates);
 };

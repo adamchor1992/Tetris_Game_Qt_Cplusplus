@@ -109,9 +109,16 @@ BlockBase* GameWindow::GenerateBlock(QString shape)
     return block;
 }
 
-void GameWindow::RedrawBlock()
+void GameWindow::RedrawMovedBlock()
 {
     m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
+    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+}
+
+void GameWindow::RedrawDroppedBlock()
+{
+    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
+    m_pCurrentBlock->DropBlockCoordinates();
     m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
 }
 
@@ -149,21 +156,21 @@ void GameWindow::StartGame()
 
 void GameWindow::RestartGame()
 {
-    GenerateInitialBlock();
+    //    GenerateInitialBlock();
 
-    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
-    delete m_pPlacedBlocks;
-    m_Scene.clear();
+    //    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
+    //    delete m_pPlacedBlocks;
+    //    m_Scene.clear();
 
-    m_pPlacedBlocks = new PlacedBlocks();
-    m_pDrawer->DrawPlacedBlocks(m_pPlacedBlocks);
+    //    m_pPlacedBlocks = new PlacedBlocks();
+    //    m_pDrawer->DrawAllPlacedBlocks(*m_pPlacedBlocks);
 
-    SetScore(0);
+    //    SetScore(0);
 
-    m_pUi->m_InfoDisplayLabel->hide();
+    //    m_pUi->m_InfoDisplayLabel->hide();
 
-    m_GameTickTimer.start();
-    m_GameState = GameState::GameRunning;
+    //    m_GameTickTimer.start();
+    //    m_GameState = GameState::GameRunning;
 }
 
 void GameWindow::GameTick()
@@ -214,7 +221,7 @@ void GameWindow::GameTick()
         }
 
         //repaint all already placed blocks
-        m_pDrawer->DrawPlacedBlocks(m_pPlacedBlocks);
+        m_pDrawer->DrawAllPlacedBlocks(*m_pPlacedBlocks);
 
         UpdateScoreLabel();
     }
@@ -231,7 +238,8 @@ void GameWindow::GameTick()
         for(int i=0; i<blockCoordinates.size(); i=i+2)
         {
             QPair<int,int> coordinatesPair(blockCoordinates.at(i),blockCoordinates.at(i+1));
-            if(m_pPlacedBlocks->getPlacedBlocksMap().value(coordinatesPair) !=nullptr)
+
+            if(m_pPlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
             {
                 EndGame();
             }
@@ -240,9 +248,7 @@ void GameWindow::GameTick()
         return;
     }
 
-    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
-    m_pCurrentBlock->DropBlockCoordinates();
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    RedrawDroppedBlock();
 }
 
 GameWindow::~GameWindow()
@@ -263,7 +269,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             if(!(m_pCurrentBlock->IsSquaresLeftOfBlock(m_pPlacedBlocks)))
             {
                 m_pCurrentBlock->MoveBlock(Direction::left);
-                RedrawBlock();
+                RedrawMovedBlock();
             }
         }
         break;
@@ -275,7 +281,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             if(!(m_pCurrentBlock->IsSquaresRightOfBlock(m_pPlacedBlocks)))
             {
                 m_pCurrentBlock->MoveBlock(Direction::right);
-                RedrawBlock();
+                RedrawMovedBlock();
             }
         }
         break;

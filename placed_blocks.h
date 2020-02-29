@@ -16,7 +16,7 @@ public:
     void DeleteRow(int rowNumber);
     int FindFullRow() const;
     void DropRowsAbove(int deletedRow);
-    QMap<QPair<int, int>, QGraphicsRectItem*> const& getPlacedBlocksMap() const {return m_PlacedBlocksMap;}
+    QMap<QPair<int, int>, QGraphicsRectItem*> const& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
 
 private:
     /*Map storing QGraphicsRectItem representing every square block*/

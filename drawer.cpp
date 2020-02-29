@@ -1,4 +1,4 @@
-#include "Drawer.h"
+#include "drawer.h"
 
 Drawer::Drawer(QGraphicsScene& scene) : m_Scene(scene)
 {
@@ -37,85 +37,9 @@ void Drawer::DrawGameArena()
                     wallPen);
 }
 
-bool Drawer::CheckCoordinatesValidity(int x, int y)
-{
-    try
-    {
-        if(x < 1 || x > 10)
-        {
-            throw 1;
-        }
-        if(y < 1 || y > 20)
-        {
-            throw 2;
-        }
-    }
-    catch(int exception)
-    {
-        switch(exception)
-        {
-        case 1:
-            qDebug() << "Wrong x coordinate";
-            return false;
-        case 2:
-            qDebug() << "Wrong y coordinate";
-            return false;
-        default:
-            qDebug() << "Unknown exception in CheckCoordinatesValidity method";
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool Drawer::CheckCoordinatesValidity(QVector<int> blockCoordinates)
-{
-    if(blockCoordinates.size() != 8)
-    {
-        qDebug() << "Bad block coordinates, it should be 4 pairs of values";
-        return false;
-    }
-
-    for(int i=0; i<4; i=i+2)
-    {
-        int x = blockCoordinates.at(i);
-        int y = blockCoordinates.at(i+1);
-
-        try
-        {
-            if(x < 1 || x > 10)
-            {
-                throw 1;
-            }
-            if(y < 1 || y > 20)
-            {
-                throw 2;
-            }
-        }
-        catch(int exception)
-        {
-            switch(exception)
-            {
-            case 1:
-                qDebug() << "Wrong x coordinate";
-                return false;
-            case 2:
-                qDebug() << "Wrong y coordinate";
-                return false;
-            default:
-                qDebug() << "Unknown exception in CheckCoordinatesValidity method";
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
 void Drawer::DrawSquare(int x, int y, QBrush brush)
 {
-    if(CheckCoordinatesValidity(x,y))
+    if(ValidateCoordinates(x,y))
     {
         m_Scene.addRect((x-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                         (y-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
@@ -126,28 +50,6 @@ void Drawer::DrawSquare(int x, int y, QBrush brush)
     }
 }
 
-void Drawer::DrawPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
-{
-    m_Scene.clear();
-
-    QBrush whiteBrush(Qt::white);
-    QPen sideWallsPen(whiteBrush, 6);
-    QPen bottomWallPen(whiteBrush, 5);
-
-    DrawGameArena();
-
-    for(auto item : p_PlacedBlocks->getPlacedBlocksMap().keys()) //item is key
-    {
-        if(p_PlacedBlocks->getPlacedBlocksMap().value(item) != nullptr)
-        {
-            int x = item.first;
-            int y = item.second;
-
-            DrawSquare(x, y, Qt::white);
-        }
-    }
-}
-
 QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QColor randomColor)
 {
     QVector<QGraphicsRectItem*> squaresGraphicPointers;
@@ -155,7 +57,7 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QCo
     QPen randomColorPen(randomColor);
     QBrush randomColorBrush(randomColor);
 
-    if(CheckCoordinatesValidity(blockCoordinates))
+    if(ValidateCoordinates(blockCoordinates))
     {
         for(int i=0 ; i<8; i=i+2)
         {
@@ -167,7 +69,25 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QCo
                                                           randomColorBrush));
         }
     }
+
     return squaresGraphicPointers;
+}
+
+void Drawer::DeletePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks)
+{
+    if(ValidateCoordinates(x,y))
+    {
+        QPair<int, int> coordinatesPair;
+
+        if(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+        {
+            m_Scene.removeItem(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair));
+        }
+        else
+        {
+            assert(false);
+        }
+    }
 }
 
 void Drawer::DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
@@ -175,6 +95,24 @@ void Drawer::DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
     for(QGraphicsRectItem *item : blockRectGraphicPointers)
     {
         m_Scene.removeItem(item);
+    }
+}
+
+void Drawer::DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks)
+{
+    m_Scene.clear();
+
+    DrawGameArena();
+
+    for(auto item : p_PlacedBlocks.GetPlacedBlocksMap().keys()) //item is key
+    {
+        if(p_PlacedBlocks.GetPlacedBlocksMap().value(item) != nullptr)
+        {
+            int x = item.first;
+            int y = item.second;
+
+            DrawSquare(x, y, Qt::white);
+        }
     }
 }
 
@@ -232,4 +170,55 @@ void Drawer::DrawAllPossibleSquares()
             }
         }
     }
+}
+
+bool Drawer::ValidateCoordinates(int x, int y)
+{
+    if(x < 1 || x > GameArenaParameters::MAX_BLOCK_COLUMNS)
+    {
+        qDebug("Wrong X coordinate");
+
+        return false;
+    }
+
+    if(y < 1 || y > GameArenaParameters::MAX_BLOCK_ROWS)
+    {
+        qDebug("Wrong Y coordinate");
+
+        return false;
+    }
+
+    return true;
+}
+
+bool Drawer::ValidateCoordinates(QVector<int> blockCoordinates)
+{
+    if(blockCoordinates.size() != 8)
+    {
+        assert(false);
+    }
+
+    /*Even coordinates are columns*/
+    if(blockCoordinates.at(0) > GameArenaParameters::MAX_BLOCK_COLUMNS ||
+            blockCoordinates.at(2) > GameArenaParameters::MAX_BLOCK_COLUMNS ||
+            blockCoordinates.at(4) > GameArenaParameters::MAX_BLOCK_COLUMNS ||
+            blockCoordinates.at(6) > GameArenaParameters::MAX_BLOCK_COLUMNS )
+    {
+        qDebug() << "Wrong X coordinate";
+
+        assert(false);
+    }
+
+    /*Odd coordinates are rows*/
+    if(blockCoordinates.at(1) > GameArenaParameters::MAX_BLOCK_ROWS ||
+            blockCoordinates.at(3) > GameArenaParameters::MAX_BLOCK_ROWS ||
+            blockCoordinates.at(5) > GameArenaParameters::MAX_BLOCK_ROWS ||
+            blockCoordinates.at(7) > GameArenaParameters::MAX_BLOCK_ROWS )
+    {
+        qDebug() << "Wrong Y coordinate";
+
+        assert(false);
+    }
+
+    return true;
 }

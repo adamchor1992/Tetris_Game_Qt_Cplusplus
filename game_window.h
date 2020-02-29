@@ -67,7 +67,8 @@ private:
     BlockBase* GenerateBlock(QString shape = "random");
     void PlaceBlock();
     void FindAndDeleteFullRows();
-    void RedrawBlock();
+    void RedrawMovedBlock();
+    void RedrawDroppedBlock();
     void PlaceCurrentBlock();
     void EndGame();
     void StartGame();

@@ -156,7 +156,7 @@ bool BlockBase::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
         QPair<int,int> leftOfBlockCoordinatesPair(leftBlockX,leftBlockY);
 
         //check if there is any block to the left of current block
-        if(p_PlacedBlocks->getPlacedBlocksMap().value(leftOfBlockCoordinatesPair) != nullptr)
+        if(p_PlacedBlocks->GetPlacedBlocksMap().value(leftOfBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -183,7 +183,7 @@ bool BlockBase::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
         QPair<int,int> rightOfBlockCoordinatesPair(rightBlockX,rightBlockY);
 
         //check if there is any block to the right of current block
-        if(p_PlacedBlocks->getPlacedBlocksMap().value(rightOfBlockCoordinatesPair) != nullptr)
+        if(p_PlacedBlocks->GetPlacedBlocksMap().value(rightOfBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -210,7 +210,7 @@ bool BlockBase::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
         QPair<int,int> belowBlockCoordinatesPair(belowBlockX,belowBlockY);
 
         //check if there is any block below current block
-        if(p_PlacedBlocks->getPlacedBlocksMap().value(belowBlockCoordinatesPair) != nullptr)
+        if(p_PlacedBlocks->GetPlacedBlocksMap().value(belowBlockCoordinatesPair) != nullptr)
         {
             return true;
         }

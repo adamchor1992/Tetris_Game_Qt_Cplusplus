@@ -131,14 +131,14 @@ bool PlacedBlocks::ValidateCoordinates(int x, int y)
     {
         qDebug("Wrong X coordinate");
 
-        return false;
+        assert(false);
     }
 
     if(y < 1 || y > ROW_COUNT)
     {
         qDebug("Wrong Y coordinate");
 
-        return false;
+        assert(false);
     }
 
     return true;
