@@ -180,9 +180,9 @@ void GameWindow::GameTick()
         int fullRowsCount = 0;
 
         //look for full rows and delete them
-        while(m_pPlacedBlocks->FindFullRows() != 0)
+        while(m_pPlacedBlocks->FindFullRow() != 0)
         {
-            int fullRow = m_pPlacedBlocks->FindFullRows();
+            int fullRow = m_pPlacedBlocks->FindFullRow();
             m_pPlacedBlocks->DeleteRow(fullRow);
             m_pPlacedBlocks->DropRowsAbove(fullRow);
             ++fullRowsCount;
@@ -231,7 +231,7 @@ void GameWindow::GameTick()
         for(int i=0; i<blockCoordinates.size(); i=i+2)
         {
             QPair<int,int> coordinatesPair(blockCoordinates.at(i),blockCoordinates.at(i+1));
-            if(m_pPlacedBlocks->getPlacedBlocksArray().value(coordinatesPair) !=nullptr)
+            if(m_pPlacedBlocks->getPlacedBlocksMap().value(coordinatesPair) !=nullptr)
             {
                 EndGame();
             }

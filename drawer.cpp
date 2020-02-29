@@ -136,9 +136,9 @@ void Drawer::DrawPlacedBlocks(PlacedBlocks const* p_PlacedBlocks)
 
     DrawGameArena();
 
-    for(auto item : p_PlacedBlocks->getPlacedBlocksArray().keys()) //item is key
+    for(auto item : p_PlacedBlocks->getPlacedBlocksMap().keys()) //item is key
     {
-        if(p_PlacedBlocks->getPlacedBlocksArray().value(item) != nullptr)
+        if(p_PlacedBlocks->getPlacedBlocksMap().value(item) != nullptr)
         {
             int x = item.first;
             int y = item.second;
