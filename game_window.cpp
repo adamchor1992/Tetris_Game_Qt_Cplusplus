@@ -2,9 +2,9 @@
 #include "ui_game_window.h"
 #include <map>
 
-GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::GameWindow)
+GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::GameWindow)
 {
-    ui->setupUi(this);
+    m_pUi->setupUi(this);
 
     m_pDrawer = new Drawer(m_Scene);
     m_pPlacedBlocks = new PlacedBlocks();
@@ -22,11 +22,11 @@ void GameWindow::InitializeGameplayAreaScene()
 
     int const sceneX = 0;
     int const sceneY = 0;
-    int const sceneWidth = ui->m_GraphicsView->geometry().width();
-    int const sceneHeight = ui->m_GraphicsView->geometry().height();
+    int const sceneWidth = m_pUi->m_GraphicsView->geometry().width();
+    int const sceneHeight = m_pUi->m_GraphicsView->geometry().height();
 
-    ui->m_GraphicsView->setScene(&m_Scene);
-    ui->m_GraphicsView->setSceneRect(sceneX, sceneY, sceneWidth, sceneHeight);
+    m_pUi->m_GraphicsView->setScene(&m_Scene);
+    m_pUi->m_GraphicsView->setSceneRect(sceneX, sceneY, sceneWidth, sceneHeight);
 }
 
 void GameWindow::DrawGameArena()
@@ -36,9 +36,11 @@ void GameWindow::DrawGameArena()
 
 void GameWindow::PrepareFirstGameRun()
 {
-    QFont font( "Arial", 16, QFont::Bold);
-    ui->m_ScoreDisplayLabel->setFont(font);
-    ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
+    m_Score = 0;
+
+    UpdateScoreLabel();
+
+    SetInformationLabel("PRESS SPACE TO START");
 
     connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTick);
 }
@@ -127,8 +129,7 @@ void GameWindow::EndGame()
 {
     qDebug() << "GAME OVER";
 
-    //ui->statusBar->showMessage("GAME OVER, FINAL SCORE: " + QString::number(m_Score), 4000);
-    //ui->statusBar->showMessage("PRESS SPACE TO RESTART");
+    SetInformationLabel("GAME OVER\nPRESS SPACE TO RESTART");
 
     m_GameTickTimer.stop();
 
@@ -140,6 +141,8 @@ void GameWindow::StartGame()
     GenerateInitialBlock();
 
     m_GameTickTimer.start(140);
+
+    m_pUi->m_InfoDisplayLabel->hide();
 
     m_GameState = GameState::GameRunning;
 }
@@ -155,8 +158,9 @@ void GameWindow::RestartGame()
     m_pPlacedBlocks = new PlacedBlocks();
     m_pDrawer->DrawPlacedBlocks(m_pPlacedBlocks);
 
-    m_Score = 0;
-    ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
+    SetScore(0);
+
+    m_pUi->m_InfoDisplayLabel->hide();
 
     m_GameTickTimer.start();
     m_GameState = GameState::GameRunning;
@@ -191,19 +195,19 @@ void GameWindow::GameTick()
             break;
         case 1:
             qDebug() << "1 FULL ROW, + 1 point";
-            m_Score+=1;
+            IncreaseScore(1);
             break;
         case 2:
-            qDebug() << "2 FULL ROWS, + 2 points";
-            m_Score+=3;
+            qDebug() << "2 FULL ROWS, + 3 points";
+            IncreaseScore(3);
             break;
         case 3:
-            qDebug() << "3 FULL ROWS, + 3 points";
-            m_Score+=7;
+            qDebug() << "3 FULL ROWS, + 7 points";
+            IncreaseScore(7);
             break;
         case 4:
-            qDebug() << "4 FULL ROWS, + 4 points";
-            m_Score+=10;
+            qDebug() << "4 FULL ROWS, + 10 points";
+            IncreaseScore(10);
             break;
         default:
             qDebug() << "WRONG FULL ROWS NUMBER";
@@ -212,8 +216,7 @@ void GameWindow::GameTick()
         //repaint all already placed blocks
         m_pDrawer->DrawPlacedBlocks(m_pPlacedBlocks);
 
-        //update m_Score label
-        ui->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
+        UpdateScoreLabel();
     }
 
     //generate new block and return immediately so it is not lowered just after creation!
@@ -244,7 +247,7 @@ void GameWindow::GameTick()
 
 GameWindow::~GameWindow()
 {
-    delete ui;
+    delete m_pUi;
     delete m_pDrawer;
     delete m_pPlacedBlocks;
 }
@@ -324,4 +327,15 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     default:
         qDebug() << "Unknown key";
     }
+}
+
+void GameWindow::UpdateScoreLabel()
+{
+    m_pUi->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
+}
+
+void GameWindow::SetInformationLabel(QString text)
+{
+    m_pUi->m_InfoDisplayLabel->setText(text);
+    m_pUi->m_InfoDisplayLabel->show();
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'game_window.ui'
 **
-** Created by: Qt User Interface Compiler version 5.13.1
+** Created by: Qt User Interface Compiler version 5.13.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -24,12 +24,13 @@ public:
     QWidget *centralWidget;
     QGraphicsView *m_GraphicsView;
     QLabel *m_ScoreDisplayLabel;
+    QLabel *m_InfoDisplayLabel;
 
     void setupUi(QMainWindow *GameWindow)
     {
         if (GameWindow->objectName().isEmpty())
             GameWindow->setObjectName(QString::fromUtf8("GameWindow"));
-        GameWindow->resize(350, 700);
+        GameWindow->resize(350, 730);
         GameWindow->setMinimumSize(QSize(350, 680));
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
@@ -119,7 +120,24 @@ public:
         m_GraphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         m_ScoreDisplayLabel = new QLabel(centralWidget);
         m_ScoreDisplayLabel->setObjectName(QString::fromUtf8("m_ScoreDisplayLabel"));
-        m_ScoreDisplayLabel->setGeometry(QRect(10, 630, 311, 41));
+        m_ScoreDisplayLabel->setGeometry(QRect(20, 630, 310, 40));
+        QFont font;
+        font.setFamily(QString::fromUtf8("Arial"));
+        font.setPointSize(16);
+        font.setBold(true);
+        font.setWeight(75);
+        m_ScoreDisplayLabel->setFont(font);
+        m_ScoreDisplayLabel->setAlignment(Qt::AlignCenter);
+        m_InfoDisplayLabel = new QLabel(centralWidget);
+        m_InfoDisplayLabel->setObjectName(QString::fromUtf8("m_InfoDisplayLabel"));
+        m_InfoDisplayLabel->setGeometry(QRect(20, 680, 310, 40));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("Arial"));
+        font1.setPointSize(12);
+        font1.setBold(true);
+        font1.setWeight(75);
+        m_InfoDisplayLabel->setFont(font1);
+        m_InfoDisplayLabel->setAlignment(Qt::AlignCenter);
         GameWindow->setCentralWidget(centralWidget);
 
         retranslateUi(GameWindow);
@@ -130,7 +148,8 @@ public:
     void retranslateUi(QMainWindow *GameWindow)
     {
         GameWindow->setWindowTitle(QCoreApplication::translate("GameWindow", "MainWindow", nullptr));
-        m_ScoreDisplayLabel->setText(QCoreApplication::translate("GameWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
+        m_ScoreDisplayLabel->setText(QCoreApplication::translate("GameWindow", "ScoreLabel", nullptr));
+        m_InfoDisplayLabel->setText(QCoreApplication::translate("GameWindow", "InfoLabel", nullptr));
     } // retranslateUi
 
 };

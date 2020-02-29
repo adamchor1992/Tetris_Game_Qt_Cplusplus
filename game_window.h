@@ -38,7 +38,7 @@ public:
     ~GameWindow() override;
 
 private:
-    Ui::GameWindow *ui = nullptr;
+    Ui::GameWindow* m_pUi = nullptr;
     QGraphicsScene m_Scene;
     QTimer m_GameTickTimer;
     QGraphicsRectItem* m_pSquare = nullptr;
@@ -46,7 +46,8 @@ private:
     BlockBase* m_pCurrentBlock = nullptr;
     QVector<QGraphicsRectItem*> m_CurrentBlockGraphicsItemsPtrs;
     PlacedBlocks* m_pPlacedBlocks = nullptr;
-    int m_Score = 0;
+
+    int m_Score;
 
     enum class GameState
     {
@@ -71,6 +72,10 @@ private:
     void EndGame();
     void StartGame();
     void RestartGame();
+    void SetScore(int score) {m_Score = score;}
+    void IncreaseScore(int score) {m_Score += score;}
+    void UpdateScoreLabel();
+    void SetInformationLabel(QString text);
 
     void keyPressEvent(QKeyEvent *event) override;
 };
