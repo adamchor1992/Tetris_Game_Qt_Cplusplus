@@ -1,6 +1,6 @@
 #include "drawer.h"
 
-Drawer::Drawer(QGraphicsScene& scene) : m_Scene(scene)
+Drawer::Drawer()
 {
     m_BlackPen = QPen(Qt::black);
     m_BlackBrush = QBrush(Qt::black);
@@ -12,25 +12,25 @@ void Drawer::DrawGameArena()
     QPen wallPen(whiteBrush, GameArenaParameters::WALL_THICKNESS);
 
     /*Left wall*/
-    m_Scene.addLine(GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
+    m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
                     GameArenaParameters::BOTTOM_Y,
                     GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
                     GameArenaParameters::TOP_Y,
                     wallPen);
     /*Right wall*/
-    m_Scene.addLine(GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
+    m_pScene->addLine(GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
                     GameArenaParameters::BOTTOM_Y,
                     GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
                     GameArenaParameters::TOP_Y,
                     wallPen);
     /*Bottom wall*/
-    m_Scene.addLine(GameArenaParameters::LEFT_BORDER_X,
+    m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
                     GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
                     GameArenaParameters::RIGHT_BORDER_X,
                     GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
                     wallPen);
     /*Top wall*/
-    m_Scene.addLine(GameArenaParameters::LEFT_BORDER_X,
+    m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
                     GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
                     GameArenaParameters::RIGHT_BORDER_X,
                     GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
@@ -41,7 +41,7 @@ void Drawer::DrawSquare(int x, int y, QBrush brush)
 {
     if(ValidateCoordinates(x,y))
     {
-        m_Scene.addRect((x-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+        m_pScene->addRect((x-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                         (y-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                         GameArenaParameters::BLOCK_SQUARE_SIZE,
                         GameArenaParameters::BLOCK_SQUARE_SIZE,
@@ -61,7 +61,7 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QCo
     {
         for(int i=0 ; i<8; i=i+2)
         {
-            squaresGraphicPointers.append(m_Scene.addRect((blockCoordinates.at(i)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+            squaresGraphicPointers.append(m_pScene->addRect((blockCoordinates.at(i)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                                           (blockCoordinates.at(i+1)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                                           GameArenaParameters::BLOCK_SQUARE_SIZE,
                                                           GameArenaParameters::BLOCK_SQUARE_SIZE,
@@ -81,7 +81,7 @@ void Drawer::DeletePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks
 
         if(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
         {
-            m_Scene.removeItem(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair));
+            m_pScene->removeItem(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair));
         }
         else
         {
@@ -94,13 +94,13 @@ void Drawer::DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
 {
     for(QGraphicsRectItem *item : blockRectGraphicPointers)
     {
-        m_Scene.removeItem(item);
+        m_pScene->removeItem(item);
     }
 }
 
 void Drawer::DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks)
 {
-    m_Scene.clear();
+    m_pScene->clear();
 
     DrawGameArena();
 
@@ -130,7 +130,7 @@ void Drawer::DrawAllPossibleSquares()
             {
                 if(row % 2 == 0) /*Different block color every second row*/
                 {
-                    m_Scene.addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
@@ -139,7 +139,7 @@ void Drawer::DrawAllPossibleSquares()
                 }
                 else
                 {
-                    m_Scene.addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
@@ -151,7 +151,7 @@ void Drawer::DrawAllPossibleSquares()
             {
                 if(row % 2 != 0)
                 {
-                    m_Scene.addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
@@ -160,7 +160,7 @@ void Drawer::DrawAllPossibleSquares()
                 }
                 else
                 {
-                    m_Scene.addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,
                                     GameArenaParameters::BLOCK_SQUARE_SIZE,

@@ -138,7 +138,7 @@ void BlockBase::RotateBlock()
     assert(false);
 }
 
-bool BlockBase::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
+bool BlockBase::IsSquaresLeftOfBlock(PlacedBlocks const p_PlacedBlocks)
 {
     for(int i=0; i<m_BlockCoordinates.size(); i=i+2)
     {
@@ -156,7 +156,7 @@ bool BlockBase::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
         QPair<int,int> leftOfBlockCoordinatesPair(leftBlockX,leftBlockY);
 
         //check if there is any block to the left of current block
-        if(p_PlacedBlocks->GetPlacedBlocksMap().value(leftOfBlockCoordinatesPair) != nullptr)
+        if(p_PlacedBlocks.GetPlacedBlocksMap().value(leftOfBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -165,7 +165,7 @@ bool BlockBase::IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks)
     return false;
 }
 
-bool BlockBase::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
+bool BlockBase::IsSquaresRightOfBlock(PlacedBlocks const p_PlacedBlocks)
 {
     for(int i=0; i<m_BlockCoordinates.size(); i=i+2)
     {
@@ -183,7 +183,7 @@ bool BlockBase::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
         QPair<int,int> rightOfBlockCoordinatesPair(rightBlockX,rightBlockY);
 
         //check if there is any block to the right of current block
-        if(p_PlacedBlocks->GetPlacedBlocksMap().value(rightOfBlockCoordinatesPair) != nullptr)
+        if(p_PlacedBlocks.GetPlacedBlocksMap().value(rightOfBlockCoordinatesPair) != nullptr)
         {
             return true;
         }
@@ -192,7 +192,7 @@ bool BlockBase::IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks)
     return false;
 }
 
-bool BlockBase::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
+bool BlockBase::IsSquaresUnderBlock(PlacedBlocks const p_PlacedBlocks)
 {
     for(int i=0; i < m_BlockCoordinates.size(); i=i+2)
     {
@@ -207,10 +207,10 @@ bool BlockBase::IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks)
             return true;
         }
 
-        QPair<int,int> belowBlockCoordinatesPair(belowBlockX,belowBlockY);
+        QPair<int, int> belowBlockCoordinatesPair(belowBlockX,belowBlockY);
 
         //check if there is any block below current block
-        if(p_PlacedBlocks->GetPlacedBlocksMap().value(belowBlockCoordinatesPair) != nullptr)
+        if(p_PlacedBlocks.GetPlacedBlocksMap().value(belowBlockCoordinatesPair) != nullptr)
         {
             return true;
         }

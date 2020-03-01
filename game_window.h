@@ -40,12 +40,14 @@ public:
 private:
     Ui::GameWindow* m_pUi = nullptr;
     QGraphicsScene m_Scene;
+    Drawer m_Drawer;
+    PlacedBlocks m_PlacedBlocks;
+
     QTimer m_GameTickTimer;
     QGraphicsRectItem* m_pSquare = nullptr;
-    Drawer* m_pDrawer = nullptr;
+
     BlockBase* m_pCurrentBlock = nullptr;
-    QVector<QGraphicsRectItem*> m_CurrentBlockGraphicsItemsPtrs;
-    PlacedBlocks* m_pPlacedBlocks = nullptr;
+
 
     int m_Score;
 

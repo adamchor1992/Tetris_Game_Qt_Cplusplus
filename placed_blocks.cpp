@@ -14,6 +14,18 @@ PlacedBlocks::PlacedBlocks()
     qDebug() << "Size of m_PlacedBlocksMap: " << m_PlacedBlocksMap.size();
 }
 
+void PlacedBlocks::ClearPlacedBlocks()
+{
+    /*Initialize m_PlacedBlocksMap with all null pointers*/
+    for(int column=1; column <= COLUMN_COUNT; column++)
+    {
+        for(int row=1; row <= ROW_COUNT; row++)
+        {
+            m_PlacedBlocksMap.insert(QPair<int,int>(column, row), nullptr);
+        }
+    }
+}
+
 void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem)
 {
     if(ValidateCoordinates(x, y))

@@ -12,6 +12,7 @@ class PlacedBlocks
 {
 public:
     explicit PlacedBlocks();
+    void ClearPlacedBlocks();
     void AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem);
     void DeleteRow(int rowNumber);
     int FindFullRow() const;

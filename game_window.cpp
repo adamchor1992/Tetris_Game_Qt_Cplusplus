@@ -6,8 +6,7 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 {
     m_pUi->setupUi(this);
 
-    m_pDrawer = new Drawer(m_Scene);
-    m_pPlacedBlocks = new PlacedBlocks();
+    m_Drawer.SetScene(&m_Scene);
 
     m_GameState = GameState::BeforeFirstRun;
 
@@ -31,7 +30,7 @@ void GameWindow::InitializeGameplayAreaScene()
 
 void GameWindow::DrawGameArena()
 {
-    m_pDrawer->DrawGameArena();
+    m_Drawer.DrawGameArena();
 }
 
 void GameWindow::PrepareFirstGameRun()
@@ -50,8 +49,7 @@ void GameWindow::GenerateInitialBlock()
     if(m_pCurrentBlock == nullptr)
     {
         m_pCurrentBlock = GenerateBlock();
-
-        m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
     }
 }
 
@@ -111,15 +109,15 @@ BlockBase* GameWindow::GenerateBlock(QString shape)
 
 void GameWindow::RedrawMovedBlock()
 {
-    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    m_Drawer.DeleteBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
+    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 }
 
 void GameWindow::RedrawDroppedBlock()
 {
-    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
+    m_Drawer.DeleteBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
     m_pCurrentBlock->DropBlockCoordinates();
-    m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 }
 
 void GameWindow::PlaceCurrentBlock()
@@ -128,7 +126,7 @@ void GameWindow::PlaceCurrentBlock()
 
     for(int i=0, j=0 ; i < blockCoordinates.size(); i=i+2, j++)
     {
-        m_pPlacedBlocks->AddSquare(blockCoordinates.at(i), blockCoordinates.at(i+1), m_CurrentBlockGraphicsItemsPtrs.at(j));
+        m_PlacedBlocks.AddSquare(blockCoordinates.at(i), blockCoordinates.at(i+1), m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers().at(j));
     }
 }
 
@@ -156,27 +154,28 @@ void GameWindow::StartGame()
 
 void GameWindow::RestartGame()
 {
-    //    GenerateInitialBlock();
+    GenerateInitialBlock();
 
-    //    m_pDrawer->DeleteBlock(m_CurrentBlockGraphicsItemsPtrs);
-    //    delete m_pPlacedBlocks;
-    //    m_Scene.clear();
+    m_Drawer.DeleteBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
 
-    //    m_pPlacedBlocks = new PlacedBlocks();
-    //    m_pDrawer->DrawAllPlacedBlocks(*m_pPlacedBlocks);
+    m_Scene.clear();
 
-    //    SetScore(0);
+    m_PlacedBlocks.ClearPlacedBlocks();
 
-    //    m_pUi->m_InfoDisplayLabel->hide();
+    m_Drawer.DrawAllPlacedBlocks(m_PlacedBlocks);
 
-    //    m_GameTickTimer.start();
-    //    m_GameState = GameState::GameRunning;
+    SetScore(0);
+
+    m_pUi->m_InfoDisplayLabel->hide();
+
+    m_GameTickTimer.start();
+    m_GameState = GameState::GameRunning;
 }
 
 void GameWindow::GameTick()
 {
     /*Check if there is something under any of block square*/
-    if(m_pCurrentBlock->IsSquaresUnderBlock(m_pPlacedBlocks))
+    if(m_pCurrentBlock->IsSquaresUnderBlock(m_PlacedBlocks))
     {
         //place block
         PlaceCurrentBlock();
@@ -187,11 +186,11 @@ void GameWindow::GameTick()
         int fullRowsCount = 0;
 
         //look for full rows and delete them
-        while(m_pPlacedBlocks->FindFullRow() != 0)
+        while(m_PlacedBlocks.FindFullRow() != 0)
         {
-            int fullRow = m_pPlacedBlocks->FindFullRow();
-            m_pPlacedBlocks->DeleteRow(fullRow);
-            m_pPlacedBlocks->DropRowsAbove(fullRow);
+            int fullRow = m_PlacedBlocks.FindFullRow();
+            m_PlacedBlocks.DeleteRow(fullRow);
+            m_PlacedBlocks.DropRowsAbove(fullRow);
             ++fullRowsCount;
         }
 
@@ -221,7 +220,7 @@ void GameWindow::GameTick()
         }
 
         //repaint all already placed blocks
-        m_pDrawer->DrawAllPlacedBlocks(*m_pPlacedBlocks);
+        m_Drawer.DrawAllPlacedBlocks(m_PlacedBlocks);
 
         UpdateScoreLabel();
     }
@@ -231,7 +230,7 @@ void GameWindow::GameTick()
     {
         m_pCurrentBlock = GenerateBlock();
 
-        m_CurrentBlockGraphicsItemsPtrs = m_pDrawer->DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor());
+        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 
         QVector<int> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
@@ -239,7 +238,7 @@ void GameWindow::GameTick()
         {
             QPair<int,int> coordinatesPair(blockCoordinates.at(i),blockCoordinates.at(i+1));
 
-            if(m_pPlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+            if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
             {
                 EndGame();
             }
@@ -254,8 +253,6 @@ void GameWindow::GameTick()
 GameWindow::~GameWindow()
 {
     delete m_pUi;
-    delete m_pDrawer;
-    delete m_pPlacedBlocks;
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
@@ -266,7 +263,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         if(m_GameState == GameState::GameRunning)
         {
-            if(!(m_pCurrentBlock->IsSquaresLeftOfBlock(m_pPlacedBlocks)))
+            if(!(m_pCurrentBlock->IsSquaresLeftOfBlock(m_PlacedBlocks)))
             {
                 m_pCurrentBlock->MoveBlock(Direction::left);
                 RedrawMovedBlock();
@@ -278,7 +275,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_D:
         if(m_GameState == GameState::GameRunning)
         {
-            if(!(m_pCurrentBlock->IsSquaresRightOfBlock(m_pPlacedBlocks)))
+            if(!(m_pCurrentBlock->IsSquaresRightOfBlock(m_PlacedBlocks)))
             {
                 m_pCurrentBlock->MoveBlock(Direction::right);
                 RedrawMovedBlock();

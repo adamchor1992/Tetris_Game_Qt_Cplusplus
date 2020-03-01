@@ -13,7 +13,8 @@
 class Drawer
 {
 public:
-    explicit Drawer(QGraphicsScene& pScene);
+    explicit Drawer();
+    void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
     void DrawGameArena();
     QVector<QGraphicsRectItem*> DrawBlock(QVector<int> blockCoordinates, QColor randomColor);
     void DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
@@ -21,7 +22,7 @@ public:
     void DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
 
 private:
-    QGraphicsScene& m_Scene;
+    QGraphicsScene* m_pScene;
     QPen m_RedPen;
     QBrush m_RedBrush;
     QPen m_BlackPen;

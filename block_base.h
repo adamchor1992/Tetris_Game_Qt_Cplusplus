@@ -12,11 +12,16 @@ public:
 
     QVector<int> GetBlockCoordinates();
     QColor GetColor();
-    bool IsSquaresUnderBlock(PlacedBlocks const* p_PlacedBlocks);
+    bool IsSquaresUnderBlock(PlacedBlocks const p_PlacedBlocks);
     void DropBlockCoordinates();
     void MoveBlock(Direction direction);
-    bool IsSquaresLeftOfBlock(PlacedBlocks const* p_PlacedBlocks);
-    bool IsSquaresRightOfBlock(PlacedBlocks const* p_PlacedBlocks);
+    bool IsSquaresLeftOfBlock(PlacedBlocks const p_PlacedBlocks);
+    bool IsSquaresRightOfBlock(PlacedBlocks const p_PlacedBlocks);
+    void SetBlockSquaresGraphicsRectItemPointers(QVector<QGraphicsRectItem*> blockSquaresGraphicsRectItemPointers)
+    {
+        m_BlockSquaresGraphicsRectItemPointers = blockSquaresGraphicsRectItemPointers;
+    }
+    QVector<QGraphicsRectItem*> const& GetBlockSquaresGraphicsRectItemPointers() const {return m_BlockSquaresGraphicsRectItemPointers;}
 
     virtual void RotateBlock() = 0;
 
@@ -34,7 +39,7 @@ protected:
 
 private:
     /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/
-    QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItems;
+    QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItemPointers;
     bool m_BlockIsPresentOnScreen;
     QVector<QColor> m_Colors = {Qt::red, Qt::blue, Qt::white, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
     QColor m_BlockColor;
