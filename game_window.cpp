@@ -9,6 +9,8 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 
     Drawer::SetScene(&m_Scene);
 
+    setFocus(Qt::ActiveWindowFocusReason);
+
     m_GameState = GameState::BeforeFirstRun;
 
     InitializeGameplayAreaScene();
@@ -261,6 +263,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_S:
         if(m_GameState == GameState::GameRunning)
         {
+            m_pCurrentBlock->DropAndPlaceBlock(m_PlacedBlocks);
             qDebug() << "Drop";
         }
         break;

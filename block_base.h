@@ -13,6 +13,7 @@ public:
     QVector<QPair<int, int> > GetBlockCoordinates();
     QColor GetColor();
     void DropBlockOneLevel();
+    void DropAndPlaceBlock(PlacedBlocks const& placedBlocks);
     void MoveBlock(Direction direction);
     bool IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks);
     bool IsSquareOrLeftWallLeftOfBlock(PlacedBlocks const& placedBlocks);

@@ -176,6 +176,14 @@ void BlockBase::DropBlockOneLevel()
     m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
+void BlockBase::DropAndPlaceBlock(PlacedBlocks const& placedBlocks)
+{
+    while(!IsSquareOrBottomWallUnderBlock(placedBlocks))
+    {
+        DropBlockOneLevel();
+    }
+}
+
 QVector<QPair<int, int> > BlockBase::GetBlockCoordinates()
 {
     return m_BlockCoordinates;
