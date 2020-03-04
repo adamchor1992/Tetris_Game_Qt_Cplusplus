@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <random>
+#include <memory>
 
 #include "block_base.h"
 #include "placed_blocks.h"
@@ -43,7 +44,7 @@ private:
 
     QTimer m_GameTickTimer;
 
-    BlockBase* m_pCurrentBlock = nullptr;
+    std::unique_ptr<BlockBase> m_pCurrentBlock;
 
     int m_Score;
 

@@ -47,13 +47,12 @@ void GameWindow::PrepareFirstGameRun()
 
 void GameWindow::GenerateBlock(QString shape)
 {
-    delete m_pCurrentBlock; //free previously allocated memory
-
     if(shape == "random")
     {
         static std::map<int, QString> numberToShapeMapping = { {0,"S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
 
-        std::srand(static_cast<unsigned int>(std::time(nullptr))); //seed based on time
+        /*Seed based on time*/
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
         int randomNumber = std::rand();
 
@@ -62,35 +61,35 @@ void GameWindow::GenerateBlock(QString shape)
 
     if(shape == "S")
     {
-        m_pCurrentBlock = new SBlock;
+        m_pCurrentBlock = std::make_unique<SBlock>();
     }
     else if(shape == "Z")
     {
-        m_pCurrentBlock = new ZBlock;
+        m_pCurrentBlock = std::make_unique<ZBlock>();
     }
     else if(shape == "I")
     {
-        m_pCurrentBlock = new IBlock;
+        m_pCurrentBlock = std::make_unique<IBlock>();
     }
     else if(shape == "J")
     {
-        m_pCurrentBlock = new JBlock;
+        m_pCurrentBlock = std::make_unique<JBlock>();
     }
     else if(shape == "L")
     {
-        m_pCurrentBlock = new LBlock;
+        m_pCurrentBlock = std::make_unique<LBlock>();
     }
     else if(shape == "O")
     {
-        m_pCurrentBlock = new OBlock;
+        m_pCurrentBlock = std::make_unique<OBlock>();
     }
     else if(shape == "T")
     {
-        m_pCurrentBlock = new TBlock;
+        m_pCurrentBlock = std::make_unique<TBlock>();
     }
     else
     {
-        qDebug() << "UNKNOWN SHAPE TO BE GENERATED, ABORTING";
+        qDebug() << "Unknown shape";
         assert(false);
     }
 
@@ -135,9 +134,8 @@ void GameWindow::RestartGame()
 
     Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
 
-    m_Scene.clear();
-
     m_PlacedBlocks.ClearPlacedBlocks();
+    m_Scene.clear();
 
     Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
@@ -156,8 +154,7 @@ void GameWindow::GameTick()
     {
         PlaceCurrentBlock();
 
-        delete m_pCurrentBlock;
-        m_pCurrentBlock = nullptr;
+        m_pCurrentBlock.reset();
 
         QList<int> fullRows = m_PlacedBlocks.FindFullRows();
 
@@ -192,13 +189,13 @@ void GameWindow::GameTick()
             qDebug() << "WRONG FULL ROWS NUMBER";
         }
 
-        //repaint all already placed blocks
+        /*Redraw all already placed blocks*/
         Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
         UpdateScoreLabel();
     }
 
-    //generate new block and return immediately so it is not lowered just after creation!
+    /*Generate new block and return immediately so it is not lowered just after creation*/
     if(m_pCurrentBlock == nullptr)
     {
         GenerateBlock();
