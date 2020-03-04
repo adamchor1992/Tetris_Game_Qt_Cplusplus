@@ -3,8 +3,6 @@
 #include <QDebug>
 #include <QVector>
 #include <QMap>
-#include <QPoint>
-#include <QHash>
 #include <QPair>
 #include <QGraphicsRectItem>
 
@@ -14,9 +12,9 @@ public:
     explicit PlacedBlocks();
     void ClearPlacedBlocks();
     void AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem);
-    void DeleteRow(int rowNumber);
-    int FindFullRow() const;
-    void DropRowsAbove(int deletedRow);
+    void RemoveRow(int rowNumber);
+    QList<int> FindFullRows() const;
+    void DropRowsAbove(int removedRow);
     QMap<QPair<int, int>, QGraphicsRectItem*> const& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
 
 private:
@@ -24,7 +22,7 @@ private:
     QMap<QPair<int,int>,QGraphicsRectItem*> m_PlacedBlocksMap;
 
     bool ValidateCoordinates(int x, int y);
-    void DeleteSquare(int x, int y);
+    void RemoveSquare(int x, int y);
 
     int const COLUMN_COUNT = 10;
     int const ROW_COUNT = 20;

@@ -13,28 +13,28 @@ void Drawer::DrawGameArena()
 
     /*Left wall*/
     m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
-                    GameArenaParameters::BOTTOM_Y,
-                    GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
-                    GameArenaParameters::TOP_Y,
-                    wallPen);
+                      GameArenaParameters::BOTTOM_Y,
+                      GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
+                      GameArenaParameters::TOP_Y,
+                      wallPen);
     /*Right wall*/
     m_pScene->addLine(GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                    GameArenaParameters::BOTTOM_Y,
-                    GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                    GameArenaParameters::TOP_Y,
-                    wallPen);
+                      GameArenaParameters::BOTTOM_Y,
+                      GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
+                      GameArenaParameters::TOP_Y,
+                      wallPen);
     /*Bottom wall*/
     m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
-                    GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
-                    GameArenaParameters::RIGHT_BORDER_X,
-                    GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
-                    wallPen);
+                      GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
+                      GameArenaParameters::RIGHT_BORDER_X,
+                      GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
+                      wallPen);
     /*Top wall*/
     m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
-                    GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
-                    GameArenaParameters::RIGHT_BORDER_X,
-                    GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
-                    wallPen);
+                      GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
+                      GameArenaParameters::RIGHT_BORDER_X,
+                      GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
+                      wallPen);
 }
 
 void Drawer::DrawSquare(int x, int y, QBrush brush)
@@ -42,15 +42,15 @@ void Drawer::DrawSquare(int x, int y, QBrush brush)
     if(ValidateCoordinates(x,y))
     {
         m_pScene->addRect((x-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                        (y-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                        GameArenaParameters::BLOCK_SQUARE_SIZE,
-                        GameArenaParameters::BLOCK_SQUARE_SIZE,
-                        Qt::NoPen,
-                        brush);
+                          (y-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                          GameArenaParameters::BLOCK_SQUARE_SIZE,
+                          GameArenaParameters::BLOCK_SQUARE_SIZE,
+                          Qt::NoPen,
+                          brush);
     }
 }
 
-QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QColor randomColor)
+QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<QPair<int, int> > blockCoordinates, QColor randomColor)
 {
     QVector<QGraphicsRectItem*> squaresGraphicPointers;
 
@@ -59,21 +59,21 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<int> blockCoordinates, QCo
 
     if(ValidateCoordinates(blockCoordinates))
     {
-        for(int i=0 ; i<8; i=i+2)
+        for(int i=0 ; i<4; i++)
         {
-            squaresGraphicPointers.append(m_pScene->addRect((blockCoordinates.at(i)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                          (blockCoordinates.at(i+1)-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                          GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                          GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                          randomColorPen,
-                                                          randomColorBrush));
+            squaresGraphicPointers.append(m_pScene->addRect((blockCoordinates.at(i).first - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                            (blockCoordinates.at(i).second - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                            GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                            GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                            randomColorPen,
+                                                            randomColorBrush));
         }
     }
 
     return squaresGraphicPointers;
 }
 
-void Drawer::DeletePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks)
+void Drawer::ErasePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks)
 {
     if(ValidateCoordinates(x,y))
     {
@@ -90,11 +90,11 @@ void Drawer::DeletePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks
     }
 }
 
-void Drawer::DeleteBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
+void Drawer::EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
 {
-    for(QGraphicsRectItem *item : blockRectGraphicPointers)
+    for(auto squareRectGraphicPointer : blockRectGraphicPointers)
     {
-        m_pScene->removeItem(item);
+        m_pScene->removeItem(squareRectGraphicPointer);
     }
 }
 
@@ -104,12 +104,12 @@ void Drawer::DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks)
 
     DrawGameArena();
 
-    for(auto item : p_PlacedBlocks.GetPlacedBlocksMap().keys()) //item is key
+    for(auto coordinatesPair : p_PlacedBlocks.GetPlacedBlocksMap().keys())
     {
-        if(p_PlacedBlocks.GetPlacedBlocksMap().value(item) != nullptr)
+        if(p_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
         {
-            int x = item.first;
-            int y = item.second;
+            int x = coordinatesPair.first;
+            int y = coordinatesPair.second;
 
             DrawSquare(x, y, Qt::white);
         }
@@ -131,20 +131,20 @@ void Drawer::DrawAllPossibleSquares()
                 if(row % 2 == 0) /*Different block color every second row*/
                 {
                     m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    Qt::NoPen,
-                                    blueBrush);
+                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      Qt::NoPen,
+                                      blueBrush);
                 }
                 else
                 {
                     m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    Qt::NoPen,
-                                    redBrush);
+                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      Qt::NoPen,
+                                      redBrush);
                 }
             }
             else
@@ -152,20 +152,20 @@ void Drawer::DrawAllPossibleSquares()
                 if(row % 2 != 0)
                 {
                     m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    Qt::NoPen,
-                                    blueBrush);
+                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      Qt::NoPen,
+                                      blueBrush);
                 }
                 else
                 {
                     m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                    Qt::NoPen,
-                                    redBrush);
+                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                      Qt::NoPen,
+                                      redBrush);
                 }
             }
         }
@@ -191,29 +191,27 @@ bool Drawer::ValidateCoordinates(int x, int y)
     return true;
 }
 
-bool Drawer::ValidateCoordinates(QVector<int> blockCoordinates)
+bool Drawer::ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates)
 {
-    if(blockCoordinates.size() != 8)
+    if(blockCoordinates.size() != 4)
     {
         assert(false);
     }
 
-    /*Even coordinates are columns*/
-    if(blockCoordinates.at(0) > GameArenaParameters::MAX_BLOCK_COLUMNS ||
-            blockCoordinates.at(2) > GameArenaParameters::MAX_BLOCK_COLUMNS ||
-            blockCoordinates.at(4) > GameArenaParameters::MAX_BLOCK_COLUMNS ||
-            blockCoordinates.at(6) > GameArenaParameters::MAX_BLOCK_COLUMNS )
+    if(blockCoordinates.at(0).first > GameArenaParameters::MAX_BLOCK_COLUMNS ||
+            blockCoordinates.at(1).first > GameArenaParameters::MAX_BLOCK_COLUMNS ||
+            blockCoordinates.at(2).first > GameArenaParameters::MAX_BLOCK_COLUMNS ||
+            blockCoordinates.at(3).first > GameArenaParameters::MAX_BLOCK_COLUMNS )
     {
         qDebug() << "Wrong X coordinate";
 
         assert(false);
     }
 
-    /*Odd coordinates are rows*/
-    if(blockCoordinates.at(1) > GameArenaParameters::MAX_BLOCK_ROWS ||
-            blockCoordinates.at(3) > GameArenaParameters::MAX_BLOCK_ROWS ||
-            blockCoordinates.at(5) > GameArenaParameters::MAX_BLOCK_ROWS ||
-            blockCoordinates.at(7) > GameArenaParameters::MAX_BLOCK_ROWS )
+    if(blockCoordinates.at(0).second > GameArenaParameters::MAX_BLOCK_ROWS ||
+            blockCoordinates.at(1).second > GameArenaParameters::MAX_BLOCK_ROWS ||
+            blockCoordinates.at(2).second > GameArenaParameters::MAX_BLOCK_ROWS ||
+            blockCoordinates.at(3).second > GameArenaParameters::MAX_BLOCK_ROWS )
     {
         qDebug() << "Wrong Y coordinate";
 

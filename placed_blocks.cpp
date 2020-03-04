@@ -30,7 +30,7 @@ void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsIt
 {
     if(ValidateCoordinates(x, y))
     {
-        QPair<int,int> coordinatesPair(x,y);
+        QPair<int,int> coordinatesPair(x, y);
 
         if(m_PlacedBlocksMap.value(coordinatesPair) == nullptr)
         {
@@ -43,7 +43,7 @@ void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsIt
     }
 }
 
-void PlacedBlocks::DeleteSquare(int x, int y)
+void PlacedBlocks::RemoveSquare(int x, int y)
 {
     if(ValidateCoordinates(x, y))
     {
@@ -60,7 +60,7 @@ void PlacedBlocks::DeleteSquare(int x, int y)
     }
 }
 
-void PlacedBlocks::DeleteRow(int rowNumber)
+void PlacedBlocks::RemoveRow(int rowNumber)
 {
     if(rowNumber < 1 || rowNumber > ROW_COUNT)
     {
@@ -69,12 +69,14 @@ void PlacedBlocks::DeleteRow(int rowNumber)
 
     for(int column = 1; column <= COLUMN_COUNT; column++)
     {
-        DeleteSquare(column, rowNumber);
+        RemoveSquare(column, rowNumber);
     }
 }
 
-int PlacedBlocks::FindFullRow() const
+QList<int> PlacedBlocks::FindFullRows() const
 {
+    QList<int> fullRows;
+
     /*Go through all rows*/
     for(int row = 1; row <= ROW_COUNT; row++)
     {
@@ -89,16 +91,16 @@ int PlacedBlocks::FindFullRow() const
 
             if(column == COLUMN_COUNT)
             {
-                return row;
+                fullRows.append(row);
             }
         }
     }
 
-    return 0;
+    return fullRows;
 }
 
 /*Drop all rows above deleted row*/
-void PlacedBlocks::DropRowsAbove(int deletedRow)
+void PlacedBlocks::DropRowsAbove(int removedRow)
 {
     QMap<QPair<int,int>,QGraphicsRectItem*> temporaryPlacedBlocksMap;
 
@@ -111,7 +113,7 @@ void PlacedBlocks::DropRowsAbove(int deletedRow)
         }
     }
 
-    for(int row = ROW_COUNT; row > deletedRow; row--)
+    for(int row = ROW_COUNT; row > removedRow; row--)
     {
         /*Copy unchanged square block positions below deleted row from m_PlacedBlocksMap to temporaryPlacedBlocksMap*/
         for(int column = 1; column <= COLUMN_COUNT; column++)
@@ -123,7 +125,7 @@ void PlacedBlocks::DropRowsAbove(int deletedRow)
     }
 
     /*Drop all rows by one*/
-    for(int row = deletedRow; row > 1; row--)
+    for(int row = removedRow; row > 1; row--)
     {
         for(int column = 1; column <= COLUMN_COUNT; column++)
         {

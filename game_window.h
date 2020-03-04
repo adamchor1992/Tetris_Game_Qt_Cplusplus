@@ -44,10 +44,8 @@ private:
     PlacedBlocks m_PlacedBlocks;
 
     QTimer m_GameTickTimer;
-    QGraphicsRectItem* m_pSquare = nullptr;
 
     BlockBase* m_pCurrentBlock = nullptr;
-
 
     int m_Score;
 

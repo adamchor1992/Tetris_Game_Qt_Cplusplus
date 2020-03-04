@@ -7,16 +7,16 @@
 class BlockBase
 {
 public:
-    explicit BlockBase(QString shape = "I");
+    explicit BlockBase();
     virtual ~BlockBase();
 
-    QVector<int> GetBlockCoordinates();
+    QVector<QPair<int, int> > GetBlockCoordinates();
     QColor GetColor();
-    bool IsSquaresUnderBlock(PlacedBlocks const p_PlacedBlocks);
     void DropBlockCoordinates();
     void MoveBlock(Direction direction);
-    bool IsSquaresLeftOfBlock(PlacedBlocks const p_PlacedBlocks);
-    bool IsSquaresRightOfBlock(PlacedBlocks const p_PlacedBlocks);
+    bool IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks);
+    bool IsSquareOrLeftWallLeftOfBlock(PlacedBlocks const& placedBlocks);
+    bool IsSquareOrRightWallRightOfBlock(PlacedBlocks const& placedBlocks);
     void SetBlockSquaresGraphicsRectItemPointers(QVector<QGraphicsRectItem*> blockSquaresGraphicsRectItemPointers)
     {
         m_BlockSquaresGraphicsRectItemPointers = blockSquaresGraphicsRectItemPointers;
@@ -26,16 +26,16 @@ public:
     virtual void RotateBlock() = 0;
 
 protected:
-    int m_CentralSquareX = 0;
-    int m_CentralSquareY = 0;
-    int m_Square1PositionX = 0;
-    int m_Square1PositionY = 0;
-    int m_Square2PositionX = 0;
-    int m_Square2PositionY = 0;
-    int m_Square3PositionX = 0;
-    int m_Square3PositionY = 0;
+    int m_CentralSquareX;
+    int m_CentralSquareY;
+    int m_Square1PositionX;
+    int m_Square1PositionY;
+    int m_Square2PositionX;
+    int m_Square2PositionY;
+    int m_Square3PositionX;
+    int m_Square3PositionY;
 
-    QVector<int> m_BlockCoordinates;
+    QVector<QPair<int, int> > m_BlockCoordinates;
 
 private:
     /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/

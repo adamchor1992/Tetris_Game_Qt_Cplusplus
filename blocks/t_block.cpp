@@ -1,21 +1,38 @@
 #include "t_block.h"
 
-TBlock::TBlock() : BlockBase(QString("T"))
+TBlock::TBlock() : BlockBase()
 {
+    m_Square1PositionX = m_CentralSquareX - 1;
+    m_Square1PositionY = m_CentralSquareY;
+    m_Square2PositionX = m_CentralSquareX;
+    m_Square2PositionY = m_CentralSquareY + 1;
+    m_Square3PositionX = m_CentralSquareX + 1;
+    m_Square3PositionY = m_CentralSquareY;
+
     m_CurrentRotation = 0;
+
+    QPair<int, int> centralSquareCoordinates(m_CentralSquareX, m_CentralSquareY);
+    QPair<int, int> square1Coordinates(m_Square1PositionX, m_Square1PositionY);
+    QPair<int, int> square2Coordinates(m_Square2PositionX, m_Square2PositionY);
+    QPair<int, int> square3Coordinates(m_Square3PositionX, m_Square3PositionY);
+
+    m_BlockCoordinates.append(centralSquareCoordinates);
+    m_BlockCoordinates.append(square1Coordinates);
+    m_BlockCoordinates.append(square2Coordinates);
+    m_BlockCoordinates.append(square3Coordinates);
 }
 
 void TBlock::RotateBlock()
 {
-    m_CentralSquareX = m_BlockCoordinates.at(2);
-    m_CentralSquareY = m_BlockCoordinates.at(3);
+    m_CentralSquareX = m_BlockCoordinates.at(0).first;
+    m_CentralSquareY = m_BlockCoordinates.at(0).second;
 
     if(m_CurrentRotation == 0)
     {
-        int newSquare1X = m_CentralSquareX;
-        int newSquare1Y = m_CentralSquareY - 1;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
+        int newSquare1X = m_CentralSquareX;
+        int newSquare1Y = m_CentralSquareY - 1;
         int newSquare2X = m_CentralSquareX - 1;
         int newSquare2Y = m_CentralSquareY;
         int newSquare3X = m_CentralSquareX;
@@ -55,23 +72,23 @@ void TBlock::RotateBlock()
             return;
         }
 
-        m_BlockCoordinates[0] = newSquare1X;
-        m_BlockCoordinates[1] = newSquare1Y;
-        m_BlockCoordinates[2] = newCentralSquareX;
-        m_BlockCoordinates[3] = newCentralSquareY;
-        m_BlockCoordinates[4] = newSquare2X;
-        m_BlockCoordinates[5] = newSquare2Y;
-        m_BlockCoordinates[6] = newSquare3X;
-        m_BlockCoordinates[7] = newSquare3Y;
+        m_BlockCoordinates[0].first = newCentralSquareX;
+        m_BlockCoordinates[0].second = newCentralSquareY;
+        m_BlockCoordinates[1].first = newSquare1X;
+        m_BlockCoordinates[1].second = newSquare1Y;
+        m_BlockCoordinates[2].first = newSquare2X;
+        m_BlockCoordinates[2].second = newSquare2Y;
+        m_BlockCoordinates[3].first = newSquare3X;
+        m_BlockCoordinates[3].second = newSquare3Y;
 
         m_CurrentRotation = 1;
     }
     else if(m_CurrentRotation == 1)
     {
-        int newSquare1X = m_CentralSquareX + 1;
-        int newSquare1Y = m_CentralSquareY;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
+        int newSquare1X = m_CentralSquareX + 1;
+        int newSquare1Y = m_CentralSquareY;
         int newSquare2X = m_CentralSquareX;
         int newSquare2Y = m_CentralSquareY - 1;
         int newSquare3X = m_CentralSquareX - 1;
@@ -111,23 +128,23 @@ void TBlock::RotateBlock()
             return;
         }
 
-        m_BlockCoordinates[0] = newSquare1X;
-        m_BlockCoordinates[1] = newSquare1Y;
-        m_BlockCoordinates[2] = newCentralSquareX;
-        m_BlockCoordinates[3] = newCentralSquareY;
-        m_BlockCoordinates[4] = newSquare2X;
-        m_BlockCoordinates[5] = newSquare2Y;
-        m_BlockCoordinates[6] = newSquare3X;
-        m_BlockCoordinates[7] = newSquare3Y;
+        m_BlockCoordinates[0].first = newCentralSquareX;
+        m_BlockCoordinates[0].second = newCentralSquareY;
+        m_BlockCoordinates[1].first = newSquare1X;
+        m_BlockCoordinates[1].second = newSquare1Y;
+        m_BlockCoordinates[2].first = newSquare2X;
+        m_BlockCoordinates[2].second = newSquare2Y;
+        m_BlockCoordinates[3].first = newSquare3X;
+        m_BlockCoordinates[3].second = newSquare3Y;
 
         m_CurrentRotation = 2;
     }
     else if(m_CurrentRotation == 2)
     {
-        int newSquare1X = m_CentralSquareX;
-        int newSquare1Y = m_CentralSquareY + 1;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
+        int newSquare1X = m_CentralSquareX;
+        int newSquare1Y = m_CentralSquareY + 1;
         int newSquare2X = m_CentralSquareX + 1;
         int newSquare2Y = m_CentralSquareY;
         int newSquare3X = m_CentralSquareX;
@@ -167,23 +184,23 @@ void TBlock::RotateBlock()
             return;
         }
 
-        m_BlockCoordinates[0] = newSquare1X;
-        m_BlockCoordinates[1] = newSquare1Y;
-        m_BlockCoordinates[2] = newCentralSquareX;
-        m_BlockCoordinates[3] = newCentralSquareY;
-        m_BlockCoordinates[4] = newSquare2X;
-        m_BlockCoordinates[5] = newSquare2Y;
-        m_BlockCoordinates[6] = newSquare3X;
-        m_BlockCoordinates[7] = newSquare3Y;
+        m_BlockCoordinates[0].first = newCentralSquareX;
+        m_BlockCoordinates[0].second = newCentralSquareY;
+        m_BlockCoordinates[1].first = newSquare1X;
+        m_BlockCoordinates[1].second = newSquare1Y;
+        m_BlockCoordinates[2].first = newSquare2X;
+        m_BlockCoordinates[2].second = newSquare2Y;
+        m_BlockCoordinates[3].first = newSquare3X;
+        m_BlockCoordinates[3].second = newSquare3Y;
 
         m_CurrentRotation = 3;
     }
     else if(m_CurrentRotation == 3)
     {
-        int newSquare1X = m_CentralSquareX - 1;
-        int newSquare1Y = m_CentralSquareY;
         int newCentralSquareX = m_CentralSquareX;
         int newCentralSquareY = m_CentralSquareY;
+        int newSquare1X = m_CentralSquareX - 1;
+        int newSquare1Y = m_CentralSquareY;
         int newSquare2X = m_CentralSquareX;
         int newSquare2Y = m_CentralSquareY + 1;
         int newSquare3X = m_CentralSquareX + 1;
@@ -223,14 +240,14 @@ void TBlock::RotateBlock()
             return;
         }
 
-        m_BlockCoordinates[0] = newSquare1X;
-        m_BlockCoordinates[1] = newSquare1Y;
-        m_BlockCoordinates[2] = newCentralSquareX;
-        m_BlockCoordinates[3] = newCentralSquareY;
-        m_BlockCoordinates[4] = newSquare2X;
-        m_BlockCoordinates[5] = newSquare2Y;
-        m_BlockCoordinates[6] = newSquare3X;
-        m_BlockCoordinates[7] = newSquare3Y;
+        m_BlockCoordinates[0].first = newCentralSquareX;
+        m_BlockCoordinates[0].second = newCentralSquareY;
+        m_BlockCoordinates[1].first = newSquare1X;
+        m_BlockCoordinates[1].second = newSquare1Y;
+        m_BlockCoordinates[2].first = newSquare2X;
+        m_BlockCoordinates[2].second = newSquare2Y;
+        m_BlockCoordinates[3].first = newSquare3X;
+        m_BlockCoordinates[3].second = newSquare3Y;
 
         m_CurrentRotation = 0;
     }
