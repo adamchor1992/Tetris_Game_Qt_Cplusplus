@@ -1,12 +1,13 @@
 #include "game_window.h"
 #include "ui_game_window.h"
 #include <map>
+#include "drawer.h"
 
 GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::GameWindow)
 {
     m_pUi->setupUi(this);
 
-    m_Drawer.SetScene(&m_Scene);
+    Drawer::SetScene(&m_Scene);
 
     m_GameState = GameState::BeforeFirstRun;
 
@@ -30,7 +31,7 @@ void GameWindow::InitializeGameplayAreaScene()
 
 void GameWindow::DrawGameArena()
 {
-    m_Drawer.DrawGameArena();
+    Drawer::DrawGameArena();
 }
 
 void GameWindow::PrepareFirstGameRun()
@@ -49,7 +50,7 @@ void GameWindow::GenerateInitialBlock()
     if(m_pCurrentBlock == nullptr)
     {
         m_pCurrentBlock = GenerateBlock();
-        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
+        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
     }
 }
 
@@ -109,15 +110,15 @@ BlockBase* GameWindow::GenerateBlock(QString shape)
 
 void GameWindow::RedrawMovedBlock()
 {
-    m_Drawer.EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
-    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
+    Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
+    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 }
 
 void GameWindow::RedrawDroppedBlock()
 {
-    m_Drawer.EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
+    Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
     m_pCurrentBlock->DropBlockCoordinates();
-    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
+    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 }
 
 void GameWindow::PlaceCurrentBlock()
@@ -156,13 +157,13 @@ void GameWindow::RestartGame()
 {
     GenerateInitialBlock();
 
-    m_Drawer.EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
+    Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
 
     m_Scene.clear();
 
     m_PlacedBlocks.ClearPlacedBlocks();
 
-    m_Drawer.DrawAllPlacedBlocks(m_PlacedBlocks);
+    Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
     SetScore(0);
 
@@ -216,7 +217,7 @@ void GameWindow::GameTick()
         }
 
         //repaint all already placed blocks
-        m_Drawer.DrawAllPlacedBlocks(m_PlacedBlocks);
+        Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
         UpdateScoreLabel();
     }
@@ -226,7 +227,7 @@ void GameWindow::GameTick()
     {
         m_pCurrentBlock = GenerateBlock();
 
-        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(m_Drawer.DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
+        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 
         QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 

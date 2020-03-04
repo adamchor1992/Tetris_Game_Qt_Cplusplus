@@ -13,20 +13,21 @@
 class Drawer
 {
 public:
-    explicit Drawer();
-    void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
-    void DrawGameArena();
-    QVector<QGraphicsRectItem*> DrawBlock(QVector<QPair<int, int> > blockCoordinates, QColor randomColor);
-    void DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
-    void RemoveAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
-    void EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
+    Drawer() = delete;
+    Drawer(const Drawer&) = delete;
+    Drawer& operator=(Drawer&) = delete;
+    Drawer(const Drawer&&) = delete;
+    Drawer& operator=(Drawer&&) = delete;
+
+    static void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
+    static void DrawGameArena();
+    static QVector<QGraphicsRectItem*> DrawBlock(QVector<QPair<int, int> > blockCoordinates, QColor randomColor);
+    static void DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
+    static void RemoveAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
+    static void EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
 
 private:
-    QGraphicsScene* m_pScene;
-    QPen m_RedPen;
-    QBrush m_RedBrush;
-    QPen m_BlackPen;
-    QBrush m_BlackBrush;
+    static QGraphicsScene* m_pScene;
 
     struct GameArenaParameters
     {
@@ -46,9 +47,9 @@ private:
         static int const BLOCK_SQUARE_SIZE = 30;
     };
 
-    void DrawSquare(int x, int y, QBrush brush);
-    void ErasePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks);
-    void DrawAllPossibleSquares();
-    bool ValidateCoordinates(int x, int y);
-    bool ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates);
+    static void DrawSquare(int x, int y, QBrush brush);
+    static void ErasePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks);
+    static void DrawAllPossibleSquares();
+    static bool ValidateCoordinates(int x, int y);
+    static bool ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates);
 };

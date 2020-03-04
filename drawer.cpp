@@ -1,10 +1,6 @@
 #include "drawer.h"
 
-Drawer::Drawer()
-{
-    m_BlackPen = QPen(Qt::black);
-    m_BlackBrush = QBrush(Qt::black);
-}
+QGraphicsScene* Drawer::m_pScene = nullptr;
 
 void Drawer::DrawGameArena()
 {

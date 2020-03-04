@@ -10,7 +10,6 @@
 #include <random>
 
 #include "block_base.h"
-#include "drawer.h"
 #include "placed_blocks.h"
 #include "blocks/i_block.h"
 #include "blocks/i_block.h"
@@ -40,7 +39,6 @@ public:
 private:
     Ui::GameWindow* m_pUi = nullptr;
     QGraphicsScene m_Scene;
-    Drawer m_Drawer;
     PlacedBlocks m_PlacedBlocks;
 
     QTimer m_GameTickTimer;
