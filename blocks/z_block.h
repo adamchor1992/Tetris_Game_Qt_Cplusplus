@@ -6,7 +6,7 @@ class ZBlock : public BlockBase
 {
 public:
     explicit ZBlock();
-    void RotateBlock() override;
+    void RotateBlock(PlacedBlocks const& placedBlocks) override;
 
 private:
     int m_CurrentRotation;

@@ -69,19 +69,15 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<QPair<int, int> > blockCoo
     return squaresGraphicPointers;
 }
 
-void Drawer::ErasePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks)
+void Drawer::ErasePlacedSquare(int x, int y, PlacedBlocks const& placedBlocks)
 {
     if(ValidateCoordinates(x,y))
     {
         QPair<int, int> coordinatesPair;
 
-        if(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+        if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
         {
-            m_pScene->removeItem(p_PlacedBlocks->GetPlacedBlocksMap().value(coordinatesPair));
-        }
-        else
-        {
-            assert(false);
+            m_pScene->removeItem(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair));
         }
     }
 }
@@ -94,15 +90,15 @@ void Drawer::EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
     }
 }
 
-void Drawer::DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks)
+void Drawer::DrawAllPlacedBlocks(PlacedBlocks const& placedBlocks)
 {
     m_pScene->clear();
 
     DrawGameArena();
 
-    for(auto coordinatesPair : p_PlacedBlocks.GetPlacedBlocksMap().keys())
+    for(auto coordinatesPair : placedBlocks.GetPlacedBlocksMap().keys())
     {
-        if(p_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+        if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
         {
             int x = coordinatesPair.first;
             int y = coordinatesPair.second;
@@ -194,6 +190,16 @@ bool Drawer::ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates)
         assert(false);
     }
 
+    if(blockCoordinates.at(0).first < GameArenaParameters::MIN_BLOCK_COLUMNS ||
+            blockCoordinates.at(1).first < GameArenaParameters::MIN_BLOCK_COLUMNS ||
+            blockCoordinates.at(2).first < GameArenaParameters::MIN_BLOCK_COLUMNS ||
+            blockCoordinates.at(3).first < GameArenaParameters::MIN_BLOCK_COLUMNS )
+    {
+        qDebug() << "Wrong X coordinate";
+
+        return false;
+    }
+
     if(blockCoordinates.at(0).first > GameArenaParameters::MAX_BLOCK_COLUMNS ||
             blockCoordinates.at(1).first > GameArenaParameters::MAX_BLOCK_COLUMNS ||
             blockCoordinates.at(2).first > GameArenaParameters::MAX_BLOCK_COLUMNS ||
@@ -201,7 +207,17 @@ bool Drawer::ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates)
     {
         qDebug() << "Wrong X coordinate";
 
-        assert(false);
+        return false;
+    }
+
+    if(blockCoordinates.at(0).first < GameArenaParameters::MIN_BLOCK_ROWS ||
+            blockCoordinates.at(1).first < GameArenaParameters::MIN_BLOCK_ROWS ||
+            blockCoordinates.at(2).first < GameArenaParameters::MIN_BLOCK_ROWS ||
+            blockCoordinates.at(3).first < GameArenaParameters::MIN_BLOCK_ROWS )
+    {
+        qDebug() << "Wrong X coordinate";
+
+        return false;
     }
 
     if(blockCoordinates.at(0).second > GameArenaParameters::MAX_BLOCK_ROWS ||
@@ -211,7 +227,7 @@ bool Drawer::ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates)
     {
         qDebug() << "Wrong Y coordinate";
 
-        assert(false);
+        return false;
     }
 
     return true;

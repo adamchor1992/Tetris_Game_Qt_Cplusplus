@@ -6,7 +6,7 @@ class OBlock : public BlockBase
 {
 public:
     explicit OBlock();
-    void RotateBlock() override;
+    void RotateBlock(PlacedBlocks const& placedBlocks) override;
 
 private:
     int m_CurrentRotation;

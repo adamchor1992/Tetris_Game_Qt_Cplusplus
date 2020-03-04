@@ -6,7 +6,7 @@ class JBlock : public BlockBase
 {
 public:
     explicit JBlock();
-    void RotateBlock() override;
+    void RotateBlock(PlacedBlocks const& placedBlocks) override;
 
 private:
     int m_CurrentRotation;

@@ -64,7 +64,7 @@ void BlockBase::MoveBlock(Direction direction)
     m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
-void BlockBase::RotateBlock()
+void BlockBase::RotateBlock(PlacedBlocks const& placedBlocks)
 {
     qDebug() << "Base class RotateBlock() method called";
     assert(false);

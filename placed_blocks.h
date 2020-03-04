@@ -21,7 +21,6 @@ private:
     /*Map storing QGraphicsRectItem representing every square block*/
     QMap<QPair<int,int>,QGraphicsRectItem*> m_PlacedBlocksMap;
 
-    bool ValidateCoordinates(int x, int y);
     void RemoveSquare(int x, int y);
 
     int const COLUMN_COUNT = 10;

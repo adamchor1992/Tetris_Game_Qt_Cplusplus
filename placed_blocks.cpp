@@ -1,4 +1,5 @@
 #include "placed_blocks.h"
+#include "drawer.h"
 
 PlacedBlocks::PlacedBlocks()
 {
@@ -28,7 +29,7 @@ void PlacedBlocks::ClearPlacedBlocks()
 
 void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem)
 {
-    if(ValidateCoordinates(x, y))
+    if(Drawer::ValidateCoordinates(x, y))
     {
         QPair<int,int> coordinatesPair(x, y);
 
@@ -45,12 +46,13 @@ void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsIt
 
 void PlacedBlocks::RemoveSquare(int x, int y)
 {
-    if(ValidateCoordinates(x, y))
+    if(Drawer::ValidateCoordinates(x, y))
     {
         QPair<int,int> coordinatesPair(x,y);
 
         if(m_PlacedBlocksMap.value(coordinatesPair) != nullptr)
         {
+            Drawer::ErasePlacedSquare(coordinatesPair.first, coordinatesPair.second, *this);
             m_PlacedBlocksMap[coordinatesPair] = nullptr;
         }
         else
@@ -137,23 +139,4 @@ void PlacedBlocks::DropRowsAbove(int removedRow)
     }
 
     m_PlacedBlocksMap = temporaryPlacedBlocksMap;
-}
-
-bool PlacedBlocks::ValidateCoordinates(int x, int y)
-{
-    if(x < 1 || x > COLUMN_COUNT)
-    {
-        qDebug("Wrong X coordinate");
-
-        assert(false);
-    }
-
-    if(y < 1 || y > ROW_COUNT)
-    {
-        qDebug("Wrong Y coordinate");
-
-        assert(false);
-    }
-
-    return true;
 }

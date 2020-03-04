@@ -255,7 +255,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_W:
         if(m_GameState == GameState::GameRunning)
         {
-            m_pCurrentBlock->RotateBlock();
+            m_pCurrentBlock->RotateBlock(m_PlacedBlocks);
         }
         break;
 

@@ -22,9 +22,12 @@ public:
     static void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
     static void DrawGameArena();
     static QVector<QGraphicsRectItem*> DrawBlock(QVector<QPair<int, int> > blockCoordinates, QColor randomColor);
-    static void DrawAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
-    static void RemoveAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
+    static void DrawAllPlacedBlocks(PlacedBlocks const& placedBlocks);
+    static void RemoveAllPlacedBlocks(PlacedBlocks const& placedBlocks);
+    static void ErasePlacedSquare(int x, int y, PlacedBlocks const& placedBlocks);
     static void EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
+    static bool ValidateCoordinates(int x, int y);
+    static bool ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates);
 
     struct GameArenaParameters
     {
@@ -41,6 +44,8 @@ public:
         static int const TOP_Y_OFFSET = +2;
         static int const MAX_BLOCK_ROWS = 20;
         static int const MAX_BLOCK_COLUMNS = 10;
+        static int const MIN_BLOCK_ROWS = 1;
+        static int const MIN_BLOCK_COLUMNS = 1;
         static int const BLOCK_SQUARE_SIZE = 30;
     };
 
@@ -48,8 +53,5 @@ private:
     static QGraphicsScene* m_pScene;
 
     static void DrawSquare(int x, int y, QBrush brush);
-    static void ErasePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks);
     static void DrawAllPossibleSquares();
-    static bool ValidateCoordinates(int x, int y);
-    static bool ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates);
 };

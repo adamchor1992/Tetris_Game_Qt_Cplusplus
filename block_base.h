@@ -24,7 +24,7 @@ public:
     }
     QVector<QGraphicsRectItem*> const& GetBlockSquaresGraphicsRectItemPointers() const {return m_BlockSquaresGraphicsRectItemPointers;}
 
-    virtual void RotateBlock() = 0;
+    virtual void RotateBlock(PlacedBlocks const& placedBlocks) = 0;
 
 protected:
     int m_CentralSquareX;
