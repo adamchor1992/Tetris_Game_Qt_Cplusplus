@@ -45,20 +45,9 @@ void GameWindow::PrepareFirstGameRun()
     connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTick);
 }
 
-void GameWindow::GenerateInitialBlock()
-{
-    if(m_pCurrentBlock == nullptr)
-    {
-        m_pCurrentBlock = GenerateBlock();
-        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
-    }
-}
-
-BlockBase* GameWindow::GenerateBlock(QString shape)
+void GameWindow::GenerateBlock(QString shape)
 {
     delete m_pCurrentBlock; //free previously allocated memory
-
-    BlockBase* block = nullptr;
 
     if(shape == "random")
     {
@@ -73,31 +62,31 @@ BlockBase* GameWindow::GenerateBlock(QString shape)
 
     if(shape == "S")
     {
-        block = new SBlock;
+        m_pCurrentBlock = new SBlock;
     }
     else if(shape == "Z")
     {
-        block = new ZBlock;
+        m_pCurrentBlock = new ZBlock;
     }
     else if(shape == "I")
     {
-        block = new IBlock;
+        m_pCurrentBlock = new IBlock;
     }
     else if(shape == "J")
     {
-        block = new JBlock;
+        m_pCurrentBlock = new JBlock;
     }
     else if(shape == "L")
     {
-        block = new LBlock;
+        m_pCurrentBlock = new LBlock;
     }
     else if(shape == "O")
     {
-        block = new OBlock;
+        m_pCurrentBlock = new OBlock;
     }
     else if(shape == "T")
     {
-        block = new TBlock;
+        m_pCurrentBlock = new TBlock;
     }
     else
     {
@@ -105,19 +94,6 @@ BlockBase* GameWindow::GenerateBlock(QString shape)
         assert(false);
     }
 
-    return block;
-}
-
-void GameWindow::RedrawMovedBlock()
-{
-    Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
-    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
-}
-
-void GameWindow::RedrawDroppedBlock()
-{
-    Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
-    m_pCurrentBlock->DropBlockCoordinates();
     m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
 }
 
@@ -144,7 +120,7 @@ void GameWindow::EndGame()
 
 void GameWindow::StartGame()
 {
-    GenerateInitialBlock();
+    GenerateBlock();
 
     m_GameTickTimer.start(140);
 
@@ -155,7 +131,7 @@ void GameWindow::StartGame()
 
 void GameWindow::RestartGame()
 {
-    GenerateInitialBlock();
+    GenerateBlock();
 
     Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
 
@@ -225,9 +201,7 @@ void GameWindow::GameTick()
     //generate new block and return immediately so it is not lowered just after creation!
     if(m_pCurrentBlock == nullptr)
     {
-        m_pCurrentBlock = GenerateBlock();
-
-        m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
+        GenerateBlock();
 
         QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
@@ -244,7 +218,7 @@ void GameWindow::GameTick()
         return;
     }
 
-    RedrawDroppedBlock();
+    m_pCurrentBlock->DropBlockOneLevel();
 }
 
 GameWindow::~GameWindow()
@@ -263,7 +237,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             if(!(m_pCurrentBlock->IsSquareOrLeftWallLeftOfBlock(m_PlacedBlocks)))
             {
                 m_pCurrentBlock->MoveBlock(Direction::left);
-                RedrawMovedBlock();
             }
         }
         break;
@@ -275,7 +248,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             if(!(m_pCurrentBlock->IsSquareOrRightWallRightOfBlock(m_PlacedBlocks)))
             {
                 m_pCurrentBlock->MoveBlock(Direction::right);
-                RedrawMovedBlock();
             }
         }
         break;

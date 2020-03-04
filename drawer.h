@@ -26,9 +26,6 @@ public:
     static void RemoveAllPlacedBlocks(PlacedBlocks const& p_PlacedBlocks);
     static void EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
 
-private:
-    static QGraphicsScene* m_pScene;
-
     struct GameArenaParameters
     {
         static int const WALL_THICKNESS = 5;
@@ -46,6 +43,9 @@ private:
         static int const MAX_BLOCK_COLUMNS = 10;
         static int const BLOCK_SQUARE_SIZE = 30;
     };
+
+private:
+    static QGraphicsScene* m_pScene;
 
     static void DrawSquare(int x, int y, QBrush brush);
     static void ErasePlacedSquare(int x, int y, PlacedBlocks const* p_PlacedBlocks);

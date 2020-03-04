@@ -1,4 +1,5 @@
 #include "block_base.h"
+#include "drawer.h"
 
 BlockBase::BlockBase()
 {
@@ -58,6 +59,9 @@ void BlockBase::MoveBlock(Direction direction)
             m_BlockCoordinates[i].second = newY;
         }
     }
+
+    Drawer::EraseBlock(m_BlockSquaresGraphicsRectItemPointers);
+    m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
 void BlockBase::RotateBlock()
@@ -160,13 +164,16 @@ QColor BlockBase::GetColor()
     return m_BlockColor;
 }
 
-void BlockBase::DropBlockCoordinates()
+void BlockBase::DropBlockOneLevel()
 {
     for(int i=0; i<m_BlockCoordinates.size(); i++)
     {
         /*Increment Y coordinate*/
         m_BlockCoordinates[i].second++;
     }
+
+    Drawer::EraseBlock(m_BlockSquaresGraphicsRectItemPointers);
+    m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
 QVector<QPair<int, int> > BlockBase::GetBlockCoordinates()

@@ -60,13 +60,10 @@ private:
     void InitializeGameplayAreaScene();
     void DrawGameArena();
     void PrepareFirstGameRun();
-    void GenerateInitialBlock();
     void DrawAllPossibleSquares();
-    BlockBase* GenerateBlock(QString shape = "random");
+    void GenerateBlock(QString shape = "random");
     void PlaceBlock();
     void FindAndDeleteFullRows();
-    void RedrawMovedBlock();
-    void RedrawDroppedBlock();
     void PlaceCurrentBlock();
     void EndGame();
     void StartGame();
