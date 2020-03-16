@@ -3,9 +3,6 @@
 
 BlockBase::BlockBase()
 {
-    /*Seed based on time*/
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
     int randomNumber = std::rand();
 
     m_BlockColor = m_Colors.at(randomNumber % m_Colors.size());

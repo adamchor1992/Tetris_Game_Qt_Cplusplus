@@ -16,6 +16,9 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
     InitializeGameplayAreaScene();
     DrawGameArena();
     PrepareFirstGameRun();
+
+    /*Seed based on time*/
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 void GameWindow::InitializeGameplayAreaScene()
@@ -54,9 +57,6 @@ std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
     if(shape == "random")
     {
         static std::map<int, QString> numberToShapeMapping = { {0,"S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
-
-        /*Seed based on time*/
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
         int randomNumber = std::rand();
 
