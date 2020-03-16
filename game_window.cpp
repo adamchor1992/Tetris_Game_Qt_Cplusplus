@@ -47,8 +47,10 @@ void GameWindow::PrepareFirstGameRun()
     connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTick);
 }
 
-void GameWindow::GenerateBlock(QString shape)
+std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
 {
+    std::unique_ptr<BlockBase> pBlock = nullptr;
+
     if(shape == "random")
     {
         static std::map<int, QString> numberToShapeMapping = { {0,"S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
@@ -63,31 +65,31 @@ void GameWindow::GenerateBlock(QString shape)
 
     if(shape == "S")
     {
-        m_pCurrentBlock = std::make_unique<SBlock>();
+        pBlock = std::make_unique<SBlock>();
     }
     else if(shape == "Z")
     {
-        m_pCurrentBlock = std::make_unique<ZBlock>();
+        pBlock = std::make_unique<ZBlock>();
     }
     else if(shape == "I")
     {
-        m_pCurrentBlock = std::make_unique<IBlock>();
+        pBlock = std::make_unique<IBlock>();
     }
     else if(shape == "J")
     {
-        m_pCurrentBlock = std::make_unique<JBlock>();
+        pBlock = std::make_unique<JBlock>();
     }
     else if(shape == "L")
     {
-        m_pCurrentBlock = std::make_unique<LBlock>();
+        pBlock = std::make_unique<LBlock>();
     }
     else if(shape == "O")
     {
-        m_pCurrentBlock = std::make_unique<OBlock>();
+        pBlock = std::make_unique<OBlock>();
     }
     else if(shape == "T")
     {
-        m_pCurrentBlock = std::make_unique<TBlock>();
+        pBlock = std::make_unique<TBlock>();
     }
     else
     {
@@ -95,7 +97,9 @@ void GameWindow::GenerateBlock(QString shape)
         assert(false);
     }
 
-    m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
+    pBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(pBlock->GetBlockCoordinates(), pBlock->GetColor()));
+
+    return pBlock;
 }
 
 void GameWindow::PlaceCurrentBlock()
@@ -104,12 +108,14 @@ void GameWindow::PlaceCurrentBlock()
 
     for(int i=0; i < blockCoordinates.size(); i++)
     {
-        m_PlacedBlocks.AddSquare(blockCoordinates.at(i).first, blockCoordinates.at(i).second, m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers().at(i));
+        m_PlacedBlocks.AddSquare(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
     }
 }
 
 void GameWindow::EndGame()
 {
+    m_pCurrentBlock.reset();
+
     qDebug() << "GAME OVER";
 
     SetInformationLabel("GAME OVER\nPRESS SPACE TO RESTART");
@@ -121,7 +127,7 @@ void GameWindow::EndGame()
 
 void GameWindow::StartGame()
 {
-    GenerateBlock();
+    m_pCurrentBlock = GenerateBlock();
 
     m_GameTickTimer.start(140);
 
@@ -132,12 +138,9 @@ void GameWindow::StartGame()
 
 void GameWindow::RestartGame()
 {
-    GenerateBlock();
-
-    Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
+    m_pCurrentBlock = GenerateBlock();
 
     m_PlacedBlocks.ClearPlacedBlocks();
-    m_Scene.clear();
 
     Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
@@ -195,12 +198,8 @@ void GameWindow::GameTick()
         Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
         UpdateScoreLabel();
-    }
 
-    /*Generate new block and return immediately so it is not lowered just after creation*/
-    if(m_pCurrentBlock == nullptr)
-    {
-        GenerateBlock();
+        m_pCurrentBlock = GenerateBlock();
 
         QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
@@ -208,16 +207,19 @@ void GameWindow::GameTick()
         {
             QPair<int,int> coordinatesPair(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
 
-            if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+            if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
             {
                 EndGame();
             }
         }
 
+        /*Return so new block is not lowered just after creation*/
         return;
     }
-
-    m_pCurrentBlock->DropBlockOneLevel();
+    else
+    {
+        m_pCurrentBlock->DropBlockOneLevel();
+    }
 }
 
 GameWindow::~GameWindow()

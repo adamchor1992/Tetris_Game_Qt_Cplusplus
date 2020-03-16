@@ -69,19 +69,6 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(QVector<QPair<int, int> > blockCoo
     return squaresGraphicPointers;
 }
 
-void Drawer::ErasePlacedSquare(int x, int y, PlacedBlocks const& placedBlocks)
-{
-    if(ValidateCoordinates(x,y))
-    {
-        QPair<int, int> coordinatesPair;
-
-        if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
-        {
-            m_pScene->removeItem(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair));
-        }
-    }
-}
-
 void Drawer::EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
 {
     for(auto squareRectGraphicPointer : blockRectGraphicPointers)
@@ -90,15 +77,28 @@ void Drawer::EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
     }
 }
 
+void Drawer::RemoveAllPlacedBlocks()
+{
+    QList<QGraphicsItem*> graphicItems = m_pScene->items();
+
+    for(auto graphicItem : graphicItems)
+    {
+        /*Remove all squares from scene*/
+        if(dynamic_cast<QGraphicsRectItem*>(graphicItem))
+        {
+            m_pScene->removeItem(graphicItem);
+        }
+    }
+}
+
 void Drawer::DrawAllPlacedBlocks(PlacedBlocks const& placedBlocks)
 {
-    m_pScene->clear();
-
-    DrawGameArena();
+    /*Placed blocks are first removed from scene and then placed again*/
+    RemoveAllPlacedBlocks();
 
     for(auto coordinatesPair : placedBlocks.GetPlacedBlocksMap().keys())
     {
-        if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+        if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
         {
             int x = coordinatesPair.first;
             int y = coordinatesPair.second;

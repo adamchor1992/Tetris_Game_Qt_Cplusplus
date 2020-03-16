@@ -10,19 +10,22 @@ class PlacedBlocks
 {
 public:
     explicit PlacedBlocks();
+
+    enum class SquarePresence
+    {
+        SQUARE_PRESENT, NO_SQUARE
+    };
+
     void ClearPlacedBlocks();
-    void AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem);
+    void AddSquare(int x, int y);
     void RemoveRow(int rowNumber);
     QList<int> FindFullRows() const;
     void DropRowsAbove(int removedRow);
-    QMap<QPair<int, int>, QGraphicsRectItem*> const& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
+    QMap<QPair<int, int>, SquarePresence> const& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
 
 private:
-    /*Map storing QGraphicsRectItem representing every square block*/
-    QMap<QPair<int,int>,QGraphicsRectItem*> m_PlacedBlocksMap;
+    /*Map storing bool value representing every square block*/
+    QMap<QPair<int,int>, SquarePresence> m_PlacedBlocksMap;
 
     void RemoveSquare(int x, int y);
-
-    int const COLUMN_COUNT = 10;
-    int const ROW_COUNT = 20;
 };

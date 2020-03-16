@@ -62,7 +62,7 @@ private:
     void DrawGameArena();
     void PrepareFirstGameRun();
     void DrawAllPossibleSquares();
-    void GenerateBlock(QString shape = "random");
+    std::unique_ptr<BlockBase> GenerateBlock(QString shape = "random");
     void PlaceBlock();
     void FindAndDeleteFullRows();
     void PlaceCurrentBlock();

@@ -80,7 +80,7 @@ void ZBlock::RotateBlock(PlacedBlocks const& placedBlocks)
     {
         for(auto coordinatesPair : newCoordinates)
         {
-            if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) != nullptr)
+            if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
             {
                 return;
             }

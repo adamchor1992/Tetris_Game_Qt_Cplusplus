@@ -4,11 +4,11 @@
 PlacedBlocks::PlacedBlocks()
 {
     /*Initialize m_PlacedBlocksMap with all null pointers*/
-    for(int column=1; column <= COLUMN_COUNT; column++)
+    for(int column=1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
-        for(int row=1; row <= ROW_COUNT; row++)
+        for(int row=1; row <= Drawer::GameArenaParameters::MAX_BLOCK_ROWS; row++)
         {
-            m_PlacedBlocksMap.insert(QPair<int,int>(column, row), nullptr);
+            m_PlacedBlocksMap.insert(QPair<int,int>(column, row), PlacedBlocks::SquarePresence::NO_SQUARE);
         }
     }
 
@@ -18,24 +18,24 @@ PlacedBlocks::PlacedBlocks()
 void PlacedBlocks::ClearPlacedBlocks()
 {
     /*Initialize m_PlacedBlocksMap with all null pointers*/
-    for(int column=1; column <= COLUMN_COUNT; column++)
+    for(int column=1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
-        for(int row=1; row <= ROW_COUNT; row++)
+        for(int row=1; row <= Drawer::GameArenaParameters::MAX_BLOCK_ROWS; row++)
         {
-            m_PlacedBlocksMap.insert(QPair<int,int>(column, row), nullptr);
+            m_PlacedBlocksMap.insert(QPair<int,int>(column, row), PlacedBlocks::SquarePresence::NO_SQUARE);
         }
     }
 }
 
-void PlacedBlocks::AddSquare(int x, int y, QGraphicsRectItem* p_SquareGraphicsItem)
+void PlacedBlocks::AddSquare(int x, int y)
 {
     if(Drawer::ValidateCoordinates(x, y))
     {
         QPair<int,int> coordinatesPair(x, y);
 
-        if(m_PlacedBlocksMap.value(coordinatesPair) == nullptr)
+        if(m_PlacedBlocksMap.value(coordinatesPair) == PlacedBlocks::SquarePresence::NO_SQUARE)
         {
-            m_PlacedBlocksMap[coordinatesPair] = p_SquareGraphicsItem;
+            m_PlacedBlocksMap[coordinatesPair] = PlacedBlocks::SquarePresence::SQUARE_PRESENT;
         }
         else
         {
@@ -50,10 +50,9 @@ void PlacedBlocks::RemoveSquare(int x, int y)
     {
         QPair<int,int> coordinatesPair(x,y);
 
-        if(m_PlacedBlocksMap.value(coordinatesPair) != nullptr)
+        if(m_PlacedBlocksMap.value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
         {
-            Drawer::ErasePlacedSquare(coordinatesPair.first, coordinatesPair.second, *this);
-            m_PlacedBlocksMap[coordinatesPair] = nullptr;
+            m_PlacedBlocksMap[coordinatesPair] = PlacedBlocks::SquarePresence::NO_SQUARE;
         }
         else
         {
@@ -64,12 +63,12 @@ void PlacedBlocks::RemoveSquare(int x, int y)
 
 void PlacedBlocks::RemoveRow(int rowNumber)
 {
-    if(rowNumber < 1 || rowNumber > ROW_COUNT)
+    if(rowNumber < 1 || rowNumber > Drawer::GameArenaParameters::MAX_BLOCK_ROWS)
     {
         assert(false);
     }
 
-    for(int column = 1; column <= COLUMN_COUNT; column++)
+    for(int column = 1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
         RemoveSquare(column, rowNumber);
     }
@@ -80,18 +79,18 @@ QList<int> PlacedBlocks::FindFullRows() const
     QList<int> fullRows;
 
     /*Go through all rows*/
-    for(int row = 1; row <= ROW_COUNT; row++)
+    for(int row = 1; row <= Drawer::GameArenaParameters::MAX_BLOCK_ROWS; row++)
     {
-        for(int column = 1; column <= COLUMN_COUNT; column++)
+        for(int column = 1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
         {
             QPair<int,int> coordinatesPair(column, row);
 
-            if(m_PlacedBlocksMap.value(coordinatesPair) == nullptr)
+            if(m_PlacedBlocksMap.value(coordinatesPair) == PlacedBlocks::SquarePresence::NO_SQUARE)
             {
                 break;
             }
 
-            if(column == COLUMN_COUNT)
+            if(column == Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS)
             {
                 fullRows.append(row);
             }
@@ -104,21 +103,21 @@ QList<int> PlacedBlocks::FindFullRows() const
 /*Drop all rows above deleted row*/
 void PlacedBlocks::DropRowsAbove(int removedRow)
 {
-    QMap<QPair<int,int>,QGraphicsRectItem*> temporaryPlacedBlocksMap;
+    QMap<QPair<int,int>, PlacedBlocks::SquarePresence> temporaryPlacedBlocksMap;
 
     /*Initialize temporaryPlacedBlocksArray with null pointers representing each square block*/
-    for(int column=1; column <= COLUMN_COUNT; column++)
+    for(int column=1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
-        for(int row=1; row <= ROW_COUNT; row++)
+        for(int row=1; row <= Drawer::GameArenaParameters::MAX_BLOCK_ROWS; row++)
         {
-            temporaryPlacedBlocksMap.insert(QPair<int,int>(column,row), nullptr);
+            temporaryPlacedBlocksMap.insert(QPair<int,int>(column,row), PlacedBlocks::SquarePresence::NO_SQUARE);
         }
     }
 
-    for(int row = ROW_COUNT; row > removedRow; row--)
+    for(int row = Drawer::GameArenaParameters::MAX_BLOCK_ROWS; row > removedRow; row--)
     {
         /*Copy unchanged square block positions below deleted row from m_PlacedBlocksMap to temporaryPlacedBlocksMap*/
-        for(int column = 1; column <= COLUMN_COUNT; column++)
+        for(int column = 1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
         {
             QPair<int,int> coordinatesPair(column, row);
 
@@ -129,7 +128,7 @@ void PlacedBlocks::DropRowsAbove(int removedRow)
     /*Drop all rows by one*/
     for(int row = removedRow; row > 1; row--)
     {
-        for(int column = 1; column <= COLUMN_COUNT; column++)
+        for(int column = 1; column <= Drawer::GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
         {
             QPair<int,int> coordinatesPair(column, row);
             QPair<int,int> coordinatesPairOneRowBelow(column, row-1);

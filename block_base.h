@@ -41,7 +41,6 @@ protected:
 private:
     /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/
     QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItemPointers;
-    bool m_BlockIsPresentOnScreen;
     QVector<QColor> m_Colors = {Qt::red, Qt::blue, Qt::white, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
     QColor m_BlockColor;
 };

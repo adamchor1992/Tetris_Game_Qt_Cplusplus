@@ -22,7 +22,10 @@ BlockBase::BlockBase()
 
 BlockBase::~BlockBase()
 {
-
+    for(auto& pointer : m_BlockSquaresGraphicsRectItemPointers)
+    {
+        pointer = nullptr;
+    }
 }
 
 void BlockBase::MoveBlock(Direction direction)
@@ -91,7 +94,7 @@ bool BlockBase::IsSquareOrLeftWallLeftOfBlock(PlacedBlocks const& placedBlocks)
         QPair<int,int> leftOfBlockCoordinatesPair(leftBlockX,leftBlockY);
 
         /*Check if there is any block to the left of current block*/
-        if(placedBlocks.GetPlacedBlocksMap().value(leftOfBlockCoordinatesPair) != nullptr)
+        if(placedBlocks.GetPlacedBlocksMap().value(leftOfBlockCoordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
         {
             return true;
         }
@@ -121,7 +124,7 @@ bool BlockBase::IsSquareOrRightWallRightOfBlock(PlacedBlocks const& placedBlocks
         QPair<int,int> rightOfBlockCoordinatesPair(rightBlockX,rightBlockY);
 
         /*Check if there is any block to the right of the current block*/
-        if(placedBlocks.GetPlacedBlocksMap().value(rightOfBlockCoordinatesPair) != nullptr)
+        if(placedBlocks.GetPlacedBlocksMap().value(rightOfBlockCoordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
         {
             return true;
         }
@@ -151,7 +154,7 @@ bool BlockBase::IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks)
         QPair<int, int> belowBlockCoordinatesPair(belowBlockX,belowBlockY);
 
         /*Check if there is any block below the current block*/
-        if(placedBlocks.GetPlacedBlocksMap().value(belowBlockCoordinatesPair) != nullptr)
+        if(placedBlocks.GetPlacedBlocksMap().value(belowBlockCoordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
         {
             return true;
         }
