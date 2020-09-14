@@ -4,4 +4,4 @@ It was written in modern C++ using QtCreator and Qt libraries.
 
 See SCREENSHOT.jpg for quick glance at game window.
 
-Run release/Tetris.exe to start the game.
+Run executable/Tetris.exe to start the game.

@@ -37,6 +37,9 @@ public:
     explicit GameWindow(QWidget *parent = nullptr);
     ~GameWindow() override;
 
+private slots:
+    void on_m_SpeedHorizontalSlider_valueChanged(int value);
+
 private:
     Ui::GameWindow* m_pUi = nullptr;
     QGraphicsScene m_Scene;
@@ -73,6 +76,7 @@ private:
     void IncreaseScore(int score) {m_Score += score;}
     void UpdateScoreLabel();
     void SetInformationLabel(QString text);
+    void SetGameSpeedLevel(int speedLevel);
 
     void keyPressEvent(QKeyEvent *event) override;
 };
