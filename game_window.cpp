@@ -7,6 +7,8 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 {
     m_pUi->setupUi(this);
 
+    setWindowTitle("Tetris");
+
     Drawer::SetScene(&m_Scene);
 
     setFocus(Qt::ActiveWindowFocusReason);
@@ -112,6 +114,17 @@ void GameWindow::PlaceCurrentBlock()
     }
 }
 
+void GameWindow::StartGame()
+{
+    m_pCurrentBlock = GenerateBlock();
+
+    m_GameTickTimer.start(140);
+
+    m_pUi->m_InfoDisplayLabel->hide();
+
+    m_GameState = GameState::GameRunning;
+}
+
 void GameWindow::EndGame()
 {
     m_pCurrentBlock.reset();
@@ -123,17 +136,6 @@ void GameWindow::EndGame()
     m_GameTickTimer.stop();
 
     m_GameState = GameState::GameStopped;
-}
-
-void GameWindow::StartGame()
-{
-    m_pCurrentBlock = GenerateBlock();
-
-    m_GameTickTimer.start(140);
-
-    m_pUi->m_InfoDisplayLabel->hide();
-
-    m_GameState = GameState::GameRunning;
 }
 
 void GameWindow::RestartGame()

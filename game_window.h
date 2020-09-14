@@ -66,8 +66,8 @@ private:
     void PlaceBlock();
     void FindAndDeleteFullRows();
     void PlaceCurrentBlock();
-    void EndGame();
     void StartGame();
+    void EndGame();
     void RestartGame();
     void SetScore(int score) {m_Score = score;}
     void IncreaseScore(int score) {m_Score += score;}
