@@ -127,6 +127,7 @@ void GameWindow::StartGame()
     Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
     SetScore(0);
+    UpdateScoreLabel();
 
     m_pUi->m_InfoDisplayLabel->hide();
 
