@@ -30,22 +30,22 @@ public:
 
     struct GameArenaParameters
     {
-        static int const WALL_THICKNESS = 5;
+        static const int WALL_THICKNESS = 5;
         static Qt::GlobalColor const WALL_COLOR = Qt::white;
-        static int const WALL_OFFSET = 5;
-        static int const LEFT_BORDER_X = 0;
-        static int const LEFT_BORDER_X_OFFSET = +2;
-        static int const RIGHT_BORDER_X = 305;
-        static int const RIGHT_BORDER_X_OFFSET = +2;
-        static int const BOTTOM_Y = 610;
-        static int const BOTTOM_Y_OFFSET = -3;
-        static int const TOP_Y = 0;
-        static int const TOP_Y_OFFSET = +2;
-        static int const MAX_BLOCK_ROWS = 20;
-        static int const MAX_BLOCK_COLUMNS = 10;
-        static int const MIN_BLOCK_ROWS = 1;
-        static int const MIN_BLOCK_COLUMNS = 1;
-        static int const BLOCK_SQUARE_SIZE = 30;
+        static const int WALL_OFFSET = 5;
+        static const int LEFT_BORDER_X = 0;
+        static const int LEFT_BORDER_X_OFFSET = +2;
+        static const int RIGHT_BORDER_X = 305;
+        static const int RIGHT_BORDER_X_OFFSET = +2;
+        static const int BOTTOM_Y = 610;
+        static const int BOTTOM_Y_OFFSET = -3;
+        static const int TOP_Y = 0;
+        static const int TOP_Y_OFFSET = +2;
+        static const int MAX_BLOCK_ROWS = 20;
+        static const int MAX_BLOCK_COLUMNS = 10;
+        static const int MIN_BLOCK_ROWS = 1;
+        static const int MIN_BLOCK_COLUMNS = 1;
+        static const int BLOCK_SQUARE_SIZE = 30;
     };
 
 private:

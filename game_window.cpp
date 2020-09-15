@@ -8,19 +8,29 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
     m_pUi->setupUi(this);
 
     setWindowTitle("Tetris");
-
-    Drawer::SetScene(&m_Scene);
-
     setFocus(Qt::ActiveWindowFocusReason);
-
-    m_GameState = GameState::BeforeFirstRun;
-
-    InitializeGameplayAreaScene();
-    DrawGameArena();
-    PrepareFirstGameRun();
 
     /*Seed based on time*/
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    Drawer::SetScene(&m_Scene);
+
+    InitializeGameplayAreaScene();
+    DrawGameArena();
+
+    qDebug() << &m_Scene;
+
+//    for(int i=0 ; i< m_Scene.items().length(); i++)
+//    {
+//        qDebug() << "Item " << i << ": " << m_Scene.items()[i];
+//    }
+
+    for(auto & item : m_Scene.items())
+    {
+        qDebug() << item;
+    }
+
+    //PrepareFirstGameRun();
 }
 
 void GameWindow::InitializeGameplayAreaScene()
@@ -34,15 +44,20 @@ void GameWindow::InitializeGameplayAreaScene()
 
     m_pUi->m_GraphicsView->setScene(&m_Scene);
     m_pUi->m_GraphicsView->setSceneRect(sceneX, sceneY, sceneWidth, sceneHeight);
+
+    qDebug("Gameplay scene initialized");
 }
 
 void GameWindow::DrawGameArena()
 {
     Drawer::DrawGameArena();
+
+    qDebug("Gameplay area drawn");
 }
 
 void GameWindow::PrepareFirstGameRun()
 {
+    m_GameState = GameState::BeforeFirstRun;
     m_Score = 0;
 
     UpdateScoreLabel();
