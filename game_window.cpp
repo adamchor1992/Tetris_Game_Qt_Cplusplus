@@ -184,6 +184,9 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         if(m_GameState == GameState::GameRunning)
         {
             m_pCurrentBlock->RotateBlock(m_PlacedBlocks);
+
+            Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
+            m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
         }
         break;
 
@@ -254,7 +257,7 @@ void GameWindow::on_m_SpeedHorizontalSlider_valueChanged(int value)
 
 void GameWindow::GameTick()
 {
-    /*Check if there is something under any of block square*/
+    /*Check if there is floor or other square under any of block squares*/
     if(m_pCurrentBlock->IsSquareOrBottomWallUnderBlock(m_PlacedBlocks))
     {
         PlaceCurrentBlock();
