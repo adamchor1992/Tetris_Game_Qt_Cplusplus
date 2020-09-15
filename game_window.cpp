@@ -155,6 +155,8 @@ GameWindow::~GameWindow()
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
+    int sliderValue = m_pUi->m_SpeedHorizontalSlider->value();
+
     switch(event->key())
     {
     case Qt::Key_Left:
@@ -197,6 +199,16 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             m_pCurrentBlock->DropAndPlaceBlock(m_PlacedBlocks);
             qDebug() << "Drop";
         }
+        break;
+
+    case Qt::Key_Plus:
+        //Subtracting means increasing speed
+        m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue - 1);
+        break;
+
+    case Qt::Key_Minus:
+        //Adding means decreasing speed
+        m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue + 1);
         break;
 
     case Qt::Key_P:
@@ -247,7 +259,7 @@ void GameWindow::SetGameSpeedLevel(int speedLevel)
 {
     const int TIME_OFFSET = 50;
 
-    m_GameTickTimer.start(TIME_OFFSET + speedLevel * 20);
+    m_GameTickTimer.setInterval(TIME_OFFSET + speedLevel * 20);
 }
 
 void GameWindow::on_m_SpeedHorizontalSlider_valueChanged(int value)
