@@ -79,9 +79,7 @@ void Drawer::EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers)
 
 void Drawer::RemoveAllPlacedBlocks()
 {
-    QList<QGraphicsItem*> graphicItems = m_pScene->items();
-
-    for(auto graphicItem : graphicItems)
+    for(auto & graphicItem : m_pScene->items())
     {
         /*Remove all squares from scene*/
         if(dynamic_cast<QGraphicsRectItem*>(graphicItem))

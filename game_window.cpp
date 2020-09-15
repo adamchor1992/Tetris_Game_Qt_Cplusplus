@@ -17,20 +17,7 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 
     InitializeGameplayAreaScene();
     DrawGameArena();
-
-    qDebug() << &m_Scene;
-
-//    for(int i=0 ; i< m_Scene.items().length(); i++)
-//    {
-//        qDebug() << "Item " << i << ": " << m_Scene.items()[i];
-//    }
-
-    for(auto & item : m_Scene.items())
-    {
-        qDebug() << item;
-    }
-
-    //PrepareFirstGameRun();
+    PrepareFirstGameRun();
 }
 
 void GameWindow::InitializeGameplayAreaScene()
@@ -131,13 +118,21 @@ void GameWindow::PlaceCurrentBlock()
 
 void GameWindow::StartGame()
 {
-    SetGameSpeedLevel(5);
+    SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
 
     m_pCurrentBlock = GenerateBlock();
+
+    m_PlacedBlocks.ClearPlacedBlocks();
+
+    Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
+
+    SetScore(0);
 
     m_pUi->m_InfoDisplayLabel->hide();
 
     m_GameState = GameState::GameRunning;
+
+    m_GameTickTimer.start();
 }
 
 void GameWindow::EndGame()
@@ -151,22 +146,6 @@ void GameWindow::EndGame()
     m_GameTickTimer.stop();
 
     m_GameState = GameState::GameStopped;
-}
-
-void GameWindow::RestartGame()
-{
-    m_pCurrentBlock = GenerateBlock();
-
-    m_PlacedBlocks.ClearPlacedBlocks();
-
-    Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
-
-    SetScore(0);
-
-    m_pUi->m_InfoDisplayLabel->hide();
-
-    m_GameTickTimer.start();
-    m_GameState = GameState::GameRunning;
 }
 
 GameWindow::~GameWindow()
@@ -240,8 +219,8 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         }
         else if(m_GameState == GameState::GameStopped)
         {
-            qDebug() << "Restart game";
-            RestartGame();
+            qDebug() << "Starting game again";
+            StartGame();
         }
         break;
 

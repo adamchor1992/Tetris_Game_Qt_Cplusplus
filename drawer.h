@@ -23,7 +23,7 @@ public:
     static void DrawGameArena();
     static QVector<QGraphicsRectItem*> DrawBlock(QVector<QPair<int, int> > blockCoordinates, QColor randomColor);
     static void DrawAllPlacedBlocks(PlacedBlocks const& placedBlocks);
-    static void RemoveAllPlacedBlocks();
+
     static void EraseBlock(QVector<QGraphicsRectItem*> blockRectGraphicPointers);
     static bool ValidateCoordinates(int x, int y);
     static bool ValidateCoordinates(QVector<QPair<int, int> > blockCoordinates);
@@ -53,4 +53,5 @@ private:
 
     static void DrawSquare(int x, int y, QBrush brush);
     static void DrawAllPossibleSquares();
+    static void RemoveAllPlacedBlocks();
 };

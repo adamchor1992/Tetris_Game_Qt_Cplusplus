@@ -71,7 +71,6 @@ private:
     void PlaceCurrentBlock();
     void StartGame();
     void EndGame();
-    void RestartGame();
     void SetScore(int score) {m_Score = score;}
     void IncreaseScore(int score) {m_Score += score;}
     void UpdateScoreLabel();
