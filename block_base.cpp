@@ -1,11 +1,11 @@
 #include "block_base.h"
 #include "drawer.h"
+#include "random_number_generator.h"
 
 BlockBase::BlockBase()
 {
-    int randomNumber = std::rand();
-
-    m_BlockColor = m_Colors.at(randomNumber % m_Colors.size());
+    static RandomNumberGenerator randomNumberGenerator(0, m_Colors.size() - 1);
+    m_BlockColor = m_Colors.at(randomNumberGenerator.GenerateRandomNumber());
 
     m_CentralSquareX = 5;
     m_CentralSquareY = 1;

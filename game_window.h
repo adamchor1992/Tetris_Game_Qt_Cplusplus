@@ -7,7 +7,6 @@
 #include <QDebug>
 #include <QTimer>
 #include <QKeyEvent>
-#include <random>
 #include <memory>
 
 #include "block_base.h"
@@ -20,6 +19,7 @@
 #include "blocks/l_block.h"
 #include "blocks/o_block.h"
 #include "blocks/t_block.h"
+#include <random_number_generator.h>
 
 namespace Ui
 {

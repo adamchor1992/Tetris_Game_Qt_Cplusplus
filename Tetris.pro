@@ -34,13 +34,15 @@ SOURCES += \
         blocks/o_block.cpp \
         blocks/s_block.cpp \
         blocks/t_block.cpp \
-        blocks/z_block.cpp
+        blocks/z_block.cpp \
+        random_number_generator.cpp
 
 HEADERS += \
         game_window.h \
         block_base.h \
         drawer.h \
         placed_blocks.h \
+        random_number_generator.h \
         utilities.h \
         blocks/i_block.h \
         blocks/j_block.h \

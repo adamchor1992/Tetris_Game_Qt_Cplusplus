@@ -10,9 +10,6 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
     setWindowTitle("Tetris");
     setFocus(Qt::ActiveWindowFocusReason);
 
-    /*Seed based on time*/
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
     Drawer::SetScene(&m_Scene);
 
     InitializeGameplayAreaScene();
@@ -61,10 +58,9 @@ std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
     if(shape == "random")
     {
         static std::map<int, QString> numberToShapeMapping = { {0,"S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
+        static RandomNumberGenerator randomNumberGenerator(0, numberToShapeMapping.size() - 1);
 
-        int randomNumber = std::rand();
-
-        shape = numberToShapeMapping.at(randomNumber % static_cast<int>(numberToShapeMapping.size()));
+        shape = numberToShapeMapping.at(randomNumberGenerator.GenerateRandomNumber());
     }
 
     if(shape == "S")
