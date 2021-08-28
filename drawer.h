@@ -24,10 +24,13 @@ public:
     static void DrawAllPlacedBlocks(const PlacedBlocks& placedBlocks);
     static void EraseBlock(const QVector<QGraphicsRectItem *>& blockRectGraphicPointers);
 
+    static void Debug_PrintItemsCurrentlyOnScene();
+
 private:
     static QGraphicsScene* m_pScene;
 
     static void DrawSquare(int x, int y, QBrush brush);
-    static void DrawAllPossibleSquares();
     static void RemoveAllPlacedBlocks();
+
+    static void Debug_DrawAllPossibleSquares();
 };

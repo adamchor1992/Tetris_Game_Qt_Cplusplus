@@ -14,18 +14,21 @@ void Drawer::DrawGameArena()
                       GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
                       GameArenaParameters::TOP_Y,
                       wallPen);
+
     /*Right wall*/
     m_pScene->addLine(GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
                       GameArenaParameters::BOTTOM_Y,
                       GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
                       GameArenaParameters::TOP_Y,
                       wallPen);
+
     /*Bottom wall*/
     m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
                       GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
                       GameArenaParameters::RIGHT_BORDER_X,
                       GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
                       wallPen);
+
     /*Top wall*/
     m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
                       GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
@@ -49,7 +52,7 @@ void Drawer::DrawSquare(int x, int y, QBrush brush)
 
 QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<QPair<int, int> >& blockCoordinates, QColor randomColor)
 {
-    QVector<QGraphicsRectItem*> squaresGraphicPointers;
+    QVector<QGraphicsRectItem*> squaresGraphicsRectPointers;
 
     QPen randomColorPen(randomColor);
     QBrush randomColorBrush(randomColor);
@@ -58,16 +61,18 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<QPair<int, int> >& b
     {
         for(int i = 0 ; i < 4; i++)
         {
-            squaresGraphicPointers.append(m_pScene->addRect((blockCoordinates.at(i).first - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+            auto squareGraphicsRectItem = m_pScene->addRect((blockCoordinates.at(i).first - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                                             (blockCoordinates.at(i).second - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
                                                             GameArenaParameters::BLOCK_SQUARE_SIZE,
                                                             GameArenaParameters::BLOCK_SQUARE_SIZE,
                                                             randomColorPen,
-                                                            randomColorBrush));
+                                                            randomColorBrush);
+
+            squaresGraphicsRectPointers.append(squareGraphicsRectItem);
         }
     }
 
-    return squaresGraphicPointers;
+    return squaresGraphicsRectPointers;
 }
 
 void Drawer::EraseBlock(const QVector<QGraphicsRectItem*>& blockRectGraphicPointers)
@@ -107,7 +112,20 @@ void Drawer::DrawAllPlacedBlocks(const PlacedBlocks& placedBlocks)
     }
 }
 
-void Drawer::DrawAllPossibleSquares()
+void Drawer::Debug_PrintItemsCurrentlyOnScene()
+{
+    qDebug() << "GRAPHICAL ITEMS CURRENTLY ON SCENE (" << m_pScene << ")";
+
+    int index = 1;
+
+    for(auto* item : m_pScene->items())
+    {
+        qDebug() << index << ". " << item;
+        index++;
+    }
+}
+
+void Drawer::Debug_DrawAllPossibleSquares()
 {
     QBrush redBrush(Qt::red);
     QBrush blueBrush(Qt::blue);

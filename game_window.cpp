@@ -14,7 +14,15 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 
     InitializeGameplayAreaScene();
     DrawGameArena();
-    PrepareFirstGameRun();
+
+    m_GameState = GameState::GameStopped;
+    m_Score = 0;
+
+    UpdateScoreLabel();
+
+    SetInformationLabel("PRESS SPACE TO START");
+
+    connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTickHandler);
 }
 
 void GameWindow::InitializeGameplayAreaScene()
@@ -37,18 +45,6 @@ void GameWindow::DrawGameArena()
     Drawer::DrawGameArena();
 
     qDebug("Gameplay area drawn");
-}
-
-void GameWindow::PrepareFirstGameRun()
-{
-    m_GameState = GameState::BeforeFirstRun;
-    m_Score = 0;
-
-    UpdateScoreLabel();
-
-    SetInformationLabel("PRESS SPACE TO START");
-
-    connect(&m_GameTickTimer, &QTimer::timeout, this, &GameWindow::GameTick);
 }
 
 std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
@@ -97,7 +93,9 @@ std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
         assert(false);
     }
 
-    pBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(pBlock->GetBlockCoordinates(), pBlock->GetColor()));
+    QVector<QGraphicsRectItem*> blockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(pBlock->GetBlockCoordinates(), pBlock->GetColor());
+
+    pBlock->SetBlockSquaresGraphicsRectItemPointers(blockSquaresGraphicsRectItemPointers);
 
     return pBlock;
 }
@@ -106,7 +104,7 @@ void GameWindow::PlaceCurrentBlock()
 {
     QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
-    for(int i=0; i < blockCoordinates.size(); i++)
+    for(int i = 0; i < blockCoordinates.size(); i++)
     {
         m_PlacedBlocks.AddSquare(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
     }
@@ -116,11 +114,11 @@ void GameWindow::StartGame()
 {
     SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
 
-    m_pCurrentBlock = GenerateBlock();
-
     m_PlacedBlocks.ClearPlacedBlocks();
 
     Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
+
+    m_pCurrentBlock = GenerateBlock();
 
     SetScore(0);
     UpdateScoreLabel();
@@ -134,15 +132,12 @@ void GameWindow::StartGame()
 
 void GameWindow::EndGame()
 {
+    m_GameState = GameState::GameStopped;
+    m_GameTickTimer.stop();
     m_pCurrentBlock.reset();
 
     qDebug() << "GAME OVER";
-
     SetInformationLabel("GAME OVER\nPRESS SPACE TO RESTART");
-
-    m_GameTickTimer.stop();
-
-    m_GameState = GameState::GameStopped;
 }
 
 GameWindow::~GameWindow()
@@ -224,14 +219,9 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         break;
 
     case Qt::Key_Space:
-        if(m_GameState == GameState::BeforeFirstRun)
+        if(m_GameState == GameState::GameStopped)
         {
             qDebug() << "Start game";
-            StartGame();
-        }
-        else if(m_GameState == GameState::GameStopped)
-        {
-            qDebug() << "Starting game again";
             StartGame();
         }
         break;
@@ -264,72 +254,75 @@ void GameWindow::on_m_SpeedHorizontalSlider_valueChanged(int value)
     SetGameSpeedLevel(value);
 }
 
-void GameWindow::GameTick()
+void GameWindow::GameTickHandler()
 {
-    /*Check if there is floor or other square under any of block squares*/
-    if(m_pCurrentBlock->IsSquareOrBottomWallUnderBlock(m_PlacedBlocks))
+    if(m_GameState == GameState::GameRunning)
     {
-        PlaceCurrentBlock();
-
-        m_pCurrentBlock.reset();
-
-        QVector<int> fullRows = m_PlacedBlocks.FindFullRows();
-
-        for(auto row : fullRows)
+        /*Check if there is floor or other square under any of block squares*/
+        if(m_pCurrentBlock->IsSquareOrBottomWallUnderBlock(m_PlacedBlocks))
         {
-            m_PlacedBlocks.RemoveRow(row);
-            m_PlacedBlocks.DropRowsAbove(row);
-        }
+            PlaceCurrentBlock();
 
-        switch(fullRows.size())
-        {
-        case 0:
-            qDebug() << "NO FULL ROWS";
-            break;
-        case 1:
-            qDebug() << "1 FULL ROW, + 1 point";
-            IncreaseScore(1);
-            break;
-        case 2:
-            qDebug() << "2 FULL ROWS, + 3 points";
-            IncreaseScore(3);
-            break;
-        case 3:
-            qDebug() << "3 FULL ROWS, + 7 points";
-            IncreaseScore(7);
-            break;
-        case 4:
-            qDebug() << "4 FULL ROWS, + 10 points";
-            IncreaseScore(10);
-            break;
-        default:
-            qDebug() << "WRONG FULL ROWS NUMBER";
-        }
+            m_pCurrentBlock.reset();
 
-        /*Redraw all already placed blocks*/
-        Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
+            QVector<int> fullRows = m_PlacedBlocks.FindFullRows();
 
-        UpdateScoreLabel();
-
-        m_pCurrentBlock = GenerateBlock();
-
-        QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
-
-        for(int i=0; i<blockCoordinates.size(); i++)
-        {
-            QPair<int,int> coordinatesPair(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
-
-            if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
+            for(auto row : fullRows)
             {
-                EndGame();
+                m_PlacedBlocks.RemoveRow(row);
+                m_PlacedBlocks.DropRowsAbove(row);
             }
-        }
 
-        /*Return so new block is not lowered just after creation*/
-        return;
-    }
-    else
-    {
-        m_pCurrentBlock->DropBlockOneLevel();
+            switch(fullRows.size())
+            {
+            case 0:
+                qDebug() << "NO FULL ROWS";
+                break;
+            case 1:
+                qDebug() << "1 FULL ROW, + 1 point";
+                IncreaseScore(1);
+                break;
+            case 2:
+                qDebug() << "2 FULL ROWS, + 3 points";
+                IncreaseScore(3);
+                break;
+            case 3:
+                qDebug() << "3 FULL ROWS, + 7 points";
+                IncreaseScore(7);
+                break;
+            case 4:
+                qDebug() << "4 FULL ROWS, + 10 points";
+                IncreaseScore(10);
+                break;
+            default:
+                qDebug() << "WRONG FULL ROWS NUMBER";
+            }
+
+            /*Redraw all already placed blocks*/
+            Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
+
+            UpdateScoreLabel();
+
+            m_pCurrentBlock = GenerateBlock();
+
+            QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
+
+            for(int i=0; i<blockCoordinates.size(); i++)
+            {
+                QPair<int,int> coordinatesPair(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
+
+                if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
+                {
+                    EndGame();
+                }
+            }
+
+            /*Return so new block is not lowered just after creation*/
+            return;
+        }
+        else
+        {
+            m_pCurrentBlock->DropBlockOneLevel();
+        }
     }
 }

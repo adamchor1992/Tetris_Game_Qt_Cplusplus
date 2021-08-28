@@ -31,7 +31,7 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public slots:
-    void GameTick();
+    void GameTickHandler();
 
 public:
     explicit GameWindow(QWidget *parent = nullptr);
@@ -53,7 +53,6 @@ private:
 
     enum class GameState
     {
-        BeforeFirstRun,
         GameRunning,
         GamePaused,
         GameStopped
@@ -63,7 +62,6 @@ private:
 
     void InitializeGameplayAreaScene();
     void DrawGameArena();
-    void PrepareFirstGameRun();
     void DrawAllPossibleSquares();
     std::unique_ptr<BlockBase> GenerateBlock(QString shape = "random");
     void PlaceBlock();
