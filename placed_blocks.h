@@ -19,7 +19,7 @@ public:
     void ClearPlacedBlocks();
     void AddSquare(int x, int y);
     void RemoveRow(int rowNumber);
-    QList<int> FindFullRows() const;
+    QVector<int> FindFullRows() const;
     void DropRowsAbove(int removedRow);
     const QMap<QPair<int, int>, SquarePresence>& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
 

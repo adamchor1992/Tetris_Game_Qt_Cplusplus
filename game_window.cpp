@@ -273,7 +273,7 @@ void GameWindow::GameTick()
 
         m_pCurrentBlock.reset();
 
-        QList<int> fullRows = m_PlacedBlocks.FindFullRows();
+        QVector<int> fullRows = m_PlacedBlocks.FindFullRows();
 
         for(auto row : fullRows)
         {

@@ -75,9 +75,9 @@ void PlacedBlocks::RemoveRow(int rowNumber)
     }
 }
 
-QList<int> PlacedBlocks::FindFullRows() const
+QVector<int> PlacedBlocks::FindFullRows() const
 {
-    QList<int> fullRows;
+    QVector<int> fullRows;
 
     /*Go through all rows*/
     for(int row = 1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
