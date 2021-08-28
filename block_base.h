@@ -38,9 +38,10 @@ protected:
 
     QVector<QPair<int, int> > m_BlockCoordinates;
 
-private:
     /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/
     QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItemPointers;
+
+private:
     QVector<QColor> m_Colors = {Qt::red, Qt::blue, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
     QColor m_BlockColor;
 };

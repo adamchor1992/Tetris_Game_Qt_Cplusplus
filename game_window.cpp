@@ -178,9 +178,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         if(m_GameState == GameState::GameRunning)
         {
             m_pCurrentBlock->RotateBlock(m_PlacedBlocks);
-
-            Drawer::EraseBlock(m_pCurrentBlock->GetBlockSquaresGraphicsRectItemPointers());
-            m_pCurrentBlock->SetBlockSquaresGraphicsRectItemPointers(Drawer::DrawBlock(m_pCurrentBlock->GetBlockCoordinates(), m_pCurrentBlock->GetColor()));
         }
         break;
 

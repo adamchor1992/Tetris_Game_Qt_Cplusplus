@@ -22,8 +22,6 @@ public:
     static void DrawGameArena();
     static QVector<QGraphicsRectItem*> DrawBlock(const QVector<QPair<int, int> >& blockCoordinates, QColor randomColor);
     static void DrawAllPlacedBlocks(const PlacedBlocks& placedBlocks);
-    static void EraseBlock(const QVector<QGraphicsRectItem *>& blockRectGraphicPointers);
-
     static void Debug_PrintItemsCurrentlyOnScene();
 
 private:

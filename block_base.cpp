@@ -41,6 +41,8 @@ void BlockBase::MoveBlock(Direction direction)
 
             m_BlockCoordinates[i].first = newX;
             m_BlockCoordinates[i].second = newY;
+
+            m_BlockSquaresGraphicsRectItemPointers.at(i)->moveBy(-GameArenaParameters::BLOCK_SQUARE_SIZE, 0);
         }
     }
     else if(direction == Direction::right)
@@ -57,11 +59,10 @@ void BlockBase::MoveBlock(Direction direction)
 
             m_BlockCoordinates[i].first = newX;
             m_BlockCoordinates[i].second = newY;
+
+            m_BlockSquaresGraphicsRectItemPointers.at(i)->moveBy(+GameArenaParameters::BLOCK_SQUARE_SIZE, 0);
         }
     }
-
-    Drawer::EraseBlock(m_BlockSquaresGraphicsRectItemPointers);
-    m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
 void BlockBase::RotateBlock(const PlacedBlocks&)
@@ -166,14 +167,11 @@ QColor BlockBase::GetColor() const
 
 void BlockBase::DropBlockOneLevel()
 {
-    for(int i=0; i<m_BlockCoordinates.size(); i++)
+    for(int i=0; i < m_BlockCoordinates.size(); i++)
     {
-        /*Increment Y coordinate*/
         m_BlockCoordinates[i].second++;
+        m_BlockSquaresGraphicsRectItemPointers.at(i)->moveBy(0, GameArenaParameters::BLOCK_SQUARE_SIZE);
     }
-
-    Drawer::EraseBlock(m_BlockSquaresGraphicsRectItemPointers);
-    m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
 void BlockBase::DropAndPlaceBlock(const PlacedBlocks& placedBlocks)

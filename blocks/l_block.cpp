@@ -112,6 +112,18 @@ void LBlock::RotateBlock(const PlacedBlocks& placedBlocks)
             }
         }
 
+        m_BlockSquaresGraphicsRectItemPointers.at(0)->moveBy((newCentralSquareX - m_BlockCoordinates[0].first) * GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                             (newCentralSquareY - m_BlockCoordinates[0].second) * GameArenaParameters::BLOCK_SQUARE_SIZE);
+
+        m_BlockSquaresGraphicsRectItemPointers.at(1)->moveBy((newSquare1X - m_BlockCoordinates[1].first) * GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                             (newSquare1Y - m_BlockCoordinates[1].second) * GameArenaParameters::BLOCK_SQUARE_SIZE);
+
+        m_BlockSquaresGraphicsRectItemPointers.at(2)->moveBy((newSquare2X - m_BlockCoordinates[2].first) * GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                             (newSquare2Y - m_BlockCoordinates[2].second) * GameArenaParameters::BLOCK_SQUARE_SIZE);
+
+        m_BlockSquaresGraphicsRectItemPointers.at(3)->moveBy((newSquare3X - m_BlockCoordinates[3].first) * GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                             (newSquare3Y - m_BlockCoordinates[3].second) * GameArenaParameters::BLOCK_SQUARE_SIZE);
+
         m_BlockCoordinates[0].first = newCentralSquareX;
         m_BlockCoordinates[0].second = newCentralSquareY;
         m_BlockCoordinates[1].first = newSquare1X;

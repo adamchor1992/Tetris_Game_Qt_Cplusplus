@@ -75,14 +75,6 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<QPair<int, int> >& b
     return squaresGraphicsRectPointers;
 }
 
-void Drawer::EraseBlock(const QVector<QGraphicsRectItem*>& blockRectGraphicPointers)
-{
-    for(auto squareRectGraphicPointer : blockRectGraphicPointers)
-    {
-        m_pScene->removeItem(squareRectGraphicPointer);
-    }
-}
-
 void Drawer::RemoveAllPlacedBlocks()
 {
     for(auto& graphicItem : m_pScene->items())
