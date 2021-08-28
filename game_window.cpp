@@ -21,10 +21,10 @@ void GameWindow::InitializeGameplayAreaScene()
 {
     m_Scene.setParent(this);
 
-    int const sceneX = 0;
-    int const sceneY = 0;
-    int const sceneWidth = m_pUi->m_GraphicsView->geometry().width();
-    int const sceneHeight = m_pUi->m_GraphicsView->geometry().height();
+    const int sceneX = 0;
+    const int sceneY = 0;
+    const int sceneWidth = m_pUi->m_GraphicsView->geometry().width();
+    const int sceneHeight = m_pUi->m_GraphicsView->geometry().height();
 
     m_pUi->m_GraphicsView->setScene(&m_Scene);
     m_pUi->m_GraphicsView->setSceneRect(sceneX, sceneY, sceneWidth, sceneHeight);

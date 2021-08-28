@@ -21,7 +21,7 @@ public:
     void RemoveRow(int rowNumber);
     QList<int> FindFullRows() const;
     void DropRowsAbove(int removedRow);
-    QMap<QPair<int, int>, SquarePresence> const& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
+    const QMap<QPair<int, int>, SquarePresence>& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
 
 private:
     /*Map storing bool value representing every square block*/

@@ -64,13 +64,13 @@ void BlockBase::MoveBlock(Direction direction)
     m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
-void BlockBase::RotateBlock(PlacedBlocks const& placedBlocks)
+void BlockBase::RotateBlock(const PlacedBlocks&)
 {
     qDebug() << "Base class RotateBlock() method called";
     assert(false);
 }
 
-bool BlockBase::IsSquareOrLeftWallLeftOfBlock(PlacedBlocks const& placedBlocks)
+bool BlockBase::IsSquareOrLeftWallLeftOfBlock(const PlacedBlocks& placedBlocks) const
 {
     for(int i=0; i < m_BlockCoordinates.size(); i++)
     {
@@ -100,7 +100,7 @@ bool BlockBase::IsSquareOrLeftWallLeftOfBlock(PlacedBlocks const& placedBlocks)
     return false;
 }
 
-bool BlockBase::IsSquareOrRightWallRightOfBlock(PlacedBlocks const& placedBlocks)
+bool BlockBase::IsSquareOrRightWallRightOfBlock(const PlacedBlocks& placedBlocks) const
 {
     for(int i=0; i<m_BlockCoordinates.size(); i++)
     {
@@ -113,7 +113,7 @@ bool BlockBase::IsSquareOrRightWallRightOfBlock(PlacedBlocks const& placedBlocks
         int rightBlockY = currentY;
 
         /*Check if there is wall next to the block*/
-        if(rightBlockX > 10)
+        if(rightBlockX > GameArenaParameters::MAX_BLOCK_COLUMNS)
         {
             return true;
         }
@@ -130,7 +130,7 @@ bool BlockBase::IsSquareOrRightWallRightOfBlock(PlacedBlocks const& placedBlocks
     return false;
 }
 
-bool BlockBase::IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks)
+bool BlockBase::IsSquareOrBottomWallUnderBlock(const PlacedBlocks& placedBlocks) const
 {
     for(int i=0; i < m_BlockCoordinates.size(); i++)
     {
@@ -143,7 +143,7 @@ bool BlockBase::IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks)
         int belowBlockY = currentY + 1;
 
         /*Check if there is bottom wall below the current block*/
-        if(belowBlockY > 20)
+        if(belowBlockY > GameArenaParameters::MAX_BLOCK_ROWS)
         {
             return true;
         }
@@ -159,7 +159,7 @@ bool BlockBase::IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks)
     return false;
 }
 
-QColor BlockBase::GetColor()
+QColor BlockBase::GetColor() const
 {
     return m_BlockColor;
 }
@@ -176,7 +176,7 @@ void BlockBase::DropBlockOneLevel()
     m_BlockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(GetBlockCoordinates(), GetColor());
 }
 
-void BlockBase::DropAndPlaceBlock(PlacedBlocks const& placedBlocks)
+void BlockBase::DropAndPlaceBlock(const PlacedBlocks& placedBlocks)
 {
     while(!IsSquareOrBottomWallUnderBlock(placedBlocks))
     {
@@ -184,7 +184,7 @@ void BlockBase::DropAndPlaceBlock(PlacedBlocks const& placedBlocks)
     }
 }
 
-QVector<QPair<int, int> > BlockBase::GetBlockCoordinates()
+QVector<QPair<int, int> > BlockBase::GetBlockCoordinates() const
 {
     return m_BlockCoordinates;
 }

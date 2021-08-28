@@ -6,7 +6,7 @@ class SBlock : public BlockBase
 {
 public:
     explicit SBlock();
-    void RotateBlock(PlacedBlocks const& placedBlocks) override;
+    void RotateBlock(const PlacedBlocks& placedBlocks) override;
 
 private:
     int m_CurrentRotation;

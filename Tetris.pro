@@ -35,7 +35,8 @@ SOURCES += \
         blocks/s_block.cpp \
         blocks/t_block.cpp \
         blocks/z_block.cpp \
-        random_number_generator.cpp
+        random_number_generator.cpp \
+        utilities.cpp
 
 HEADERS += \
         game_window.h \

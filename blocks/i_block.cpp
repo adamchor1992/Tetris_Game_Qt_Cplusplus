@@ -23,7 +23,7 @@ IBlock::IBlock() : BlockBase()
     m_BlockCoordinates.append(square3Coordinates);
 }
 
-void IBlock::RotateBlock(PlacedBlocks const& placedBlocks)
+void IBlock::RotateBlock(const PlacedBlocks& placedBlocks)
 {
     m_CentralSquareX = m_BlockCoordinates.at(0).first;
     m_CentralSquareY = m_BlockCoordinates.at(0).second;
@@ -76,7 +76,7 @@ void IBlock::RotateBlock(PlacedBlocks const& placedBlocks)
     newCoordinates.append(newSquare2Coordinates);
     newCoordinates.append(newSquare3Coordinates);
 
-    if(Drawer::ValidateCoordinates(newCoordinates))
+    if(utilities::ValidateCoordinates(newCoordinates))
     {
         for(auto coordinatesPair : newCoordinates)
         {

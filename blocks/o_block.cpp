@@ -22,7 +22,7 @@ OBlock::OBlock() : BlockBase()
     m_BlockCoordinates.append(square3Coordinates);
 }
 
-void OBlock::RotateBlock(PlacedBlocks const& placedBlocks)
+void OBlock::RotateBlock(const PlacedBlocks&)
 {
     /*This block does not rotate*/
 }

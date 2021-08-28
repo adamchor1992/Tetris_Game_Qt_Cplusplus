@@ -10,21 +10,21 @@ public:
     explicit BlockBase();
     virtual ~BlockBase();
 
-    QVector<QPair<int, int> > GetBlockCoordinates();
-    QColor GetColor();
+    QVector<QPair<int, int> > GetBlockCoordinates() const;
+    QColor GetColor() const;
     void DropBlockOneLevel();
-    void DropAndPlaceBlock(PlacedBlocks const& placedBlocks);
+    void DropAndPlaceBlock(const PlacedBlocks& placedBlocks);
     void MoveBlock(Direction direction);
-    bool IsSquareOrBottomWallUnderBlock(PlacedBlocks const& placedBlocks);
-    bool IsSquareOrLeftWallLeftOfBlock(PlacedBlocks const& placedBlocks);
-    bool IsSquareOrRightWallRightOfBlock(PlacedBlocks const& placedBlocks);
-    void SetBlockSquaresGraphicsRectItemPointers(QVector<QGraphicsRectItem*> blockSquaresGraphicsRectItemPointers)
+    bool IsSquareOrBottomWallUnderBlock(const PlacedBlocks& placedBlocks) const;
+    bool IsSquareOrLeftWallLeftOfBlock(const PlacedBlocks& placedBlocks) const;
+    bool IsSquareOrRightWallRightOfBlock(const PlacedBlocks& placedBlocks) const;
+    void SetBlockSquaresGraphicsRectItemPointers(const QVector<QGraphicsRectItem*>& blockSquaresGraphicsRectItemPointers)
     {
         m_BlockSquaresGraphicsRectItemPointers = blockSquaresGraphicsRectItemPointers;
     }
-    QVector<QGraphicsRectItem*> const& GetBlockSquaresGraphicsRectItemPointers() const {return m_BlockSquaresGraphicsRectItemPointers;}
+    const QVector<QGraphicsRectItem*>& GetBlockSquaresGraphicsRectItemPointers() const {return m_BlockSquaresGraphicsRectItemPointers;}
 
-    virtual void RotateBlock(PlacedBlocks const& placedBlocks) = 0;
+    virtual void RotateBlock(const PlacedBlocks&) = 0;
 
 protected:
     int m_CentralSquareX;
@@ -41,6 +41,6 @@ protected:
 private:
     /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/
     QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItemPointers;
-    QVector<QColor> m_Colors = {Qt::red, Qt::blue, Qt::white, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
+    QVector<QColor> m_Colors = {Qt::red, Qt::blue, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
     QColor m_BlockColor;
 };
