@@ -28,15 +28,16 @@ SOURCES += \
         block_base.cpp \
         drawer.cpp \
         placed_blocks.cpp \
+        random_number_generator.cpp \
+        utilities.cpp \
+        coordinates.cpp \
         blocks/i_block.cpp \
         blocks/j_block.cpp \
         blocks/l_block.cpp \
         blocks/o_block.cpp \
         blocks/s_block.cpp \
         blocks/t_block.cpp \
-        blocks/z_block.cpp \
-        random_number_generator.cpp \
-        utilities.cpp
+        blocks/z_block.cpp
 
 HEADERS += \
         game_window.h \
@@ -45,6 +46,7 @@ HEADERS += \
         placed_blocks.h \
         random_number_generator.h \
         utilities.h \
+        coordinates.cpp \
         blocks/i_block.h \
         blocks/j_block.h \
         blocks/l_block.h \

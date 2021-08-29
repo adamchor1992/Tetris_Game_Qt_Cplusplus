@@ -1,5 +1,6 @@
 #include "drawer.h"
 #include "utilities.h"
+#include "coordinates.h"
 
 QGraphicsScene* Drawer::m_pScene = nullptr;
 
@@ -37,39 +38,33 @@ void Drawer::DrawGameArena()
                       wallPen);
 }
 
-void Drawer::DrawSquare(int x, int y, QBrush brush)
+void Drawer::DrawSquare(const Coordinates& coordinates, QBrush brush)
 {
-    if(utilities::ValidateCoordinates(x,y))
-    {
-        m_pScene->addRect((x-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                          (y-1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                          GameArenaParameters::BLOCK_SQUARE_SIZE,
-                          GameArenaParameters::BLOCK_SQUARE_SIZE,
-                          Qt::NoPen,
-                          brush);
-    }
+    m_pScene->addRect((coordinates.GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                      (coordinates.GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                      Qt::NoPen,
+                      brush);
 }
 
-QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<QPair<int, int> >& blockCoordinates, QColor randomColor)
+QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<Coordinates>& blockCoordinates, QColor randomColor)
 {
     QVector<QGraphicsRectItem*> squaresGraphicsRectPointers;
 
     QPen randomColorPen(randomColor);
     QBrush randomColorBrush(randomColor);
 
-    if(utilities::ValidateCoordinates(blockCoordinates))
+    for(int i = 0 ; i < blockCoordinates.size(); i++)
     {
-        for(int i = 0 ; i < 4; i++)
-        {
-            auto squareGraphicsRectItem = m_pScene->addRect((blockCoordinates.at(i).first - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                            (blockCoordinates.at(i).second - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                            GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                            GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                            randomColorPen,
-                                                            randomColorBrush);
+        auto squareGraphicsRectItem = m_pScene->addRect((blockCoordinates.at(i).GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                        (blockCoordinates.at(i).GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                        GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                        GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                        randomColorPen,
+                                                        randomColorBrush);
 
-            squaresGraphicsRectPointers.append(squareGraphicsRectItem);
-        }
+        squaresGraphicsRectPointers.append(squareGraphicsRectItem);
     }
 
     return squaresGraphicsRectPointers;
@@ -92,14 +87,11 @@ void Drawer::DrawAllPlacedBlocks(const PlacedBlocks& placedBlocks)
     /*Placed blocks are first removed from scene and then placed again*/
     RemoveAllPlacedBlocks();
 
-    for(auto& coordinatesPair : placedBlocks.GetPlacedBlocksMap().keys())
+    for(auto& coordinates : placedBlocks.GetPlacedBlocksMap().keys())
     {
-        if(placedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
+        if(placedBlocks.GetPlacedBlocksMap().value(coordinates) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
         {
-            int x = coordinatesPair.first;
-            int y = coordinatesPair.second;
-
-            DrawSquare(x, y, Qt::white);
+            DrawSquare(coordinates, Qt::white);
         }
     }
 }

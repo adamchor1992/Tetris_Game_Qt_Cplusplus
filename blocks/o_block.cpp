@@ -2,24 +2,21 @@
 
 OBlock::OBlock() : BlockBase()
 {
-    m_Square1PositionX = m_CentralSquareX;
-    m_Square1PositionY = m_CentralSquareY + 1;
-    m_Square2PositionX = m_CentralSquareX + 1;
-    m_Square2PositionY = m_CentralSquareY + 1;
-    m_Square3PositionX = m_CentralSquareX + 1;
-    m_Square3PositionY = m_CentralSquareY;
+    const QVector<int> transformationCoefficientsVsCentralSquare {0, +1, +1, +1, +1, 0};
 
-    m_CurrentRotation = 0;
+    const Coordinates square1Coordinates(STARTING_CENTRAL_SQUARE_COORDINATES.GetX() + transformationCoefficientsVsCentralSquare.at(0),
+                                         STARTING_CENTRAL_SQUARE_COORDINATES.GetY() + transformationCoefficientsVsCentralSquare.at(1));
+    const Coordinates square2Coordinates(STARTING_CENTRAL_SQUARE_COORDINATES.GetX() + transformationCoefficientsVsCentralSquare.at(2),
+                                         STARTING_CENTRAL_SQUARE_COORDINATES.GetY() + transformationCoefficientsVsCentralSquare.at(3));
+    const Coordinates square3Coordinates(STARTING_CENTRAL_SQUARE_COORDINATES.GetX() + transformationCoefficientsVsCentralSquare.at(4),
+                                         STARTING_CENTRAL_SQUARE_COORDINATES.GetY() + transformationCoefficientsVsCentralSquare.at(5));
 
-    QPair<int, int> centralSquareCoordinates(m_CentralSquareX, m_CentralSquareY);
-    QPair<int, int> square1Coordinates(m_Square1PositionX, m_Square1PositionY);
-    QPair<int, int> square2Coordinates(m_Square2PositionX, m_Square2PositionY);
-    QPair<int, int> square3Coordinates(m_Square3PositionX, m_Square3PositionY);
-
-    m_BlockCoordinates.append(centralSquareCoordinates);
+    m_BlockCoordinates.append(STARTING_CENTRAL_SQUARE_COORDINATES);
     m_BlockCoordinates.append(square1Coordinates);
     m_BlockCoordinates.append(square2Coordinates);
     m_BlockCoordinates.append(square3Coordinates);
+
+    m_CurrentRotation = 0;
 }
 
 void OBlock::RotateBlock(const PlacedBlocks&)

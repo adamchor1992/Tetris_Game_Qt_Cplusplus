@@ -102,11 +102,11 @@ std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
 
 void GameWindow::PlaceCurrentBlock()
 {
-    QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
+    const QVector<Coordinates> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
     for(int i = 0; i < blockCoordinates.size(); i++)
     {
-        m_PlacedBlocks.AddSquare(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
+        m_PlacedBlocks.AddSquare(blockCoordinates.at(i));
     }
 }
 
@@ -191,12 +191,12 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         break;
 
     case Qt::Key_Plus:
-        //Subtracting means increasing speed
+        /*Subtracting means increasing speed*/
         m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue - 1);
         break;
 
     case Qt::Key_Minus:
-        //Adding means decreasing speed
+        /*Adding means decreasing speed*/
         m_pUi->m_SpeedHorizontalSlider->setValue(sliderValue + 1);
         break;
 
@@ -302,13 +302,13 @@ void GameWindow::GameTickHandler()
 
             m_pCurrentBlock = GenerateBlock();
 
-            QVector<QPair<int, int> > blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
+            QVector<Coordinates> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
 
-            for(int i=0; i<blockCoordinates.size(); i++)
+            for(int i = 0; i<blockCoordinates.size(); i++)
             {
-                QPair<int,int> coordinatesPair(blockCoordinates.at(i).first, blockCoordinates.at(i).second);
+                Coordinates coordinates(blockCoordinates.at(i).GetX(), blockCoordinates.at(i).GetY());
 
-                if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinatesPair) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
+                if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinates) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
                 {
                     EndGame();
                 }

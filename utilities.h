@@ -26,8 +26,3 @@ enum class Direction
     left=1,
     right=2
 };
-
-namespace utilities {
-    bool ValidateCoordinates(int x, int y);
-    bool ValidateCoordinates(const QVector<QPair<int, int> >& blockCoordinates);
-}

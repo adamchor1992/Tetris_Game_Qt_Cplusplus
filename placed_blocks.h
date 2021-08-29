@@ -3,8 +3,9 @@
 #include <QDebug>
 #include <QVector>
 #include <QMap>
-#include <QPair>
 #include <QGraphicsRectItem>
+
+#include "coordinates.h"
 
 class PlacedBlocks
 {
@@ -17,15 +18,15 @@ public:
     };
 
     void ClearPlacedBlocks();
-    void AddSquare(int x, int y);
+    void AddSquare(const Coordinates& coordinates);
     void RemoveRow(int rowNumber);
     QVector<int> FindFullRows() const;
     void DropRowsAbove(int removedRow);
-    const QMap<QPair<int, int>, SquarePresence>& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
+    const QMap<Coordinates, SquarePresence>& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
 
 private:
     /*Map storing bool value representing every square block*/
-    QMap<QPair<int,int>, SquarePresence> m_PlacedBlocksMap;
+    QMap<Coordinates, SquarePresence> m_PlacedBlocksMap;
 
-    void RemoveSquare(int x, int y);
+    void RemoveSquare(const Coordinates& coordinates);
 };
