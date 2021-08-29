@@ -4,13 +4,14 @@
 #include <QVector>
 #include <QMap>
 #include <QGraphicsRectItem>
+#include <QColor>
 
 #include "coordinates.h"
 
-class PlacedBlocks
+class PlacedSquares
 {
 public:
-    explicit PlacedBlocks();
+    explicit PlacedSquares();
 
     enum class SquarePresence
     {
@@ -23,6 +24,7 @@ public:
     QVector<int> FindFullRows() const;
     void DropRowsAbove(int removedRow);
     const QMap<Coordinates, SquarePresence>& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
+    static const Qt::GlobalColor PLACED_SQUARES_COLOR = Qt::white;
 
 private:
     /*Map storing bool value representing every square block*/

@@ -20,7 +20,7 @@ IBlock::IBlock() : BlockBase()
     m_CurrentRotation = 0;
 }
 
-void IBlock::RotateBlock(const PlacedBlocks& placedBlocks)
+void IBlock::RotateBlock(const PlacedSquares& placedBlocks)
 {
     QVector<int> rotationCoefficients;
 

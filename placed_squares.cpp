@@ -1,38 +1,40 @@
-#include "placed_blocks.h"
+#include "placed_squares.h"
 #include "drawer.h"
 #include "utilities.h"
 
-PlacedBlocks::PlacedBlocks()
+PlacedSquares::PlacedSquares()
 {
     /*Initialize m_PlacedBlocksMap with all null pointers*/
-    for(int column=1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
+    for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
         for(int row=1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
         {
-            m_PlacedBlocksMap.insert(Coordinates(column, row), PlacedBlocks::SquarePresence::NO_SQUARE);
+            m_PlacedBlocksMap.insert(Coordinates(column, row), PlacedSquares::SquarePresence::NO_SQUARE);
         }
     }
 
     qDebug() << "Size of m_PlacedBlocksMap: " << m_PlacedBlocksMap.size();
 }
 
-void PlacedBlocks::ClearPlacedBlocks()
+void PlacedSquares::ClearPlacedBlocks()
 {
     /*Initialize m_PlacedBlocksMap with all null pointers*/
-    for(int column=1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
+    for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
-        for(int row=1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
+        for(int row = 1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
         {
-            m_PlacedBlocksMap.insert(Coordinates(column, row), PlacedBlocks::SquarePresence::NO_SQUARE);
+            m_PlacedBlocksMap.insert(Coordinates(column, row), PlacedSquares::SquarePresence::NO_SQUARE);
         }
     }
+
+    Drawer::RemoveAllPlacedBlocks();
 }
 
-void PlacedBlocks::AddSquare(const Coordinates& coordinates)
+void PlacedSquares::AddSquare(const Coordinates& coordinates)
 {
-    if(m_PlacedBlocksMap.value(coordinates) == PlacedBlocks::SquarePresence::NO_SQUARE)
+    if(m_PlacedBlocksMap.value(coordinates) == PlacedSquares::SquarePresence::NO_SQUARE)
     {
-        m_PlacedBlocksMap[coordinates] = PlacedBlocks::SquarePresence::SQUARE_PRESENT;
+        m_PlacedBlocksMap[coordinates] = PlacedSquares::SquarePresence::SQUARE_PRESENT;
     }
     else
     {
@@ -40,11 +42,11 @@ void PlacedBlocks::AddSquare(const Coordinates& coordinates)
     }
 }
 
-void PlacedBlocks::RemoveSquare(const Coordinates& coordinates)
+void PlacedSquares::RemoveSquare(const Coordinates& coordinates)
 {
-    if(m_PlacedBlocksMap.value(coordinates) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
+    if(m_PlacedBlocksMap.value(coordinates) == PlacedSquares::SquarePresence::SQUARE_PRESENT)
     {
-        m_PlacedBlocksMap[coordinates] = PlacedBlocks::SquarePresence::NO_SQUARE;
+        m_PlacedBlocksMap[coordinates] = PlacedSquares::SquarePresence::NO_SQUARE;
     }
     else
     {
@@ -52,7 +54,7 @@ void PlacedBlocks::RemoveSquare(const Coordinates& coordinates)
     }
 }
 
-void PlacedBlocks::RemoveRow(int rowNumber)
+void PlacedSquares::RemoveRow(int rowNumber)
 {
     if(rowNumber < GameArenaParameters::MIN_BLOCK_ROWS || rowNumber > GameArenaParameters::MAX_BLOCK_ROWS)
     {
@@ -65,7 +67,7 @@ void PlacedBlocks::RemoveRow(int rowNumber)
     }
 }
 
-QVector<int> PlacedBlocks::FindFullRows() const
+QVector<int> PlacedSquares::FindFullRows() const
 {
     QVector<int> fullRows;
 
@@ -76,7 +78,7 @@ QVector<int> PlacedBlocks::FindFullRows() const
         {
             Coordinates coordinates(column, row);
 
-            if(m_PlacedBlocksMap.value(coordinates) == PlacedBlocks::SquarePresence::NO_SQUARE)
+            if(m_PlacedBlocksMap.value(coordinates) == PlacedSquares::SquarePresence::NO_SQUARE)
             {
                 break;
             }
@@ -92,16 +94,16 @@ QVector<int> PlacedBlocks::FindFullRows() const
 }
 
 /*Drop all rows above deleted row*/
-void PlacedBlocks::DropRowsAbove(int removedRow)
+void PlacedSquares::DropRowsAbove(int removedRow)
 {
-    QMap<Coordinates, PlacedBlocks::SquarePresence> temporaryPlacedBlocksMap;
+    QMap<Coordinates, PlacedSquares::SquarePresence> temporaryPlacedBlocksMap;
 
     /*Initialize temporaryPlacedBlocksArray with null pointers representing each square block*/
     for(int column=1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
     {
         for(int row=1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
         {
-            temporaryPlacedBlocksMap.insert(Coordinates(column,row), PlacedBlocks::SquarePresence::NO_SQUARE);
+            temporaryPlacedBlocksMap.insert(Coordinates(column,row), PlacedSquares::SquarePresence::NO_SQUARE);
         }
     }
 

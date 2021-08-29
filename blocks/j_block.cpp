@@ -20,7 +20,7 @@ JBlock::JBlock() : BlockBase()
     m_CurrentRotation = 0;
 }
 
-void JBlock::RotateBlock(const PlacedBlocks& placedBlocks)
+void JBlock::RotateBlock(const PlacedSquares& placedBlocks)
 {
     QVector<int> rotationCoefficients;
 

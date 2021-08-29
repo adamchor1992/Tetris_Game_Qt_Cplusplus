@@ -70,6 +70,20 @@ QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<Coordinates>& blockC
     return squaresGraphicsRectPointers;
 }
 
+void Drawer::DrawAllPlacedBlocks(const PlacedSquares& placedBlocks)
+{
+    /*Placed blocks are first removed from scene and then placed again*/
+    RemoveAllPlacedBlocks();
+
+    for(auto& coordinates : placedBlocks.GetPlacedBlocksMap().keys())
+    {
+        if(placedBlocks.GetPlacedBlocksMap().value(coordinates) == PlacedSquares::SquarePresence::SQUARE_PRESENT)
+        {
+            DrawSquare(coordinates, PlacedSquares::PLACED_SQUARES_COLOR);
+        }
+    }
+}
+
 void Drawer::RemoveAllPlacedBlocks()
 {
     for(auto& graphicItem : m_pScene->items())
@@ -78,20 +92,6 @@ void Drawer::RemoveAllPlacedBlocks()
         if(dynamic_cast<QGraphicsRectItem*>(graphicItem))
         {
             m_pScene->removeItem(graphicItem);
-        }
-    }
-}
-
-void Drawer::DrawAllPlacedBlocks(const PlacedBlocks& placedBlocks)
-{
-    /*Placed blocks are first removed from scene and then placed again*/
-    RemoveAllPlacedBlocks();
-
-    for(auto& coordinates : placedBlocks.GetPlacedBlocksMap().keys())
-    {
-        if(placedBlocks.GetPlacedBlocksMap().value(coordinates) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
-        {
-            DrawSquare(coordinates, Qt::white);
         }
     }
 }

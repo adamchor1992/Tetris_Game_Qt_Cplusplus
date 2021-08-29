@@ -7,6 +7,8 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 {
     m_pUi->setupUi(this);
 
+    m_ScoreManager.ConnectScoreLabel(m_pUi->m_ScoreDisplayLabel);
+
     setWindowTitle("Tetris");
     setFocus(Qt::ActiveWindowFocusReason);
 
@@ -16,9 +18,6 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
     DrawGameArena();
 
     m_GameState = GameState::GameStopped;
-    m_Score = 0;
-
-    UpdateScoreLabel();
 
     SetInformationLabel("PRESS SPACE TO START");
 
@@ -47,62 +46,9 @@ void GameWindow::DrawGameArena()
     qDebug("Gameplay area drawn");
 }
 
-std::unique_ptr<BlockBase> GameWindow::GenerateBlock(QString shape)
+void GameWindow::PlaceActiveBlock()
 {
-    std::unique_ptr<BlockBase> pBlock = nullptr;
-
-    if(shape == "random")
-    {
-        static std::map<int, QString> numberToShapeMapping = { {0,"S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
-        static RandomNumberGenerator randomNumberGenerator(0, numberToShapeMapping.size() - 1);
-
-        shape = numberToShapeMapping.at(randomNumberGenerator.GenerateRandomNumber());
-    }
-
-    if(shape == "S")
-    {
-        pBlock = std::make_unique<SBlock>();
-    }
-    else if(shape == "Z")
-    {
-        pBlock = std::make_unique<ZBlock>();
-    }
-    else if(shape == "I")
-    {
-        pBlock = std::make_unique<IBlock>();
-    }
-    else if(shape == "J")
-    {
-        pBlock = std::make_unique<JBlock>();
-    }
-    else if(shape == "L")
-    {
-        pBlock = std::make_unique<LBlock>();
-    }
-    else if(shape == "O")
-    {
-        pBlock = std::make_unique<OBlock>();
-    }
-    else if(shape == "T")
-    {
-        pBlock = std::make_unique<TBlock>();
-    }
-    else
-    {
-        qDebug() << "Unknown shape";
-        assert(false);
-    }
-
-    QVector<QGraphicsRectItem*> blockSquaresGraphicsRectItemPointers = Drawer::DrawBlock(pBlock->GetBlockCoordinates(), pBlock->GetColor());
-
-    pBlock->SetBlockSquaresGraphicsRectItemPointers(blockSquaresGraphicsRectItemPointers);
-
-    return pBlock;
-}
-
-void GameWindow::PlaceCurrentBlock()
-{
-    const QVector<Coordinates> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
+    const QVector<Coordinates> blockCoordinates = m_pActiveBlock->GetBlockCoordinates();
 
     for(int i = 0; i < blockCoordinates.size(); i++)
     {
@@ -112,29 +58,23 @@ void GameWindow::PlaceCurrentBlock()
 
 void GameWindow::StartGame()
 {
-    SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
-
     m_PlacedBlocks.ClearPlacedBlocks();
 
-    Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
-
-    m_pCurrentBlock = GenerateBlock();
-
-    SetScore(0);
-    UpdateScoreLabel();
-
+    SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
+    m_ScoreManager.RestartScore();
     m_pUi->m_InfoDisplayLabel->hide();
 
-    m_GameState = GameState::GameRunning;
+    m_pActiveBlock = BlockBase::MakeBlock();
 
     m_GameTickTimer.start();
+    m_GameState = GameState::GameRunning;
 }
 
 void GameWindow::EndGame()
 {
     m_GameState = GameState::GameStopped;
     m_GameTickTimer.stop();
-    m_pCurrentBlock.reset();
+    m_pActiveBlock.reset();
 
     qDebug() << "GAME OVER";
     SetInformationLabel("GAME OVER\nPRESS SPACE TO RESTART");
@@ -143,6 +83,22 @@ void GameWindow::EndGame()
 GameWindow::~GameWindow()
 {
     delete m_pUi;
+}
+
+void GameWindow::TogglePause()
+{
+    if(m_GameState == GameState::GameRunning)
+    {
+        qDebug() << "Pause";
+        m_GameTickTimer.stop();
+        m_GameState = GameState::GamePaused;
+    }
+    else if(m_GameState == GameState::GamePaused)
+    {
+        qDebug() << "Unpause";
+        m_GameTickTimer.start();
+        m_GameState = GameState::GameRunning;
+    }
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
@@ -155,9 +111,9 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         if(m_GameState == GameState::GameRunning)
         {
-            if(!(m_pCurrentBlock->IsSquareOrLeftWallLeftOfBlock(m_PlacedBlocks)))
+            if(m_pActiveBlock->CheckMovePossibility(Direction::left, m_PlacedBlocks))
             {
-                m_pCurrentBlock->MoveBlock(Direction::left);
+                m_pActiveBlock->MoveBlock(Direction::left);
             }
         }
         break;
@@ -166,9 +122,9 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_D:
         if(m_GameState == GameState::GameRunning)
         {
-            if(!(m_pCurrentBlock->IsSquareOrRightWallRightOfBlock(m_PlacedBlocks)))
+            if(m_pActiveBlock->CheckMovePossibility(Direction::right, m_PlacedBlocks))
             {
-                m_pCurrentBlock->MoveBlock(Direction::right);
+                m_pActiveBlock->MoveBlock(Direction::right);
             }
         }
         break;
@@ -177,7 +133,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_W:
         if(m_GameState == GameState::GameRunning)
         {
-            m_pCurrentBlock->RotateBlock(m_PlacedBlocks);
+            m_pActiveBlock->RotateBlock(m_PlacedBlocks);
         }
         break;
 
@@ -185,7 +141,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_S:
         if(m_GameState == GameState::GameRunning)
         {
-            m_pCurrentBlock->DropAndPlaceBlock(m_PlacedBlocks);
+            m_pActiveBlock->DropAndPlaceBlock(m_PlacedBlocks);
             qDebug() << "Drop";
         }
         break;
@@ -201,18 +157,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         break;
 
     case Qt::Key_P:
-        if(m_GameState == GameState::GameRunning)
-        {
-            qDebug() << "Pause";
-            m_GameTickTimer.stop();
-            m_GameState = GameState::GamePaused;
-        }
-        else if(m_GameState == GameState::GamePaused)
-        {
-            qDebug() << "Unpause";
-            m_GameTickTimer.start();
-            m_GameState = GameState::GameRunning;
-        }
+        TogglePause();
         break;
 
     case Qt::Key_Space:
@@ -226,11 +171,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     default:
         qDebug() << "Unknown key";
     }
-}
-
-void GameWindow::UpdateScoreLabel()
-{
-    m_pUi->m_ScoreDisplayLabel->setText("SCORE: " + QString::number(m_Score));
 }
 
 void GameWindow::SetInformationLabel(QString text)
@@ -256,70 +196,42 @@ void GameWindow::GameTickHandler()
     if(m_GameState == GameState::GameRunning)
     {
         /*Check if there is floor or other square under any of block squares*/
-        if(m_pCurrentBlock->IsSquareOrBottomWallUnderBlock(m_PlacedBlocks))
+        if(m_pActiveBlock->IsSquareOrBottomWallUnderBlock(m_PlacedBlocks))
         {
-            PlaceCurrentBlock();
+            PlaceActiveBlock();
 
-            m_pCurrentBlock.reset();
+            m_pActiveBlock.reset();
 
             QVector<int> fullRows = m_PlacedBlocks.FindFullRows();
 
-            for(auto row : fullRows)
+            if(!fullRows.empty())
             {
-                m_PlacedBlocks.RemoveRow(row);
-                m_PlacedBlocks.DropRowsAbove(row);
-            }
+                m_ScoreManager.RewardPlayerForFullRows(fullRows.size());
 
-            switch(fullRows.size())
-            {
-            case 0:
-                qDebug() << "NO FULL ROWS";
-                break;
-            case 1:
-                qDebug() << "1 FULL ROW, + 1 point";
-                IncreaseScore(1);
-                break;
-            case 2:
-                qDebug() << "2 FULL ROWS, + 3 points";
-                IncreaseScore(3);
-                break;
-            case 3:
-                qDebug() << "3 FULL ROWS, + 7 points";
-                IncreaseScore(7);
-                break;
-            case 4:
-                qDebug() << "4 FULL ROWS, + 10 points";
-                IncreaseScore(10);
-                break;
-            default:
-                qDebug() << "WRONG FULL ROWS NUMBER";
+                for(auto row : fullRows)
+                {
+                    m_PlacedBlocks.RemoveRow(row);
+                    m_PlacedBlocks.DropRowsAbove(row);
+                }
             }
 
             /*Redraw all already placed blocks*/
             Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
 
-            UpdateScoreLabel();
+            m_pActiveBlock = BlockBase::MakeBlock();
 
-            m_pCurrentBlock = GenerateBlock();
-
-            QVector<Coordinates> blockCoordinates = m_pCurrentBlock->GetBlockCoordinates();
-
-            for(int i = 0; i<blockCoordinates.size(); i++)
+            if(m_pActiveBlock->CheckForOverlappingSquares(m_pActiveBlock->GetBlockCoordinates(), m_PlacedBlocks))
             {
-                Coordinates coordinates(blockCoordinates.at(i).GetX(), blockCoordinates.at(i).GetY());
-
-                if(m_PlacedBlocks.GetPlacedBlocksMap().value(coordinates) == PlacedBlocks::SquarePresence::SQUARE_PRESENT)
-                {
-                    EndGame();
-                }
+                EndGame();
             }
-
-            /*Return so new block is not lowered just after creation*/
-            return;
         }
+
         else
         {
-            m_pCurrentBlock->DropBlockOneLevel();
+            m_pActiveBlock->DropBlockOneLevel();
         }
     }
+
+
+    m_Scene.update();
 }

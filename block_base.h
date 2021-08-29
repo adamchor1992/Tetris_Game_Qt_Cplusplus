@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "placed_blocks.h"
+#include "placed_squares.h"
 #include "utilities.h"
 #include "coordinates.h"
 
@@ -14,19 +14,19 @@ public:
     const QVector<Coordinates>& GetBlockCoordinates() const {return m_BlockCoordinates;}
     QColor GetColor() const;
     void DropBlockOneLevel();
-    void DropAndPlaceBlock(const PlacedBlocks& placedBlocks);
+    void DropAndPlaceBlock(const PlacedSquares& placedBlocks);
     void MoveBlock(Direction direction);
-    bool ProcessRotation(const PlacedBlocks& placedBlocks, const QVector<int>& rotationCoefficients);
-    bool IsSquareOrBottomWallUnderBlock(const PlacedBlocks& placedBlocks) const;
-    bool IsSquareOrLeftWallLeftOfBlock(const PlacedBlocks& placedBlocks) const;
-    bool IsSquareOrRightWallRightOfBlock(const PlacedBlocks& placedBlocks) const;
-    void SetBlockSquaresGraphicsRectItemPointers(const QVector<QGraphicsRectItem*>& blockSquaresGraphicsRectItemPointers)
-    {
-        m_BlockSquaresGraphicsRectItemPointers = blockSquaresGraphicsRectItemPointers;
-    }
+    bool ProcessRotation(const PlacedSquares& placedBlocks, const QVector<int>& rotationCoefficients);
+    bool IsSquareOrBottomWallUnderBlock(const PlacedSquares& placedBlocks) const;
+    bool CheckMovePossibility(Direction direction, const PlacedSquares& placedBlocks) const;
+    bool CheckIfRotationIsPossible(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedBlocks) const;
+    bool CheckForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedSquares& placedBlocks) const;
+    void SetBlockSquaresGraphicsRectItemPointers(const QVector<QGraphicsRectItem*>& blockSquaresGraphicsRectItemPointers) {m_BlockSquaresGraphicsRectItemPointers = blockSquaresGraphicsRectItemPointers;}
     const QVector<QGraphicsRectItem*>& GetBlockSquaresGraphicsRectItemPointers() const {return m_BlockSquaresGraphicsRectItemPointers;}
 
-    virtual void RotateBlock(const PlacedBlocks&) = 0;
+    virtual void RotateBlock(const PlacedSquares&) = 0;
+
+    static std::unique_ptr<BlockBase> MakeBlock();
 
 protected:
     const Coordinates STARTING_CENTRAL_SQUARE_COORDINATES;

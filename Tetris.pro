@@ -27,8 +27,9 @@ SOURCES += \
         game_window.cpp \
         block_base.cpp \
         drawer.cpp \
-        placed_blocks.cpp \
+        placed_squares.cpp \
         random_number_generator.cpp \
+        score_manager.cpp \
         utilities.cpp \
         coordinates.cpp \
         blocks/i_block.cpp \
@@ -43,8 +44,9 @@ HEADERS += \
         game_window.h \
         block_base.h \
         drawer.h \
-        placed_blocks.h \
+        placed_squares.h \
         random_number_generator.h \
+        score_manager.h \
         utilities.h \
         coordinates.cpp \
         blocks/i_block.h \

@@ -19,7 +19,7 @@ OBlock::OBlock() : BlockBase()
     m_CurrentRotation = 0;
 }
 
-void OBlock::RotateBlock(const PlacedBlocks&)
+void OBlock::RotateBlock(const PlacedSquares&)
 {
     /*This block does not rotate*/
 }

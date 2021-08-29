@@ -3,7 +3,7 @@
 #include <QPair>
 #include <QVector>
 
-class PlacedBlocks;
+class PlacedSquares;
 
 class Coordinates
 {
@@ -21,8 +21,6 @@ public:
     int GetY() const {return m_Y;}
 
     static bool ValidateCoordinates(int x, int y);
-    static bool CheckIfRotationIsPossible(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedBlocks& placedBlocks);
-    static bool CheckForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedBlocks& placedBlocks);
 
 private:
     int m_X;

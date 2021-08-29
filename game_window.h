@@ -10,16 +10,9 @@
 #include <memory>
 
 #include "block_base.h"
-#include "placed_blocks.h"
-#include "blocks/i_block.h"
-#include "blocks/i_block.h"
-#include "blocks/s_block.h"
-#include "blocks/z_block.h"
-#include "blocks/j_block.h"
-#include "blocks/l_block.h"
-#include "blocks/o_block.h"
-#include "blocks/t_block.h"
-#include <random_number_generator.h>
+#include "placed_squares.h"
+#include "random_number_generator.h"
+#include "score_manager.h"
 
 namespace Ui
 {
@@ -43,13 +36,12 @@ private slots:
 private:
     Ui::GameWindow* m_pUi = nullptr;
     QGraphicsScene m_Scene;
-    PlacedBlocks m_PlacedBlocks;
+    PlacedSquares m_PlacedBlocks;
 
     QTimer m_GameTickTimer;
+    ScoreManager m_ScoreManager;
 
-    std::unique_ptr<BlockBase> m_pCurrentBlock;
-
-    int m_Score;
+    std::unique_ptr<BlockBase> m_pActiveBlock;
 
     enum class GameState
     {
@@ -63,17 +55,14 @@ private:
     void InitializeGameplayAreaScene();
     void DrawGameArena();
     void DrawAllPossibleSquares();
-    std::unique_ptr<BlockBase> GenerateBlock(QString shape = "random");
     void PlaceBlock();
     void FindAndDeleteFullRows();
-    void PlaceCurrentBlock();
+    void PlaceActiveBlock();
     void StartGame();
     void EndGame();
-    void SetScore(int score) {m_Score = score;}
-    void IncreaseScore(int score) {m_Score += score;}
-    void UpdateScoreLabel();
     void SetInformationLabel(QString text);
     void SetGameSpeedLevel(int speedLevel);
 
     void keyPressEvent(QKeyEvent *event) override;
+    void TogglePause();
 };

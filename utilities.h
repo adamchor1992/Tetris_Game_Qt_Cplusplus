@@ -4,7 +4,7 @@
 namespace GameArenaParameters
 {
     const int WALL_THICKNESS = 5;
-    Qt::GlobalColor const WALL_COLOR = Qt::white;
+    const Qt::GlobalColor WALL_COLOR = Qt::white;
     const int WALL_OFFSET = 5;
     const int LEFT_BORDER_X = 0;
     const int LEFT_BORDER_X_OFFSET = +2;

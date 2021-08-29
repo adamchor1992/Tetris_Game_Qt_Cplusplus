@@ -7,7 +7,7 @@
 #include <QBrush>
 #include <QVector>
 #include <QColor>
-#include <placed_blocks.h>
+#include <placed_squares.h>
 
 #include "coordinates.h"
 
@@ -23,14 +23,13 @@ public:
     static void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
     static void DrawGameArena();
     static QVector<QGraphicsRectItem*> DrawBlock(const QVector<Coordinates>& blockCoordinates, QColor randomColor);
-    static void DrawAllPlacedBlocks(const PlacedBlocks& placedBlocks);
+    static void DrawAllPlacedBlocks(const PlacedSquares &placedBlocks);
+    static void RemoveAllPlacedBlocks();
     static void Debug_PrintItemsCurrentlyOnScene();
 
 private:
     static QGraphicsScene* m_pScene;
 
     static void DrawSquare(const Coordinates& coordinates, QBrush brush);
-    static void RemoveAllPlacedBlocks();
-
     static void Debug_DrawAllPossibleSquares();
 };
