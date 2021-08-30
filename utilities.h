@@ -14,10 +14,10 @@ namespace GameArenaParameters
     const int BOTTOM_Y_OFFSET = -3;
     const int TOP_Y = 0;
     const int TOP_Y_OFFSET = +2;
-    const int MAX_BLOCK_ROWS = 20;
-    const int MAX_BLOCK_COLUMNS = 10;
     const int MIN_BLOCK_ROWS = 1;
+    const int MAX_BLOCK_ROWS = 20;
     const int MIN_BLOCK_COLUMNS = 1;
+    const int MAX_BLOCK_COLUMNS = 10;
     const int BLOCK_SQUARE_SIZE = 30;
 }
 

@@ -38,74 +38,69 @@ void Drawer::DrawGameArena()
                       wallPen);
 }
 
-void Drawer::DrawSquare(const Coordinates& coordinates, QBrush brush)
+void Drawer::DrawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
-    m_pScene->addRect((coordinates.GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                      (coordinates.GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                      Qt::NoPen,
-                      brush);
+    placedSquares.GetPlacedSquaresMap()[coordinates] = m_pScene->addRect((coordinates.GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                                      (coordinates.GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                                      Qt::NoPen,
+                                                                      color);
 }
 
-QVector<QGraphicsRectItem*> Drawer::DrawBlock(const QVector<Coordinates>& blockCoordinates, QColor randomColor)
+void Drawer::EraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
 {
-    QVector<QGraphicsRectItem*> squaresGraphicsRectPointers;
+    m_pScene->removeItem(placedSquares.GetPlacedSquaresMap().value(coordinates));
+    placedSquares.GetPlacedSquaresMap()[coordinates] = nullptr;
+}
 
-    QPen randomColorPen(randomColor);
-    QBrush randomColorBrush(randomColor);
+void Drawer::DrawBlock(BlockBase* block, QColor color)
+{
+    QPen pen(color);
+    QBrush brush(color);
 
-    for(int i = 0 ; i < blockCoordinates.size(); i++)
+    for(int i = 0 ; i < block->GetBlockCoordinates().size(); i++)
     {
-        auto squareGraphicsRectItem = m_pScene->addRect((blockCoordinates.at(i).GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                        (blockCoordinates.at(i).GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                        GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                        GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                        randomColorPen,
-                                                        randomColorBrush);
-
-        squaresGraphicsRectPointers.append(squareGraphicsRectItem);
+        block->GetBlockSquaresGraphicsRectItemPointers()[i] = m_pScene->addRect((block->GetBlockCoordinates().at(i).GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                                                (block->GetBlockCoordinates().at(i).GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
+                                                                                GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                                                GameArenaParameters::BLOCK_SQUARE_SIZE,
+                                                                                pen,
+                                                                                brush);
     }
-
-    return squaresGraphicsRectPointers;
 }
 
-void Drawer::DrawAllPlacedBlocks(const PlacedSquares& placedBlocks)
+void Drawer::EraseBlock(BlockBase* block)
 {
-    /*Placed blocks are first removed from scene and then placed again*/
-    RemoveAllPlacedBlocks();
-
-    for(auto& coordinates : placedBlocks.GetPlacedBlocksMap().keys())
+    for(auto& pointer : block->GetBlockSquaresGraphicsRectItemPointers())
     {
-        if(placedBlocks.GetPlacedBlocksMap().value(coordinates) == PlacedSquares::SquarePresence::SQUARE_PRESENT)
+        m_pScene->removeItem(pointer);
+        pointer = nullptr;
+    }
+}
+
+void Drawer::DropRow(int removedRow, PlacedSquares& placedSquares)
+{
+    for(auto& coordinates : placedSquares.GetPlacedSquaresMap().keys())
+    {
+        if(coordinates.GetY() < removedRow)
         {
-            DrawSquare(coordinates, PlacedSquares::PLACED_SQUARES_COLOR);
+            if(placedSquares.GetPlacedSquaresMap().value(coordinates) != nullptr)
+            {
+                placedSquares.GetPlacedSquaresMap().value(coordinates)->moveBy(0, GameArenaParameters::BLOCK_SQUARE_SIZE);
+            }
         }
     }
 }
 
-void Drawer::RemoveAllPlacedBlocks()
+void Drawer::EraseAllPlacedSquares(PlacedSquares& placedSquares)
 {
-    for(auto& graphicItem : m_pScene->items())
+    for(auto& coordinates : placedSquares.GetPlacedSquaresMap().keys())
     {
-        /*Remove all squares from scene*/
-        if(dynamic_cast<QGraphicsRectItem*>(graphicItem))
+        if(placedSquares.GetPlacedSquaresMap().value(coordinates) != nullptr)
         {
-            m_pScene->removeItem(graphicItem);
+            Drawer::EraseSquare(coordinates, placedSquares);
         }
-    }
-}
-
-void Drawer::Debug_PrintItemsCurrentlyOnScene()
-{
-    qDebug() << "GRAPHICAL ITEMS CURRENTLY ON SCENE (" << m_pScene << ")";
-
-    int index = 1;
-
-    for(auto* item : m_pScene->items())
-    {
-        qDebug() << index << ". " << item;
-        index++;
     }
 }
 

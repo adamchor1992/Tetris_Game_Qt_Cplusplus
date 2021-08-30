@@ -20,7 +20,7 @@ SBlock::SBlock() : BlockBase()
     m_CurrentRotation = 0;
 }
 
-void SBlock::RotateBlock(const PlacedSquares& placedBlocks)
+void SBlock::RotateBlock(const PlacedSquares& placedSquares)
 {
     QVector<int> rotationCoefficients;
 
@@ -37,7 +37,7 @@ void SBlock::RotateBlock(const PlacedSquares& placedBlocks)
         nextRotationState = 0;
     }
 
-    if(ProcessRotation(placedBlocks, rotationCoefficients))
+    if(ProcessRotation(placedSquares, rotationCoefficients))
     {
         m_CurrentRotation = nextRotationState;
     }

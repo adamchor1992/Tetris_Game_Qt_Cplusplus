@@ -6,7 +6,7 @@ class IBlock : public BlockBase
 {
 public:
     explicit IBlock();
-    void RotateBlock(const PlacedSquares& placedBlocks) override;
+    void RotateBlock(const PlacedSquares& placedSquares) override;
 
     QVector<int> GetRotationCoefficients() {return QVector<int> {0,0};}
 

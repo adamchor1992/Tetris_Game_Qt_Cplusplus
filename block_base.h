@@ -14,26 +14,28 @@ public:
     const QVector<Coordinates>& GetBlockCoordinates() const {return m_BlockCoordinates;}
     QColor GetColor() const;
     void DropBlockOneLevel();
-    void DropAndPlaceBlock(const PlacedSquares& placedBlocks);
+    void DropAndPlaceBlock(const PlacedSquares& placedSquares);
     void MoveBlock(Direction direction);
-    bool ProcessRotation(const PlacedSquares& placedBlocks, const QVector<int>& rotationCoefficients);
-    bool IsSquareOrBottomWallUnderBlock(const PlacedSquares& placedBlocks) const;
-    bool CheckMovePossibility(Direction direction, const PlacedSquares& placedBlocks) const;
-    bool CheckIfRotationIsPossible(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedBlocks) const;
-    bool CheckForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedSquares& placedBlocks) const;
-    void SetBlockSquaresGraphicsRectItemPointers(const QVector<QGraphicsRectItem*>& blockSquaresGraphicsRectItemPointers) {m_BlockSquaresGraphicsRectItemPointers = blockSquaresGraphicsRectItemPointers;}
-    const QVector<QGraphicsRectItem*>& GetBlockSquaresGraphicsRectItemPointers() const {return m_BlockSquaresGraphicsRectItemPointers;}
+    bool ProcessRotation(const PlacedSquares& placedSquares, const QVector<int>& rotationCoefficients);
+    bool IsSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const;
+    bool CheckMovePossibility(Direction direction, const PlacedSquares& placedSquares) const;
+    bool CheckIfRotationIsPossible(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedSquares) const;
+    bool CheckForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedSquares& placedSquares) const;
+    QVector<QGraphicsRectItem*>& GetBlockSquaresGraphicsRectItemPointers() {return m_BlockSquaresGraphicsRectItemPointers;}
+    void PlaceBlock(PlacedSquares& placedSquares);
 
     virtual void RotateBlock(const PlacedSquares&) = 0;
 
     static std::unique_ptr<BlockBase> MakeBlock();
 
+    void DropSquareOneLevel();
 protected:
     const Coordinates STARTING_CENTRAL_SQUARE_COORDINATES;
     QVector<Coordinates> m_BlockCoordinates;
 
     /*Vector holding pointers to QGraphicsRectItem objects which block consists of*/
-    QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItemPointers;
+    /*It can be static because there is only one block allowed at a time*/
+    static QVector<QGraphicsRectItem*> m_BlockSquaresGraphicsRectItemPointers;
 
 private:
     const QVector<QColor> COLORS = {Qt::red, Qt::blue, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};

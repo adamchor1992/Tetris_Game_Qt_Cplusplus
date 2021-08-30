@@ -10,6 +10,7 @@
 #include <placed_squares.h>
 
 #include "coordinates.h"
+#include "block_base.h"
 
 class Drawer
 {
@@ -22,14 +23,16 @@ public:
 
     static void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
     static void DrawGameArena();
-    static QVector<QGraphicsRectItem*> DrawBlock(const QVector<Coordinates>& blockCoordinates, QColor randomColor);
-    static void DrawAllPlacedBlocks(const PlacedSquares &placedBlocks);
-    static void RemoveAllPlacedBlocks();
-    static void Debug_PrintItemsCurrentlyOnScene();
+    static void EraseAllPlacedSquares(PlacedSquares& placedSquares);
+
+    static void DrawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+    static void EraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
+    static void DrawBlock(BlockBase* block, QColor color);
+    static void EraseBlock(BlockBase* block);
+
+    static void DropRow(int removedRow, PlacedSquares& placedSquares);
 
 private:
     static QGraphicsScene* m_pScene;
-
-    static void DrawSquare(const Coordinates& coordinates, QBrush brush);
     static void Debug_DrawAllPossibleSquares();
 };

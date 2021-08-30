@@ -36,7 +36,7 @@ private slots:
 private:
     Ui::GameWindow* m_pUi = nullptr;
     QGraphicsScene m_Scene;
-    PlacedSquares m_PlacedBlocks;
+    PlacedSquares m_PlacedSquares;
 
     QTimer m_GameTickTimer;
     ScoreManager m_ScoreManager;
@@ -53,11 +53,9 @@ private:
     GameState m_GameState;
 
     void InitializeGameplayAreaScene();
-    void DrawGameArena();
     void DrawAllPossibleSquares();
     void PlaceBlock();
     void FindAndDeleteFullRows();
-    void PlaceActiveBlock();
     void StartGame();
     void EndGame();
     void SetInformationLabel(QString text);

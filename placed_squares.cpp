@@ -4,37 +4,30 @@
 
 PlacedSquares::PlacedSquares()
 {
-    /*Initialize m_PlacedBlocksMap with all null pointers*/
-    for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
-    {
-        for(int row=1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
-        {
-            m_PlacedBlocksMap.insert(Coordinates(column, row), PlacedSquares::SquarePresence::NO_SQUARE);
-        }
-    }
+    RemoveAllPlacedSquares();
 
-    qDebug() << "Size of m_PlacedBlocksMap: " << m_PlacedBlocksMap.size();
+    qDebug() << "Size of m_PlacedSquaresMap: " << m_PlacedSquaresMap.size();
 }
 
-void PlacedSquares::ClearPlacedBlocks()
+void PlacedSquares::RemoveAllPlacedSquares()
 {
-    /*Initialize m_PlacedBlocksMap with all null pointers*/
-    for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
+    Drawer::EraseAllPlacedSquares(*this);
+
+    /*Initialize m_PlacedSquaresMap with all null pointers*/
+    for(int x = GameArenaParameters::MIN_BLOCK_COLUMNS; x <= GameArenaParameters::MAX_BLOCK_COLUMNS; x++)
     {
-        for(int row = 1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
+        for(int y = GameArenaParameters::MIN_BLOCK_ROWS; y <= GameArenaParameters::MAX_BLOCK_ROWS; y++)
         {
-            m_PlacedBlocksMap.insert(Coordinates(column, row), PlacedSquares::SquarePresence::NO_SQUARE);
+            m_PlacedSquaresMap.insert(Coordinates(x, y), nullptr);
         }
     }
-
-    Drawer::RemoveAllPlacedBlocks();
 }
 
-void PlacedSquares::AddSquare(const Coordinates& coordinates)
+void PlacedSquares::AddSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
-    if(m_PlacedBlocksMap.value(coordinates) == PlacedSquares::SquarePresence::NO_SQUARE)
+    if(m_PlacedSquaresMap.value(coordinates) == nullptr)
     {
-        m_PlacedBlocksMap[coordinates] = PlacedSquares::SquarePresence::SQUARE_PRESENT;
+        Drawer::DrawSquare(coordinates, color, placedSquares);
     }
     else
     {
@@ -44,9 +37,9 @@ void PlacedSquares::AddSquare(const Coordinates& coordinates)
 
 void PlacedSquares::RemoveSquare(const Coordinates& coordinates)
 {
-    if(m_PlacedBlocksMap.value(coordinates) == PlacedSquares::SquarePresence::SQUARE_PRESENT)
+    if(m_PlacedSquaresMap.value(coordinates) != nullptr)
     {
-        m_PlacedBlocksMap[coordinates] = PlacedSquares::SquarePresence::NO_SQUARE;
+        Drawer::EraseSquare(coordinates, *this);
     }
     else
     {
@@ -54,16 +47,20 @@ void PlacedSquares::RemoveSquare(const Coordinates& coordinates)
     }
 }
 
-void PlacedSquares::RemoveRow(int rowNumber)
+void PlacedSquares::RemoveFullRow(int rowNumber)
 {
-    if(rowNumber < GameArenaParameters::MIN_BLOCK_ROWS || rowNumber > GameArenaParameters::MAX_BLOCK_ROWS)
+    qDebug() << "REMOVING ROW";
+
+    const int y = rowNumber;
+
+    if(y < GameArenaParameters::MIN_BLOCK_ROWS || y > GameArenaParameters::MAX_BLOCK_ROWS)
     {
         assert(false);
     }
 
-    for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
+    for(int x = GameArenaParameters::MIN_BLOCK_COLUMNS; x <= GameArenaParameters::MAX_BLOCK_COLUMNS; x++)
     {
-        RemoveSquare(Coordinates(column, rowNumber));
+        RemoveSquare(Coordinates(x, y));
     }
 }
 
@@ -78,7 +75,7 @@ QVector<int> PlacedSquares::FindFullRows() const
         {
             Coordinates coordinates(column, row);
 
-            if(m_PlacedBlocksMap.value(coordinates) == PlacedSquares::SquarePresence::NO_SQUARE)
+            if(m_PlacedSquaresMap.value(coordinates) == nullptr)
             {
                 break;
             }
@@ -96,39 +93,18 @@ QVector<int> PlacedSquares::FindFullRows() const
 /*Drop all rows above deleted row*/
 void PlacedSquares::DropRowsAbove(int removedRow)
 {
-    QMap<Coordinates, PlacedSquares::SquarePresence> temporaryPlacedBlocksMap;
-
-    /*Initialize temporaryPlacedBlocksArray with null pointers representing each square block*/
-    for(int column=1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
-    {
-        for(int row=1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
-        {
-            temporaryPlacedBlocksMap.insert(Coordinates(column,row), PlacedSquares::SquarePresence::NO_SQUARE);
-        }
-    }
-
-    for(int row = GameArenaParameters::MAX_BLOCK_ROWS; row > removedRow; row--)
-    {
-        /*Copy unchanged square block positions below deleted row from m_PlacedBlocksMap to temporaryPlacedBlocksMap*/
-        for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
-        {
-            Coordinates coordinates(column, row);
-
-            temporaryPlacedBlocksMap.insert(coordinates, m_PlacedBlocksMap.value(coordinates));
-        }
-    }
+    Drawer::DropRow(removedRow, *this);
 
     /*Drop all rows by one*/
-    for(int row = removedRow; row > 1; row--)
+    for(int x = GameArenaParameters::MIN_BLOCK_COLUMNS; x <= GameArenaParameters::MAX_BLOCK_COLUMNS; x++)
     {
-        for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
+        for(int y = removedRow - 1; y > GameArenaParameters::MIN_BLOCK_ROWS; y--)
         {
-            Coordinates coordinates(column, row);
-            Coordinates coordinatesOneRowBelow(column, row-1);
+            Coordinates coordinates(x, y);
+            Coordinates coordinatesOneRowBelow(x, y + 1);
 
-            temporaryPlacedBlocksMap.insert(coordinates, m_PlacedBlocksMap.value(coordinatesOneRowBelow));
+            m_PlacedSquaresMap[coordinatesOneRowBelow] = m_PlacedSquaresMap[coordinates];
+            m_PlacedSquaresMap[coordinates] = nullptr;
         }
     }
-
-    m_PlacedBlocksMap = temporaryPlacedBlocksMap;
 }

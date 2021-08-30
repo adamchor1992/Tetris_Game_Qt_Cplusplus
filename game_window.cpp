@@ -15,7 +15,7 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
     Drawer::SetScene(&m_Scene);
 
     InitializeGameplayAreaScene();
-    DrawGameArena();
+    Drawer::DrawGameArena();
 
     m_GameState = GameState::GameStopped;
 
@@ -26,8 +26,6 @@ GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::Gam
 
 void GameWindow::InitializeGameplayAreaScene()
 {
-    m_Scene.setParent(this);
-
     const int sceneX = 0;
     const int sceneY = 0;
     const int sceneWidth = m_pUi->m_GraphicsView->geometry().width();
@@ -39,31 +37,14 @@ void GameWindow::InitializeGameplayAreaScene()
     qDebug("Gameplay scene initialized");
 }
 
-void GameWindow::DrawGameArena()
-{
-    Drawer::DrawGameArena();
-
-    qDebug("Gameplay area drawn");
-}
-
-void GameWindow::PlaceActiveBlock()
-{
-    const QVector<Coordinates> blockCoordinates = m_pActiveBlock->GetBlockCoordinates();
-
-    for(int i = 0; i < blockCoordinates.size(); i++)
-    {
-        m_PlacedBlocks.AddSquare(blockCoordinates.at(i));
-    }
-}
-
 void GameWindow::StartGame()
 {
-    m_PlacedBlocks.ClearPlacedBlocks();
+    m_PlacedSquares.RemoveAllPlacedSquares();
 
     SetGameSpeedLevel(m_pUi->m_SpeedHorizontalSlider->value());
     m_ScoreManager.RestartScore();
     m_pUi->m_InfoDisplayLabel->hide();
-
+    m_pActiveBlock.reset();
     m_pActiveBlock = BlockBase::MakeBlock();
 
     m_GameTickTimer.start();
@@ -74,7 +55,6 @@ void GameWindow::EndGame()
 {
     m_GameState = GameState::GameStopped;
     m_GameTickTimer.stop();
-    m_pActiveBlock.reset();
 
     qDebug() << "GAME OVER";
     SetInformationLabel("GAME OVER\nPRESS SPACE TO RESTART");
@@ -111,7 +91,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         if(m_GameState == GameState::GameRunning)
         {
-            if(m_pActiveBlock->CheckMovePossibility(Direction::left, m_PlacedBlocks))
+            if(m_pActiveBlock->CheckMovePossibility(Direction::left, m_PlacedSquares))
             {
                 m_pActiveBlock->MoveBlock(Direction::left);
             }
@@ -122,7 +102,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_D:
         if(m_GameState == GameState::GameRunning)
         {
-            if(m_pActiveBlock->CheckMovePossibility(Direction::right, m_PlacedBlocks))
+            if(m_pActiveBlock->CheckMovePossibility(Direction::right, m_PlacedSquares))
             {
                 m_pActiveBlock->MoveBlock(Direction::right);
             }
@@ -133,7 +113,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_W:
         if(m_GameState == GameState::GameRunning)
         {
-            m_pActiveBlock->RotateBlock(m_PlacedBlocks);
+            m_pActiveBlock->RotateBlock(m_PlacedSquares);
         }
         break;
 
@@ -141,7 +121,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_S:
         if(m_GameState == GameState::GameRunning)
         {
-            m_pActiveBlock->DropAndPlaceBlock(m_PlacedBlocks);
+            m_pActiveBlock->DropAndPlaceBlock(m_PlacedSquares);
             qDebug() << "Drop";
         }
         break;
@@ -196,13 +176,13 @@ void GameWindow::GameTickHandler()
     if(m_GameState == GameState::GameRunning)
     {
         /*Check if there is floor or other square under any of block squares*/
-        if(m_pActiveBlock->IsSquareOrBottomWallUnderBlock(m_PlacedBlocks))
+        if(m_pActiveBlock->IsSquareOrBottomWallUnderBlock(m_PlacedSquares))
         {
-            PlaceActiveBlock();
+            m_pActiveBlock->PlaceBlock(m_PlacedSquares);
 
             m_pActiveBlock.reset();
 
-            QVector<int> fullRows = m_PlacedBlocks.FindFullRows();
+            QVector<int> fullRows = m_PlacedSquares.FindFullRows();
 
             if(!fullRows.empty())
             {
@@ -210,17 +190,14 @@ void GameWindow::GameTickHandler()
 
                 for(auto row : fullRows)
                 {
-                    m_PlacedBlocks.RemoveRow(row);
-                    m_PlacedBlocks.DropRowsAbove(row);
+                    m_PlacedSquares.RemoveFullRow(row);
+                    m_PlacedSquares.DropRowsAbove(row);
                 }
             }
 
-            /*Redraw all already placed blocks*/
-            Drawer::DrawAllPlacedBlocks(m_PlacedBlocks);
-
             m_pActiveBlock = BlockBase::MakeBlock();
 
-            if(m_pActiveBlock->CheckForOverlappingSquares(m_pActiveBlock->GetBlockCoordinates(), m_PlacedBlocks))
+            if(m_pActiveBlock->CheckForOverlappingSquares(m_pActiveBlock->GetBlockCoordinates(), m_PlacedSquares))
             {
                 EndGame();
             }
@@ -231,7 +208,4 @@ void GameWindow::GameTickHandler()
             m_pActiveBlock->DropBlockOneLevel();
         }
     }
-
-
-    m_Scene.update();
 }

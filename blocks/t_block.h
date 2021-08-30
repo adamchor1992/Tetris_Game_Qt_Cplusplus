@@ -6,7 +6,7 @@ class TBlock : public BlockBase
 {
 public:
     explicit TBlock();
-    void RotateBlock(const PlacedSquares& placedBlocks) override;
+    void RotateBlock(const PlacedSquares& placedSquares) override;
 
 private:
     int m_CurrentRotation;

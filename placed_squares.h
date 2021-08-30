@@ -13,22 +13,18 @@ class PlacedSquares
 public:
     explicit PlacedSquares();
 
-    enum class SquarePresence
-    {
-        SQUARE_PRESENT, NO_SQUARE
-    };
-
-    void ClearPlacedBlocks();
-    void AddSquare(const Coordinates& coordinates);
-    void RemoveRow(int rowNumber);
+    void RemoveAllPlacedSquares();
+    void AddSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+    void RemoveFullRow(int rowNumber);
     QVector<int> FindFullRows() const;
     void DropRowsAbove(int removedRow);
-    const QMap<Coordinates, SquarePresence>& GetPlacedBlocksMap() const {return m_PlacedBlocksMap;}
+    const QMap<Coordinates, QGraphicsRectItem*>& GetPlacedSquaresMap() const {return m_PlacedSquaresMap;}
+    QMap<Coordinates, QGraphicsRectItem*>& GetPlacedSquaresMap() {return m_PlacedSquaresMap;}
     static const Qt::GlobalColor PLACED_SQUARES_COLOR = Qt::white;
 
 private:
     /*Map storing bool value representing every square block*/
-    QMap<Coordinates, SquarePresence> m_PlacedBlocksMap;
+    QMap<Coordinates, QGraphicsRectItem*> m_PlacedSquaresMap;
 
     void RemoveSquare(const Coordinates& coordinates);
 };

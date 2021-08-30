@@ -30,7 +30,6 @@ SOURCES += \
         placed_squares.cpp \
         random_number_generator.cpp \
         score_manager.cpp \
-        utilities.cpp \
         coordinates.cpp \
         blocks/i_block.cpp \
         blocks/j_block.cpp \
