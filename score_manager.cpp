@@ -1,9 +1,12 @@
 #include "score_manager.h"
 #include <QDebug>
 
+QLabel* ScoreManager::m_ScoreLabel = nullptr;
+
 ScoreManager::ScoreManager()
 {
     m_Score = 0;
+    UpdateScoreLabel();
 }
 
 void ScoreManager::ConnectScoreLabel(QLabel* scoreLabel)
@@ -16,7 +19,6 @@ void ScoreManager::RewardPlayerForFullRows(int fullRowsCount)
     switch(fullRowsCount)
     {
     case 0:
-        qDebug() << "NO FULL ROWS";
         break;
     case 1:
         qDebug() << "1 FULL ROW, + 1 point";

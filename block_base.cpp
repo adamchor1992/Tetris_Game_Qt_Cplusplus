@@ -21,7 +21,6 @@ BlockBase::BlockBase() : STARTING_CENTRAL_SQUARE_COORDINATES(5, 1)
 
 BlockBase::~BlockBase()
 {
-    qDebug() << "DESTRUCTOR";
     Drawer::EraseBlock(this);
 }
 

@@ -23,6 +23,6 @@ namespace GameArenaParameters
 
 enum class Direction
 {
-    left=1,
-    right=2
+    left = 1,
+    right = 2
 };

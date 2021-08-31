@@ -1047,7 +1047,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Slide or num+/- to change speed</string>
+     <string>Slide or press +/- to change game speed</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

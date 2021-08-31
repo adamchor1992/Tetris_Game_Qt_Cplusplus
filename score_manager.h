@@ -6,7 +6,7 @@ class ScoreManager
 {
 public:
     ScoreManager();
-    void ConnectScoreLabel(QLabel* scoreLabel);
+    static void ConnectScoreLabel(QLabel* scoreLabel);
     void RewardPlayerForFullRows(int fullRowsCount);
     void RestartScore();
 
@@ -15,6 +15,6 @@ private:
     void IncreaseScore(int score) {m_Score += score;}
     void UpdateScoreLabel();
 
-    QLabel* m_ScoreLabel;
+    static QLabel* m_ScoreLabel;
     int m_Score;
 };

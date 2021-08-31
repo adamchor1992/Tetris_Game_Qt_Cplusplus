@@ -25,12 +25,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         game_window.cpp \
-        block_base.cpp \
+        game_engine.cpp \
+        game_speed_manager.cpp \
+        info_display_manager.cpp \
+        score_manager.cpp \
         drawer.cpp \
         placed_squares.cpp \
         random_number_generator.cpp \
-        score_manager.cpp \
         coordinates.cpp \
+        block_base.cpp \
         blocks/i_block.cpp \
         blocks/j_block.cpp \
         blocks/l_block.cpp \
@@ -41,13 +44,16 @@ SOURCES += \
 
 HEADERS += \
         game_window.h \
-        block_base.h \
+        game_engine.h \
+        game_speed_manager.h \
+        info_display_manager.h \
+        score_manager.h \
         drawer.h \
         placed_squares.h \
         random_number_generator.h \
-        score_manager.h \
         utilities.h \
         coordinates.cpp \
+        block_base.h \
         blocks/i_block.h \
         blocks/j_block.h \
         blocks/l_block.h \
