@@ -1,5 +1,4 @@
 #include "j_block.h"
-#include "drawer.h"
 
 JBlock::JBlock() : BlockBase()
 {

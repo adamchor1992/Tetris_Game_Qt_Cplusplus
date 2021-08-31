@@ -1,9 +1,10 @@
 #pragma once
 
+#include "game_engine.h"
+
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QKeyEvent>
-#include "game_engine.h"
 
 namespace Ui
 {

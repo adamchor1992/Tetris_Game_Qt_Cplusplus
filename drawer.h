@@ -1,16 +1,10 @@
 #pragma once
 
-#include <QGraphicsScene>
-#include <QGraphicsRectItem>
-#include <QDebug>
-#include <QPen>
-#include <QBrush>
-#include <QVector>
-#include <QColor>
-#include <placed_squares.h>
-
+#include "placed_squares.h"
 #include "coordinates.h"
 #include "block_base.h"
+
+#include <QGraphicsScene>
 
 class Drawer
 {

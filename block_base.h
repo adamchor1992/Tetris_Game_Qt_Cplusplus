@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include "placed_squares.h"
 #include "utilities.h"
 #include "coordinates.h"

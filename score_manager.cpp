@@ -1,4 +1,5 @@
 #include "score_manager.h"
+
 #include <QDebug>
 
 QLabel* ScoreManager::m_ScoreLabel = nullptr;

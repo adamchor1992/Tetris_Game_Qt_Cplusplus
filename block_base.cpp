@@ -1,7 +1,6 @@
 #include "block_base.h"
 #include "drawer.h"
 #include "random_number_generator.h"
-
 #include "blocks/i_block.h"
 #include "blocks/i_block.h"
 #include "blocks/s_block.h"
@@ -81,9 +80,7 @@ void BlockBase::MoveBlock(Direction direction)
             int currentX = m_BlockCoordinates.at(i).GetX();
             int currentY = m_BlockCoordinates.at(i).GetY();
 
-            /*Coordinate X decreases*/
             int newX = currentX - 1;
-            /*Coordinate Y does not change*/
             int newY = currentY;
 
             m_BlockCoordinates[i].Modify(newX, newY);
@@ -98,9 +95,7 @@ void BlockBase::MoveBlock(Direction direction)
             int currentX = m_BlockCoordinates.at(i).GetX();
             int currentY = m_BlockCoordinates.at(i).GetY();
 
-            /*Coordinate X increases*/
             int newX = currentX + 1;
-            /*Coordinate Y does not change*/
             int newY = currentY;
 
             m_BlockCoordinates[i].Modify(newX, newY);
@@ -119,9 +114,7 @@ bool BlockBase::CheckMovePossibility(Direction direction, const PlacedSquares& p
 
         if(direction == Direction::left)
         {
-            /*Coordinate X decreases*/
             int leftBlockX = currentX - 1;
-            /*Coordinate Y does not change*/
             int leftBlockY = currentY;
 
             /*Check if there is left wall next to the block*/
@@ -140,9 +133,7 @@ bool BlockBase::CheckMovePossibility(Direction direction, const PlacedSquares& p
         }
         else if(direction == Direction::right)
         {
-            /*Coordinate X increases*/
             int rightBlockX = currentX + 1;
-            /*Coordinate Y does not change*/
             int rightBlockY = currentY;
 
             /*Check if there is wall next to the block*/
@@ -272,9 +263,7 @@ bool BlockBase::IsSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquare
         int currentX = m_BlockCoordinates.at(i).GetX();
         int currentY = m_BlockCoordinates.at(i).GetY();
 
-        /*Coordinate X does not change*/
         int belowBlockX = currentX;
-        /*Coordinate Y increases*/
         int belowBlockY = currentY + 1;
 
         /*Check if there is bottom wall below the current block*/

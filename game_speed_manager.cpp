@@ -31,10 +31,12 @@ void GameSpeedManager::SetGameSpeed()
 
 void GameSpeedManager::IncrementSpeed()
 {
-    m_SpeedSlider->setValue(m_SpeedSlider->value() + 1);
+    /*Subtracting means increasing speed*/
+    m_SpeedSlider->setValue(m_SpeedSlider->value() - 1);
 }
 
 void GameSpeedManager::DecrementSpeed()
 {
-    m_SpeedSlider->setValue(m_SpeedSlider->value() - 1);
+    /*Adding means decreasing speed*/
+    m_SpeedSlider->setValue(m_SpeedSlider->value() + 1);
 }

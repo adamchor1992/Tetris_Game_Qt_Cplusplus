@@ -1,9 +1,9 @@
-#include <stdexcept>
-#include <QDebug>
-
 #include "coordinates.h"
 #include "utilities.h"
 #include "placed_squares.h"
+
+#include <stdexcept>
+#include <QDebug>
 
 Coordinates::Coordinates(int x, int y)
 {

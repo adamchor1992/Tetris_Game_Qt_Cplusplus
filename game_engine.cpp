@@ -49,7 +49,6 @@ void GameEngine::GameTickHandler()
 {
     if(m_GameState == GameState::GameRunning)
     {
-        /*Check if there is floor or other square under any of block squares*/
         if(m_pActiveBlock->IsSquareOrBottomWallUnderBlock(m_PlacedSquares))
         {
             m_pActiveBlock->PlaceBlock(m_PlacedSquares);
@@ -112,13 +111,11 @@ void GameEngine::ProcessKey(QString key)
         }
         else if(key == "plus")
         {
-            /*Subtracting means increasing speed*/
-            m_GameSpeedManager.DecrementSpeed();
+            m_GameSpeedManager.IncrementSpeed();
         }
         else if(key == "minus")
         {
-            /*Adding means decreasing speed*/
-            m_GameSpeedManager.IncrementSpeed();
+            m_GameSpeedManager.DecrementSpeed();
         }
         else if(key == "pause")
         {

@@ -1,5 +1,4 @@
 #include "z_block.h"
-#include "drawer.h"
 
 ZBlock::ZBlock() : BlockBase()
 {

@@ -1,5 +1,4 @@
 #include "l_block.h"
-#include "drawer.h"
 
 LBlock::LBlock() : BlockBase()
 {

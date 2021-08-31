@@ -1,5 +1,4 @@
 #include "i_block.h"
-#include "drawer.h"
 
 IBlock::IBlock() : BlockBase()
 {

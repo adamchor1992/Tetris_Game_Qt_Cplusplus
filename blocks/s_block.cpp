@@ -1,5 +1,4 @@
 #include "s_block.h"
-#include "drawer.h"
 
 SBlock::SBlock() : BlockBase()
 {

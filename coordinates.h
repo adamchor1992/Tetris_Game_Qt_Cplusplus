@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QPair>
 #include <QVector>
 
 class PlacedSquares;

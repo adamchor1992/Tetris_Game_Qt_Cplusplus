@@ -1,5 +1,4 @@
 #include "t_block.h"
-#include "drawer.h"
 
 TBlock::TBlock() : BlockBase()
 {
