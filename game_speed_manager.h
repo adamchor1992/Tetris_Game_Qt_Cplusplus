@@ -9,17 +9,17 @@ class GameSpeedManager : public QObject
 
 public:
     GameSpeedManager();
-    static void ConnectSpeedSlider(QSlider* speedSlider);
-    const QTimer& GetGameTickTimer() {return m_GameTickTimer;}
-    void Start();
-    void Stop();
-    void IncrementSpeed();
-    void DecrementSpeed();
-
-private:
-    static QSlider* m_SpeedSlider;
-    QTimer m_GameTickTimer;
+    static void connectSpeedSlider(QSlider* speedSlider);
+    const QTimer& getGameTickTimer() {return gameTickTimer_;}
+    void start();
+    void stop();
+    void incrementSpeed();
+    void decrementSpeed();
 
 public slots:
-    void SetGameSpeed();
+    void setGameSpeed();
+
+private:
+    static QSlider* speedSlider_;
+    QTimer gameTickTimer_;
 };

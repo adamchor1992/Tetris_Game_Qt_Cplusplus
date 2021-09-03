@@ -10,18 +10,19 @@
 class PlacedSquares
 {
 public:
-    static const Qt::GlobalColor PLACED_SQUARES_COLOR = Qt::white;
-
     explicit PlacedSquares();
-    const QMap<Coordinates, QGraphicsRectItem*>& GetPlacedSquaresMap() const {return m_PlacedSquaresMap;}
-    QMap<Coordinates, QGraphicsRectItem*>& GetPlacedSquaresMap() {return m_PlacedSquaresMap;}
-    void RemoveAllPlacedSquares();
-    QVector<int> FindFullRows() const;
-    void RemoveFullRow(int rowNumber);
-    void DropRowsAbove(int removedRow);
-    void AddSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+    const QMap<Coordinates, QGraphicsRectItem*>& getPlacedSquaresMap() const {return placedSquaresMap_;}
+    QMap<Coordinates, QGraphicsRectItem*>& getPlacedSquaresMap() {return placedSquaresMap_;}
+    void removeAllPlacedSquares();
+    QVector<int> findFullRows() const;
+    void removeFullRow(int rowNumber);
+    void dropRowsAbove(int removedRow);
+    void addSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+
+    static const Qt::GlobalColor placedSquares_color_ = Qt::white;
 
 private:
-    QMap<Coordinates, QGraphicsRectItem*> m_PlacedSquaresMap;
-    void RemoveSquare(const Coordinates& coordinates);
+    void removeSquare(const Coordinates& coordinates);
+
+    QMap<Coordinates, QGraphicsRectItem*> placedSquaresMap_;
 };

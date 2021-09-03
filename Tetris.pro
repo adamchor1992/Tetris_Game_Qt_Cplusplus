@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Tetris
+TARGET = ../../Tetris_Game_Qt_Cplusplus/executable/Tetris
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -33,6 +33,7 @@ SOURCES += \
         placed_squares.cpp \
         random_number_generator.cpp \
         coordinates.cpp \
+        log_manager.cpp \
         block_base.cpp \
         blocks/i_block.cpp \
         blocks/j_block.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
         blocks/z_block.cpp
 
 HEADERS += \
+        common.h \
         game_window.h \
         game_engine.h \
         game_speed_manager.h \
@@ -51,8 +53,8 @@ HEADERS += \
         drawer.h \
         placed_squares.h \
         random_number_generator.h \
-        utilities.h \
-        coordinates.cpp \
+        coordinates.h \
+        log_manager.h \
         block_base.h \
         blocks/i_block.h \
         blocks/j_block.h \

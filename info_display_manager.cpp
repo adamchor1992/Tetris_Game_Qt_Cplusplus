@@ -1,24 +1,24 @@
 #include "info_display_manager.h"
 
-QLabel* InfoDisplayManager::m_InfoLabel = nullptr;
+QLabel* InfoDisplayManager::infoLabel_ = nullptr;
 
 InfoDisplayManager::InfoDisplayManager()
 {
-    SetLabel("PRESS SPACE TO START");
+    setLabel("PRESS SPACE TO START");
 }
 
-void InfoDisplayManager::ConnectInfoLabel(QLabel* infoLabel)
+void InfoDisplayManager::connectInfoLabel(QLabel* infoLabel)
 {
-    m_InfoLabel = infoLabel;
+    infoLabel_ = infoLabel;
 }
 
-void InfoDisplayManager::HideInfo()
+void InfoDisplayManager::hideInfo()
 {
-    m_InfoLabel->hide();
+    infoLabel_->hide();
 }
 
-void InfoDisplayManager::SetLabel(QString text)
+void InfoDisplayManager::setLabel(QString text)
 {
-    m_InfoLabel->setText(text);
-    m_InfoLabel->show();
+    infoLabel_->setText(text);
+    infoLabel_->show();
 }

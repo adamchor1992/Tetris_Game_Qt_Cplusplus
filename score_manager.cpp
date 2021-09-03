@@ -2,55 +2,53 @@
 
 #include <QDebug>
 
-QLabel* ScoreManager::m_ScoreLabel = nullptr;
+QLabel* ScoreManager::scoreLabel_ = nullptr;
 
 ScoreManager::ScoreManager()
 {
-    m_Score = 0;
-    UpdateScoreLabel();
+    score_ = 0;
+    updateScoreLabel();
 }
 
-void ScoreManager::ConnectScoreLabel(QLabel* scoreLabel)
+void ScoreManager::connectScoreLabel(QLabel* scoreLabel)
 {
-    m_ScoreLabel = scoreLabel;
+    scoreLabel_ = scoreLabel;
 }
 
-void ScoreManager::RewardPlayerForFullRows(int fullRowsCount)
+void ScoreManager::rewardPlayerForFullRows(int fullRowsCount)
 {
     switch(fullRowsCount)
     {
-    case 0:
-        break;
     case 1:
         qDebug() << "1 FULL ROW, + 1 point";
-        IncreaseScore(1);
+        increaseScore(1);
         break;
     case 2:
         qDebug() << "2 FULL ROWS, + 3 points";
-        IncreaseScore(3);
+        increaseScore(3);
         break;
     case 3:
         qDebug() << "3 FULL ROWS, + 7 points";
-        IncreaseScore(7);
+        increaseScore(7);
         break;
     case 4:
         qDebug() << "4 FULL ROWS, + 10 points";
-        IncreaseScore(10);
+        increaseScore(10);
         break;
     default:
         qDebug() << "WRONG FULL ROWS NUMBER";
     }
 
-    UpdateScoreLabel();
+    updateScoreLabel();
 }
 
-void ScoreManager::RestartScore()
+void ScoreManager::restartScore()
 {
-    m_Score = 0;
-    UpdateScoreLabel();
+    score_ = 0;
+    updateScoreLabel();
 }
 
-void ScoreManager::UpdateScoreLabel()
+void ScoreManager::updateScoreLabel()
 {
-    m_ScoreLabel->setText("SCORE: " + QString::number(m_Score));
+    scoreLabel_->setText("SCORE: " + QString::number(score_));
 }

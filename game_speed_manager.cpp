@@ -1,42 +1,42 @@
 #include "game_speed_manager.h"
 
-QSlider* GameSpeedManager::m_SpeedSlider = nullptr;
+QSlider* GameSpeedManager::speedSlider_ = nullptr;
 
 GameSpeedManager::GameSpeedManager()
 {
-    connect(m_SpeedSlider, &QSlider::valueChanged, this, &GameSpeedManager::SetGameSpeed);
+    connect(speedSlider_, &QSlider::valueChanged, this, &GameSpeedManager::setGameSpeed);
 }
 
-void GameSpeedManager::ConnectSpeedSlider(QSlider* speedSlider)
+void GameSpeedManager::connectSpeedSlider(QSlider* speedSlider)
 {
-    m_SpeedSlider = speedSlider;
+    speedSlider_ = speedSlider;
 }
 
-void GameSpeedManager::Start()
+void GameSpeedManager::start()
 {
-    m_GameTickTimer.start();
+    gameTickTimer_.start();
 }
 
-void GameSpeedManager::Stop()
+void GameSpeedManager::stop()
 {
-    m_GameTickTimer.stop();
+    gameTickTimer_.stop();
 }
 
-void GameSpeedManager::SetGameSpeed()
+void GameSpeedManager::setGameSpeed()
 {
-    const int TIME_OFFSET = 50;
-    const int speedLevel = m_SpeedSlider->value();
-    m_GameTickTimer.setInterval(TIME_OFFSET + speedLevel * 20);
+    const int timeOffset = 50;
+    const int speedLevel = speedSlider_->value();
+    gameTickTimer_.setInterval(timeOffset + speedLevel * 20);
 }
 
-void GameSpeedManager::IncrementSpeed()
+void GameSpeedManager::incrementSpeed()
 {
     /*Subtracting means increasing speed*/
-    m_SpeedSlider->setValue(m_SpeedSlider->value() - 1);
+    speedSlider_->setValue(speedSlider_->value() - 1);
 }
 
-void GameSpeedManager::DecrementSpeed()
+void GameSpeedManager::decrementSpeed()
 {
     /*Adding means decreasing speed*/
-    m_SpeedSlider->setValue(m_SpeedSlider->value() + 1);
+    speedSlider_->setValue(speedSlider_->value() + 1);
 }

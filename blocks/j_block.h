@@ -6,8 +6,8 @@ class JBlock : public BlockBase
 {
 public:
     explicit JBlock();
-    void RotateBlock(const PlacedSquares& placedSquares) override;
+    void rotateBlock(const PlacedSquares& placedSquares) override;
 
 private:
-    int m_CurrentRotation;
+    static inline const QVector<int> transformationCoefficientsVsCentralSquare_ {-1, 0, +1, 0, +1, +1};
 };

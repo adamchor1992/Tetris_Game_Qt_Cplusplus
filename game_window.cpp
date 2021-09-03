@@ -2,33 +2,33 @@
 #include "ui_game_window.h"
 #include "drawer.h"
 
-GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), m_pUi(new Ui::GameWindow)
+GameWindow::GameWindow(QWidget *parent) : QMainWindow(parent), ui_(new Ui::GameWindow)
 {
-    m_pUi->setupUi(this);
+    ui_->setupUi(this);
     setWindowTitle("Tetris");
     setFocus(Qt::ActiveWindowFocusReason);
 
-    ScoreManager::ConnectScoreLabel(m_pUi->m_ScoreDisplayLabel);
-    InfoDisplayManager::ConnectInfoLabel(m_pUi->m_InfoDisplayLabel);
-    GameSpeedManager::ConnectSpeedSlider(m_pUi->m_SpeedHorizontalSlider);
+    ScoreManager::connectScoreLabel(ui_->score_display_label);
+    InfoDisplayManager::connectInfoLabel(ui_->info_display_label);
+    GameSpeedManager::connectSpeedSlider(ui_->speed_horizontal_slider);
 
-    InitializeGameplayAreaScene();
-    Drawer::DrawGameArena();
+    initializeGameplayAreaScene();
+    Drawer::drawGameArena();
 
-    m_GameEngine = std::make_unique<GameEngine>();
+    gameEngine_ = std::make_unique<GameEngine>();
 }
 
-void GameWindow::InitializeGameplayAreaScene()
+void GameWindow::initializeGameplayAreaScene()
 {
     const int sceneX = 0;
     const int sceneY = 0;
-    const int sceneWidth = m_pUi->m_GraphicsView->geometry().width();
-    const int sceneHeight = m_pUi->m_GraphicsView->geometry().height();
+    const int sceneWidth = ui_->graphics_view->geometry().width();
+    const int sceneHeight = ui_->graphics_view->geometry().height();
 
-    m_pUi->m_GraphicsView->setScene(&m_Scene);
-    m_pUi->m_GraphicsView->setSceneRect(sceneX, sceneY, sceneWidth, sceneHeight);
+    ui_->graphics_view->setScene(&scene_);
+    ui_->graphics_view->setSceneRect(sceneX, sceneY, sceneWidth, sceneHeight);
 
-    Drawer::SetScene(&m_Scene);
+    Drawer::setScene(&scene_);
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
@@ -37,38 +37,38 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     {
     case Qt::Key_Left:
     case Qt::Key_A:
-        m_GameEngine->ProcessKey("left");
+        gameEngine_->processKey("left");
         break;
 
     case Qt::Key_Right:
     case Qt::Key_D:
-        m_GameEngine->ProcessKey("right");
+        gameEngine_->processKey("right");
         break;
 
     case Qt::Key_Up:
     case Qt::Key_W:
-        m_GameEngine->ProcessKey("up");
+        gameEngine_->processKey("up");
         break;
 
     case Qt::Key_Down:
     case Qt::Key_S:
-        m_GameEngine->ProcessKey("down");
+        gameEngine_->processKey("down");
         break;
 
     case Qt::Key_Plus:
-        m_GameEngine->ProcessKey("plus");
+        gameEngine_->processKey("plus");
         break;
 
     case Qt::Key_Minus:
-        m_GameEngine->ProcessKey("minus");
+        gameEngine_->processKey("minus");
         break;
 
     case Qt::Key_P:
-        m_GameEngine->ProcessKey("pause");
+        gameEngine_->processKey("pause");
         break;
 
     case Qt::Key_Space:
-        m_GameEngine->ProcessKey("space");
+        gameEngine_->processKey("space");
         break;
 
     default:
@@ -78,5 +78,5 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
 
 GameWindow::~GameWindow()
 {
-    delete m_pUi;
+    delete ui_;
 }

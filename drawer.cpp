@@ -1,159 +1,160 @@
 #include "drawer.h"
-#include "utilities.h"
+#include "common.h"
 #include "coordinates.h"
 
-QGraphicsScene* Drawer::m_pScene = nullptr;
+QGraphicsScene* Drawer::scene_ = nullptr;
 
-void Drawer::DrawGameArena()
+void Drawer::drawGameArena()
 {
-    QBrush whiteBrush(GameArenaParameters::WALL_COLOR);
-    QPen wallPen(whiteBrush, GameArenaParameters::WALL_THICKNESS);
+    QBrush whiteBrush(GameArenaParameters::wallColor);
+    QPen wallPen(whiteBrush, GameArenaParameters::wallThickness);
 
     /*Left wall*/
-    m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
-                      GameArenaParameters::BOTTOM_Y,
-                      GameArenaParameters::LEFT_BORDER_X + GameArenaParameters::LEFT_BORDER_X_OFFSET,
-                      GameArenaParameters::TOP_Y,
-                      wallPen);
+    scene_->addLine(GameArenaParameters::leftBorderX + GameArenaParameters::leftBorderOffsetX,
+                    GameArenaParameters::bottomY,
+                    GameArenaParameters::leftBorderX + GameArenaParameters::leftBorderOffsetX,
+                    GameArenaParameters::topY,
+                    wallPen);
 
     /*Right wall*/
-    m_pScene->addLine(GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                      GameArenaParameters::BOTTOM_Y,
-                      GameArenaParameters::RIGHT_BORDER_X + GameArenaParameters::RIGHT_BORDER_X_OFFSET,
-                      GameArenaParameters::TOP_Y,
-                      wallPen);
+    scene_->addLine(GameArenaParameters::rightBorderX + GameArenaParameters::rightBorderOffsetX,
+                    GameArenaParameters::bottomY,
+                    GameArenaParameters::rightBorderX + GameArenaParameters::rightBorderOffsetX,
+                    GameArenaParameters::topY,
+                    wallPen);
 
     /*Bottom wall*/
-    m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
-                      GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
-                      GameArenaParameters::RIGHT_BORDER_X,
-                      GameArenaParameters::BOTTOM_Y + GameArenaParameters::BOTTOM_Y_OFFSET,
-                      wallPen);
+    scene_->addLine(GameArenaParameters::leftBorderX,
+                    GameArenaParameters::bottomY + GameArenaParameters::bottomOffsetY,
+                    GameArenaParameters::rightBorderX,
+                    GameArenaParameters::bottomY + GameArenaParameters::bottomOffsetY,
+                    wallPen);
 
     /*Top wall*/
-    m_pScene->addLine(GameArenaParameters::LEFT_BORDER_X,
-                      GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
-                      GameArenaParameters::RIGHT_BORDER_X,
-                      GameArenaParameters::TOP_Y + GameArenaParameters::TOP_Y_OFFSET,
-                      wallPen);
+    scene_->addLine(GameArenaParameters::leftBorderX,
+                    GameArenaParameters::topY + GameArenaParameters::topOffsetY,
+                    GameArenaParameters::rightBorderX,
+                    GameArenaParameters::topY + GameArenaParameters::topOffsetY,
+                    wallPen);
 }
 
-void Drawer::DrawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
+void Drawer::drawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
-    placedSquares.GetPlacedSquaresMap()[coordinates] = m_pScene->addRect((coordinates.GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                                      (coordinates.GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                                      Qt::NoPen,
-                                                                      color);
+    placedSquares.getPlacedSquaresMap()[coordinates] = scene_->addRect((coordinates.getX() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                                                       (coordinates.getY() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                                                       GameArenaParameters::blockSquareSize,
+                                                                       GameArenaParameters::blockSquareSize,
+                                                                       Qt::NoPen,
+                                                                       color);
 }
 
-void Drawer::EraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
+void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
 {
-    m_pScene->removeItem(placedSquares.GetPlacedSquaresMap().value(coordinates));
-    placedSquares.GetPlacedSquaresMap()[coordinates] = nullptr;
+    scene_->removeItem(placedSquares.getPlacedSquaresMap().value(coordinates));
+    placedSquares.getPlacedSquaresMap()[coordinates] = nullptr;
 }
 
-void Drawer::DrawBlock(BlockBase* block, QColor color)
+void Drawer::drawBlock(BlockBase* block, QColor color)
 {
     QPen pen(color);
     QBrush brush(color);
 
-    for(int i = 0 ; i < block->GetBlockCoordinates().size(); i++)
+    for(int i = 0 ; i < block->getBlockCoordinates().size(); i++)
     {
-        block->GetBlockSquaresGraphicsRectItemPointers()[i] = m_pScene->addRect((block->GetBlockCoordinates().at(i).GetX() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                                                (block->GetBlockCoordinates().at(i).GetY() - 1) * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                                                                GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                                                GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                                                                pen,
-                                                                                brush);
+        block->getGraphicsRectItems().append(scene_->addRect((block->getBlockCoordinates().at(i).getX() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                                             (block->getBlockCoordinates().at(i).getY() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                                             GameArenaParameters::blockSquareSize,
+                                                             GameArenaParameters::blockSquareSize,
+                                                             pen,
+                                                             brush));
     }
 }
 
-void Drawer::EraseBlock(BlockBase* block)
+void Drawer::eraseBlock(BlockBase* block)
 {
-    for(auto& pointer : block->GetBlockSquaresGraphicsRectItemPointers())
+    for(auto& graphicsRectItem : block->getGraphicsRectItems())
     {
-        m_pScene->removeItem(pointer);
-        pointer = nullptr;
+        scene_->removeItem(graphicsRectItem);
     }
+
+    block->getGraphicsRectItems().clear();
 }
 
-void Drawer::DropRow(int removedRow, PlacedSquares& placedSquares)
+void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
 {
-    for(auto& coordinates : placedSquares.GetPlacedSquaresMap().keys())
+    for(auto& coordinates : placedSquares.getPlacedSquaresMap().keys())
     {
-        if(coordinates.GetY() < removedRow)
+        if(coordinates.getY() < removedRow)
         {
-            if(placedSquares.GetPlacedSquaresMap().value(coordinates) != nullptr)
+            if(placedSquares.getPlacedSquaresMap().value(coordinates) != nullptr)
             {
-                placedSquares.GetPlacedSquaresMap().value(coordinates)->moveBy(0, GameArenaParameters::BLOCK_SQUARE_SIZE);
+                placedSquares.getPlacedSquaresMap().value(coordinates)->moveBy(0, GameArenaParameters::blockSquareSize);
             }
         }
     }
 }
 
-void Drawer::EraseAllPlacedSquares(PlacedSquares& placedSquares)
+void Drawer::eraseAllPlacedSquares(PlacedSquares& placedSquares)
 {
-    for(auto& coordinates : placedSquares.GetPlacedSquaresMap().keys())
+    for(auto& coordinates : placedSquares.getPlacedSquaresMap().keys())
     {
-        if(placedSquares.GetPlacedSquaresMap().value(coordinates) != nullptr)
+        if(placedSquares.getPlacedSquaresMap().value(coordinates) != nullptr)
         {
-            Drawer::EraseSquare(coordinates, placedSquares);
+            Drawer::eraseSquare(coordinates, placedSquares);
         }
     }
 }
 
-void Drawer::Debug_DrawAllPossibleSquares()
+void Drawer::debugDrawAllPossibleSquares()
 {
     QBrush redBrush(Qt::red);
     QBrush blueBrush(Qt::blue);
 
-    for(int column = 0; column < GameArenaParameters::MAX_BLOCK_COLUMNS; ++column)
+    for(int column = 0; column < GameArenaParameters::maxBlockColumns; ++column)
     {
-        for(int row = 0; row < GameArenaParameters::MAX_BLOCK_ROWS; ++row)
+        for(int row = 0; row < GameArenaParameters::maxBlockRows; ++row)
         {
             /*Different block color every second column*/
             if(column % 2 == 0)
             {
                 if(row % 2 == 0) /*Different block color every second row*/
                 {
-                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      Qt::NoPen,
-                                      blueBrush);
+                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    GameArenaParameters::blockSquareSize,
+                                    GameArenaParameters::blockSquareSize,
+                                    Qt::NoPen,
+                                    blueBrush);
                 }
                 else
                 {
-                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      Qt::NoPen,
-                                      redBrush);
+                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    GameArenaParameters::blockSquareSize,
+                                    GameArenaParameters::blockSquareSize,
+                                    Qt::NoPen,
+                                    redBrush);
                 }
             }
             else
             {
                 if(row % 2 != 0)
                 {
-                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      Qt::NoPen,
-                                      blueBrush);
+                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    GameArenaParameters::blockSquareSize,
+                                    GameArenaParameters::blockSquareSize,
+                                    Qt::NoPen,
+                                    blueBrush);
                 }
                 else
                 {
-                    m_pScene->addRect(column * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      row * GameArenaParameters::BLOCK_SQUARE_SIZE + GameArenaParameters::WALL_OFFSET,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      GameArenaParameters::BLOCK_SQUARE_SIZE,
-                                      Qt::NoPen,
-                                      redBrush);
+                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                    GameArenaParameters::blockSquareSize,
+                                    GameArenaParameters::blockSquareSize,
+                                    Qt::NoPen,
+                                    redBrush);
                 }
             }
         }

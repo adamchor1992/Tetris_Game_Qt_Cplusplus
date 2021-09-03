@@ -6,8 +6,8 @@ class OBlock : public BlockBase
 {
 public:
     explicit OBlock();
-    void RotateBlock(const PlacedSquares&) override;
+    void rotateBlock(const PlacedSquares&) override;
 
 private:
-    int m_CurrentRotation;
+    static inline const QVector<int> transformationCoefficientsVsCentralSquare_ {0, +1, +1, +1, +1, 0};
 };

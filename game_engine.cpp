@@ -1,139 +1,141 @@
 #include "game_engine.h"
+#include "log_manager.h"
 
 GameEngine::GameEngine()
 {
-    m_GameState = GameState::GameStopped;
-
-    QObject::connect(&m_GameSpeedManager.GetGameTickTimer(), &QTimer::timeout, this, &GameEngine::GameTickHandler);
+    gameState_ = GameState::GameStopped;
+    QObject::connect(&gameSpeedManager_.getGameTickTimer(), &QTimer::timeout, this, &GameEngine::gameTickHandler);
 }
 
-void GameEngine::StartGame()
+void GameEngine::startGame()
 {
-    m_PlacedSquares.RemoveAllPlacedSquares();
+    logFile << "\n\n" << "NEW GAME" << "\n\n";
 
-    m_GameSpeedManager.SetGameSpeed();
-    m_ScoreManager.RestartScore();
-    m_InfoDisplayManager.HideInfo();
+    placedSquares_.removeAllPlacedSquares();
 
-    m_pActiveBlock.reset();
-    m_pActiveBlock = BlockBase::MakeBlock();
+    gameSpeedManager_.setGameSpeed();
+    scoreManager_.restartScore();
+    infoDisplayManager_.hideInfo();
 
-    m_GameSpeedManager.Start();
-    m_GameState = GameState::GameRunning;
+    activeBlock_.reset();
+    activeBlock_ = BlockBase::makeBlock();
+
+    gameSpeedManager_.start();
+    gameState_ = GameState::GameRunning;
 }
 
-void GameEngine::EndGame()
+void GameEngine::endGame()
 {
-    m_GameState = GameState::GameStopped;
-    m_GameSpeedManager.Stop();
+    gameState_ = GameState::GameStopped;
+    gameSpeedManager_.stop();
 
     qDebug() << "GAME OVER";
-    m_InfoDisplayManager.SetLabel("GAME OVER\nPRESS SPACE TO RESTART");
+    infoDisplayManager_.setLabel("GAME OVER\nPRESS SPACE TO RESTART");
 }
 
-void GameEngine::TogglePause()
+void GameEngine::togglePause()
 {
-    if(m_GameState == GameState::GameRunning)
+    if(gameState_ == GameState::GameRunning)
     {
-        m_GameSpeedManager.Stop();
-        m_GameState = GameState::GamePaused;
+        gameSpeedManager_.stop();
+        gameState_ = GameState::GamePaused;
     }
-    else if(m_GameState == GameState::GamePaused)
+    else if(gameState_ == GameState::GamePaused)
     {
-        m_GameSpeedManager.Start();
-        m_GameState = GameState::GameRunning;
+        gameSpeedManager_.start();
+        gameState_ = GameState::GameRunning;
     }
 }
 
-void GameEngine::GameTickHandler()
+void GameEngine::gameTickHandler()
 {
-    if(m_GameState == GameState::GameRunning)
+    if(gameState_ == GameState::GameRunning)
     {
-        if(m_pActiveBlock->IsSquareOrBottomWallUnderBlock(m_PlacedSquares))
+        if(activeBlock_->isSquareOrBottomWallUnderBlock(placedSquares_))
         {
-            m_pActiveBlock->PlaceBlock(m_PlacedSquares);
+            activeBlock_->placeBlock(placedSquares_);
 
-            m_pActiveBlock.reset();
+            activeBlock_.reset();
 
-            QVector<int> fullRows = m_PlacedSquares.FindFullRows();
+            QVector<int> fullRows = placedSquares_.findFullRows();
 
             if(!fullRows.empty())
             {
-                m_ScoreManager.RewardPlayerForFullRows(fullRows.size());
+                scoreManager_.rewardPlayerForFullRows(fullRows.size());
 
                 for(auto row : fullRows)
                 {
-                    m_PlacedSquares.RemoveFullRow(row);
-                    m_PlacedSquares.DropRowsAbove(row);
+                    placedSquares_.removeFullRow(row);
+                    placedSquares_.dropRowsAbove(row);
                 }
             }
 
-            m_pActiveBlock = BlockBase::MakeBlock();
+            activeBlock_ = BlockBase::makeBlock();
 
-            if(m_pActiveBlock->CheckForOverlappingSquares(m_pActiveBlock->GetBlockCoordinates(), m_PlacedSquares))
+            if(activeBlock_->checkForOverlappingSquares(activeBlock_->getBlockCoordinates(), placedSquares_))
             {
-                EndGame();
+                endGame();
             }
         }
 
         else
         {
-            m_pActiveBlock->DropBlockOneLevel();
+            activeBlock_->dropBlockOneLevel();
         }
     }
 }
 
-void GameEngine::ProcessKey(QString key)
+void GameEngine::processKey(QString key)
 {
-    if(m_GameState == GameState::GameRunning)
+    if(gameState_ == GameState::GameRunning)
     {
         if(key == "left")
         {
-            if(m_pActiveBlock->CheckMovePossibility(Direction::left, m_PlacedSquares))
+            if(activeBlock_->checkMovePossibility(Direction::left, placedSquares_))
             {
-                m_pActiveBlock->MoveBlock(Direction::left);
+                activeBlock_->moveBlock(Direction::left);
             }
         }
         else if(key == "right")
         {
-            if(m_pActiveBlock->CheckMovePossibility(Direction::right, m_PlacedSquares))
+            if(activeBlock_->checkMovePossibility(Direction::right, placedSquares_))
             {
-                m_pActiveBlock->MoveBlock(Direction::right);
+                activeBlock_->moveBlock(Direction::right);
             }
         }
         else if(key == "up")
         {
-            m_pActiveBlock->RotateBlock(m_PlacedSquares);
+            activeBlock_->rotateBlock(placedSquares_);
         }
         else if(key == "down")
         {
-            m_pActiveBlock->DropAndPlaceBlock(m_PlacedSquares);
+            activeBlock_->dropAndPlaceBlock(placedSquares_);
         }
         else if(key == "plus")
         {
-            m_GameSpeedManager.IncrementSpeed();
+            gameSpeedManager_.incrementSpeed();
         }
         else if(key == "minus")
         {
-            m_GameSpeedManager.DecrementSpeed();
+            gameSpeedManager_.decrementSpeed();
         }
         else if(key == "pause")
         {
-            TogglePause();
+            togglePause();
         }
     }
-    else if(m_GameState == GameState::GameStopped)
+    else if(gameState_ == GameState::GameStopped)
     {
         if(key == "space")
         {
-            StartGame();
+            startGame();
         }
     }
-    else if(m_GameState == GameState::GamePaused)
+    else if(gameState_ == GameState::GamePaused)
     {
         if(key == "pause")
         {
-            TogglePause();
+            togglePause();
         }
     }
 }

@@ -1,33 +1,30 @@
 #include "placed_squares.h"
 #include "drawer.h"
-#include "utilities.h"
+#include "common.h"
 
 PlacedSquares::PlacedSquares()
 {
-    RemoveAllPlacedSquares();
-
-    qDebug() << "Size of m_PlacedSquaresMap: " << m_PlacedSquaresMap.size();
+    removeAllPlacedSquares();
 }
 
-void PlacedSquares::RemoveAllPlacedSquares()
+void PlacedSquares::removeAllPlacedSquares()
 {
-    Drawer::EraseAllPlacedSquares(*this);
+    Drawer::eraseAllPlacedSquares(*this);
 
-    /*Initialize m_PlacedSquaresMap with all null pointers*/
-    for(int x = GameArenaParameters::MIN_BLOCK_COLUMNS; x <= GameArenaParameters::MAX_BLOCK_COLUMNS; x++)
+    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
     {
-        for(int y = GameArenaParameters::MIN_BLOCK_ROWS; y <= GameArenaParameters::MAX_BLOCK_ROWS; y++)
+        for(int y = GameArenaParameters::minBlockRows; y <= GameArenaParameters::maxBlockRows; y++)
         {
-            m_PlacedSquaresMap.insert(Coordinates(x, y), nullptr);
+            placedSquaresMap_.insert(Coordinates(x, y), nullptr);
         }
     }
 }
 
-void PlacedSquares::AddSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
+void PlacedSquares::addSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
-    if(m_PlacedSquaresMap.value(coordinates) == nullptr)
+    if(placedSquaresMap_.value(coordinates) == nullptr)
     {
-        Drawer::DrawSquare(coordinates, color, placedSquares);
+        Drawer::drawSquare(coordinates, color, placedSquares);
     }
     else
     {
@@ -35,11 +32,11 @@ void PlacedSquares::AddSquare(const Coordinates& coordinates, QColor color, Plac
     }
 }
 
-void PlacedSquares::RemoveSquare(const Coordinates& coordinates)
+void PlacedSquares::removeSquare(const Coordinates& coordinates)
 {
-    if(m_PlacedSquaresMap.value(coordinates) != nullptr)
+    if(placedSquaresMap_.value(coordinates) != nullptr)
     {
-        Drawer::EraseSquare(coordinates, *this);
+        Drawer::eraseSquare(coordinates, *this);
     }
     else
     {
@@ -47,40 +44,40 @@ void PlacedSquares::RemoveSquare(const Coordinates& coordinates)
     }
 }
 
-void PlacedSquares::RemoveFullRow(int rowNumber)
+void PlacedSquares::removeFullRow(int rowNumber)
 {
     qDebug() << "REMOVING ROW";
 
-    const int y = rowNumber;
+    const int& y = rowNumber;
 
-    if(y < GameArenaParameters::MIN_BLOCK_ROWS || y > GameArenaParameters::MAX_BLOCK_ROWS)
+    if(y < GameArenaParameters::minBlockRows || y > GameArenaParameters::maxBlockRows)
     {
         assert(false);
     }
 
-    for(int x = GameArenaParameters::MIN_BLOCK_COLUMNS; x <= GameArenaParameters::MAX_BLOCK_COLUMNS; x++)
+    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
     {
-        RemoveSquare(Coordinates(x, y));
+        removeSquare(Coordinates(x, y));
     }
 }
 
-QVector<int> PlacedSquares::FindFullRows() const
+QVector<int> PlacedSquares::findFullRows() const
 {
     QVector<int> fullRows;
 
     /*Go through all rows*/
-    for(int row = 1; row <= GameArenaParameters::MAX_BLOCK_ROWS; row++)
+    for(int row = 1; row <= GameArenaParameters::maxBlockRows; row++)
     {
-        for(int column = 1; column <= GameArenaParameters::MAX_BLOCK_COLUMNS; column++)
+        for(int column = 1; column <= GameArenaParameters::maxBlockColumns; column++)
         {
             Coordinates coordinates(column, row);
 
-            if(m_PlacedSquaresMap.value(coordinates) == nullptr)
+            if(placedSquaresMap_.value(coordinates) == nullptr)
             {
                 break;
             }
 
-            if(column == GameArenaParameters::MAX_BLOCK_COLUMNS)
+            if(column == GameArenaParameters::maxBlockColumns)
             {
                 fullRows.append(row);
             }
@@ -91,20 +88,20 @@ QVector<int> PlacedSquares::FindFullRows() const
 }
 
 /*Drop all rows above deleted row*/
-void PlacedSquares::DropRowsAbove(int removedRow)
+void PlacedSquares::dropRowsAbove(int removedRow)
 {
-    Drawer::DropRow(removedRow, *this);
+    Drawer::dropRow(removedRow, *this);
 
     /*Drop all rows by one*/
-    for(int x = GameArenaParameters::MIN_BLOCK_COLUMNS; x <= GameArenaParameters::MAX_BLOCK_COLUMNS; x++)
+    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
     {
-        for(int y = removedRow - 1; y > GameArenaParameters::MIN_BLOCK_ROWS; y--)
+        for(int y = removedRow - 1; y > GameArenaParameters::minBlockRows; y--)
         {
             Coordinates coordinates(x, y);
             Coordinates coordinatesOneRowBelow(x, y + 1);
 
-            m_PlacedSquaresMap[coordinatesOneRowBelow] = m_PlacedSquaresMap[coordinates];
-            m_PlacedSquaresMap[coordinates] = nullptr;
+            placedSquaresMap_[coordinatesOneRowBelow] = placedSquaresMap_[coordinates];
+            placedSquaresMap_[coordinates] = nullptr;
         }
     }
 }

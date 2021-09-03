@@ -6,8 +6,8 @@ class ZBlock : public BlockBase
 {
 public:
     explicit ZBlock();
-    void RotateBlock(const PlacedSquares& placedSquares) override;
+    void rotateBlock(const PlacedSquares& placedSquares) override;
 
 private:
-    int m_CurrentRotation;
+    static inline const QVector<int> transformationCoefficientsVsCentralSquare_ {-1, 0, 0, +1, +1, +1};
 };

@@ -15,15 +15,16 @@ public:
     Coordinates& operator=(const Coordinates&) = delete;
     Coordinates& operator=(const Coordinates&&) = delete;
 
-    void Modify(int newX, int newY);
-    int GetX() const {return m_X;}
-    int GetY() const {return m_Y;}
+    static bool validateCoordinates(int x, int y);
 
-    static bool ValidateCoordinates(int x, int y);
+    int getX() const {return x_;}
+    int getY() const {return y_;}
+
+    void modify(int newX, int newY);
 
 private:
-    int m_X;
-    int m_Y;
+    int x_;
+    int y_;
 };
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2);

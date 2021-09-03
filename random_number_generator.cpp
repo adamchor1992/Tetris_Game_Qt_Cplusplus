@@ -2,16 +2,16 @@
 
 #include <ctime>
 
-std::default_random_engine RandomNumberGenerator::m_RandomEngine;
+std::default_random_engine RandomNumberGenerator::randomEngine_;
 
 RandomNumberGenerator::RandomNumberGenerator(unsigned min, unsigned max)
 {
-    m_RandomEngine.seed(time(0));
+    randomEngine_.seed(time(0));
 
-    m_Distribution = std::make_unique<std::uniform_int_distribution<unsigned> >(min, max);
+    distribution_ = std::make_unique<std::uniform_int_distribution<unsigned> >(min, max);
 }
 
-unsigned RandomNumberGenerator::GenerateRandomNumber()
+unsigned RandomNumberGenerator::generateRandomNumber()
 {
-    return (*m_Distribution)(m_RandomEngine);
+    return (*distribution_)(randomEngine_);
 }

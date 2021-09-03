@@ -1,5 +1,5 @@
 #include "coordinates.h"
-#include "utilities.h"
+#include "common.h"
 #include "placed_squares.h"
 
 #include <stdexcept>
@@ -7,10 +7,10 @@
 
 Coordinates::Coordinates(int x, int y)
 {
-    if(ValidateCoordinates(x, y))
+    if(validateCoordinates(x, y))
     {
-        m_X = x;
-        m_Y = y;
+        x_ = x;
+        y_ = y;
     }
     else
     {
@@ -18,9 +18,9 @@ Coordinates::Coordinates(int x, int y)
     }
 }
 
-bool Coordinates::ValidateCoordinates(int x, int y)
+bool Coordinates::validateCoordinates(int x, int y)
 {
-    if((x >= GameArenaParameters::MIN_BLOCK_COLUMNS) && (x <= GameArenaParameters::MAX_BLOCK_COLUMNS) && (y >= GameArenaParameters::MIN_BLOCK_ROWS) && (y <= GameArenaParameters::MAX_BLOCK_ROWS))
+    if((x >= GameArenaParameters::minBlockColumns) && (x <= GameArenaParameters::maxBlockColumns) && (y >= GameArenaParameters::minBlockRows) && (y <= GameArenaParameters::maxBlockRows))
     {
         return true;
     }
@@ -31,29 +31,29 @@ bool Coordinates::ValidateCoordinates(int x, int y)
     }
 }
 
-void Coordinates::Modify(int newX, int newY)
+void Coordinates::modify(int newX, int newY)
 {
-    m_X = newX;
-    m_Y = newY;
+    x_ = newX;
+    y_ = newY;
 }
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
-    if(coordinates1.m_X < coordinates2.m_X)
+    if(coordinates1.x_ < coordinates2.x_)
     {
         return true;
     }
-    else if(coordinates1.m_X > coordinates2.m_X)
+    else if(coordinates1.x_ > coordinates2.x_)
     {
         return false;
     }
     else
     {
-        if(coordinates1.m_Y < coordinates2.m_Y)
+        if(coordinates1.y_ < coordinates2.y_)
         {
             return true;
         }
-        else if(coordinates1.m_Y > coordinates2.m_Y)
+        else if(coordinates1.y_ > coordinates2.y_)
         {
             return false;
         }

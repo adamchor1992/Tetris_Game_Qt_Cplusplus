@@ -13,19 +13,14 @@ class GameEngine : public QObject
 
 public:
     GameEngine();
-    void ProcessKey(QString key);
-
-public slots:
-    void GameTickHandler();
+    void processKey(QString key);
 
 private:
-    PlacedSquares m_PlacedSquares;
-
-    ScoreManager m_ScoreManager;
-    InfoDisplayManager m_InfoDisplayManager;
-    GameSpeedManager m_GameSpeedManager;
-
-    std::unique_ptr<BlockBase> m_pActiveBlock;
+    void placeBlock();
+    void findAndDeleteFullRows();
+    void startGame();
+    void endGame();
+    void togglePause();
 
     enum class GameState
     {
@@ -34,11 +29,13 @@ private:
         GameStopped
     };
 
-    GameState m_GameState;
+    PlacedSquares placedSquares_;
+    ScoreManager scoreManager_;
+    InfoDisplayManager infoDisplayManager_;
+    GameSpeedManager gameSpeedManager_;
+    std::unique_ptr<BlockBase> activeBlock_;
+    GameState gameState_;
 
-    void PlaceBlock();
-    void FindAndDeleteFullRows();
-    void StartGame();
-    void EndGame();
-    void TogglePause();
+private slots:
+    void gameTickHandler();
 };

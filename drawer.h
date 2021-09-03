@@ -15,18 +15,17 @@ public:
     Drawer(const Drawer&&) = delete;
     Drawer& operator=(Drawer&&) = delete;
 
-    static void SetScene(QGraphicsScene* pScene) {m_pScene = pScene;}
-    static void DrawGameArena();
-    static void EraseAllPlacedSquares(PlacedSquares& placedSquares);
-
-    static void DrawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
-    static void EraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
-    static void DrawBlock(BlockBase* block, QColor color);
-    static void EraseBlock(BlockBase* block);
-
-    static void DropRow(int removedRow, PlacedSquares& placedSquares);
+    static void setScene(QGraphicsScene* scene) {scene_ = scene;}
+    static void drawBlock(BlockBase* block, QColor color);
+    static void drawGameArena();
+    static void drawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+    static void dropRow(int removedRow, PlacedSquares& placedSquares);
+    static void eraseAllPlacedSquares(PlacedSquares& placedSquares);
+    static void eraseBlock(BlockBase* block);
+    static void eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
 
 private:
-    static QGraphicsScene* m_pScene;
-    static void Debug_DrawAllPossibleSquares();
+    static void debugDrawAllPossibleSquares();
+
+    static QGraphicsScene* scene_;
 };

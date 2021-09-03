@@ -19,11 +19,11 @@ public:
     explicit GameWindow(QWidget *parent = nullptr);
     ~GameWindow() override;
 
-private:
-    Ui::GameWindow* m_pUi = nullptr;
-    QGraphicsScene m_Scene;
-    std::unique_ptr<GameEngine> m_GameEngine;
-
-    void InitializeGameplayAreaScene();
+private:    
+    void initializeGameplayAreaScene();
     void keyPressEvent(QKeyEvent *event) override;
+
+    Ui::GameWindow* ui_;
+    QGraphicsScene scene_;
+    std::unique_ptr<GameEngine> gameEngine_;
 };

@@ -6,10 +6,10 @@ class InfoDisplayManager
 {
 public:
     InfoDisplayManager();
-    static void ConnectInfoLabel(QLabel* scoreLabel);
-    void HideInfo();
-    void SetLabel(QString text);
+    static void connectInfoLabel(QLabel* infoLabel);
+    void hideInfo();
+    void setLabel(QString text);
 
 private:
-    static QLabel* m_InfoLabel;
+    static QLabel* infoLabel_;
 };
