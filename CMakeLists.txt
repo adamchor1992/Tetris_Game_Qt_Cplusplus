@@ -3,47 +3,50 @@ cmake_minimum_required(VERSION 3.10)
 project(Tetris LANGUAGES CXX)
 
 set(QT_VERSION_MAJOR 6)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
+set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
-set(MAIN_PROJECT_INCLUDES_PATH ${PROJECT_DIR}/inc)
-set(MAIN_PROJECT_SOURCES_PATH ${PROJECT_DIR}/src)
-set(MAIN_PROJECT_UI_FORMS_PATH ${PROJECT_DIR}/ui_forms)
+set(INCLUDES_DIR ${PROJECT_ROOT}/inc)
+set(SOURCES_DIR ${PROJECT_ROOT}/src)
+set(UI_FORMS_DIR ${PROJECT_ROOT}/ui_forms)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${MAIN_PROJECT_UI_FORMS_PATH})
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_FORMS_DIR})
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-set(MAIN_PROJECT_SOURCES
-    ${MAIN_PROJECT_SOURCES_PATH}/main.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/common.h
-    ${MAIN_PROJECT_INCLUDES_PATH}/game_window.h ${MAIN_PROJECT_SOURCES_PATH}/game_window.cpp ${MAIN_PROJECT_UI_FORMS_PATH}/game_window.ui
-    ${MAIN_PROJECT_INCLUDES_PATH}/game_engine.h ${MAIN_PROJECT_SOURCES_PATH}/game_engine.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/block_base.h ${MAIN_PROJECT_SOURCES_PATH}/block_base.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/i_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/i_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/j_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/j_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/l_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/l_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/o_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/o_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/s_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/s_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/t_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/t_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/blocks/z_block ${MAIN_PROJECT_SOURCES_PATH}/blocks/z_block.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/drawer.h ${MAIN_PROJECT_SOURCES_PATH}/drawer.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/score_manager.h ${MAIN_PROJECT_SOURCES_PATH}/score_manager.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/random_number_generator.h ${MAIN_PROJECT_SOURCES_PATH}/random_number_generator.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/info_display_manager.h ${MAIN_PROJECT_SOURCES_PATH}/info_display_manager.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/game_speed_manager.h ${MAIN_PROJECT_SOURCES_PATH}/game_speed_manager.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/placed_squares.h ${MAIN_PROJECT_SOURCES_PATH}/placed_squares.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/coordinates.h ${MAIN_PROJECT_SOURCES_PATH}/coordinates.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/log_manager.h ${MAIN_PROJECT_SOURCES_PATH}/log_manager.cpp
+set(SOURCE_FILES
+    ${INCLUDES_DIR}/common.h
+    ${INCLUDES_DIR}/game_window.h ${SOURCES_DIR}/game_window.cpp ${UI_FORMS_DIR}/game_window.ui
+    ${INCLUDES_DIR}/game_engine.h ${SOURCES_DIR}/game_engine.cpp
+    ${INCLUDES_DIR}/block_base.h ${SOURCES_DIR}/block_base.cpp
+    ${INCLUDES_DIR}/blocks/i_block.h ${SOURCES_DIR}/blocks/i_block.cpp
+    ${INCLUDES_DIR}/blocks/j_block.h ${SOURCES_DIR}/blocks/j_block.cpp
+    ${INCLUDES_DIR}/blocks/l_block.h ${SOURCES_DIR}/blocks/l_block.cpp
+    ${INCLUDES_DIR}/blocks/o_block.h ${SOURCES_DIR}/blocks/o_block.cpp
+    ${INCLUDES_DIR}/blocks/s_block.h ${SOURCES_DIR}/blocks/s_block.cpp
+    ${INCLUDES_DIR}/blocks/t_block.h ${SOURCES_DIR}/blocks/t_block.cpp
+    ${INCLUDES_DIR}/blocks/z_block.h ${SOURCES_DIR}/blocks/z_block.cpp
+    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
+    ${INCLUDES_DIR}/score_manager.h ${SOURCES_DIR}/score_manager.cpp
+    ${INCLUDES_DIR}/random_number_generator.h ${SOURCES_DIR}/random_number_generator.cpp
+    ${INCLUDES_DIR}/info_display_manager.h ${SOURCES_DIR}/info_display_manager.cpp
+    ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp
+    ${INCLUDES_DIR}/placed_squares.h ${SOURCES_DIR}/placed_squares.cpp
+    ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
+    ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
 )
 
-add_executable(${PROJECT_NAME} WIN32 ${MAIN_PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${MAIN_PROJECT_INCLUDES_PATH} ${MAIN_PROJECT_INCLUDES_PATH}/blocks)
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+add_executable(Tetris WIN32 ${SOURCES_DIR}/main.cpp ${SOURCE_FILES})
+target_include_directories(Tetris PRIVATE ${INCLUDES_DIR} ${INCLUDES_DIR}/blocks)
+target_link_libraries(Tetris PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/executable_windows)
+if(WIN32)
+    set_target_properties(Tetris PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_windows)
+elseif(UNIX)
+    set_target_properties(Tetris PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_linux)
+endif(WIN32)
