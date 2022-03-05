@@ -13,11 +13,9 @@ class GameEngine : public QObject
 
 public:
     GameEngine();
-    void processKey(QString key);
+    void processKey(const QString& key);
 
 private:
-    void placeBlock();
-    void findAndDeleteFullRows();
     void startGame();
     void endGame();
     void togglePause();

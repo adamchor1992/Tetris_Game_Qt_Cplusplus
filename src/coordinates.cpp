@@ -1,9 +1,7 @@
 #include "coordinates.h"
 #include "common.h"
-#include "placed_squares.h"
 
 #include <stdexcept>
-#include <QDebug>
 
 Coordinates::Coordinates(int x, int y)
 {
@@ -26,7 +24,6 @@ bool Coordinates::validateCoordinates(int x, int y)
     }
     else
     {
-        qDebug("INVALID COORDINATES=(%d,%d)", x, y);
         return false;
     }
 }
@@ -52,10 +49,6 @@ bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
         if(coordinates1.y_ < coordinates2.y_)
         {
             return true;
-        }
-        else if(coordinates1.y_ > coordinates2.y_)
-        {
-            return false;
         }
         else
         {

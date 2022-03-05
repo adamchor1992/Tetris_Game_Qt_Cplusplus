@@ -29,7 +29,6 @@ void GameEngine::endGame()
     gameState_ = GameState::GameStopped;
     gameSpeedManager_.stop();
 
-    qDebug() << "GAME OVER";
     infoDisplayManager_.setLabel("GAME OVER\nPRESS SPACE TO RESTART");
 }
 
@@ -85,7 +84,7 @@ void GameEngine::gameTickHandler()
     }
 }
 
-void GameEngine::processKey(QString key)
+void GameEngine::processKey(const QString& key)
 {
     if(gameState_ == GameState::GameRunning)
     {

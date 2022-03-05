@@ -17,8 +17,8 @@ public:
 
     static bool validateCoordinates(int x, int y);
 
-    int getX() const {return x_;}
-    int getY() const {return y_;}
+    [[nodiscard]] int getX() const {return x_;}
+    [[nodiscard]] int getY() const {return y_;}
 
     void modify(int newX, int newY);
 

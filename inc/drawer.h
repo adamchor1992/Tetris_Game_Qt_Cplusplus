@@ -25,7 +25,6 @@ public:
     static void eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
 
 private:
-    static void debugDrawAllPossibleSquares();
-
-    static QGraphicsScene* scene_;
+    [[maybe_unused]] static void debugDrawAllPossibleSquares();
+    inline static QGraphicsScene* scene_ = nullptr;
 };

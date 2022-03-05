@@ -8,8 +8,8 @@ public:
     InfoDisplayManager();
     static void connectInfoLabel(QLabel* infoLabel);
     void hideInfo();
-    void setLabel(QString text);
+    void setLabel(const QString& text);
 
 private:
-    static QLabel* infoLabel_;
+    inline static QLabel* infoLabel_ = nullptr;
 };

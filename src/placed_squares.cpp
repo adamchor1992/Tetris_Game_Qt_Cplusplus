@@ -15,14 +15,14 @@ void PlacedSquares::removeAllPlacedSquares()
     {
         for(int y = GameArenaParameters::minBlockRows; y <= GameArenaParameters::maxBlockRows; y++)
         {
-            placedSquaresMap_.insert(Coordinates(x, y), nullptr);
+            coordinatesToSquaresMapping_.insert(Coordinates(x, y), nullptr);
         }
     }
 }
 
 void PlacedSquares::addSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
-    if(placedSquaresMap_.value(coordinates) == nullptr)
+    if(coordinatesToSquaresMapping_.value(coordinates) == nullptr)
     {
         Drawer::drawSquare(coordinates, color, placedSquares);
     }
@@ -34,7 +34,7 @@ void PlacedSquares::addSquare(const Coordinates& coordinates, QColor color, Plac
 
 void PlacedSquares::removeSquare(const Coordinates& coordinates)
 {
-    if(placedSquaresMap_.value(coordinates) != nullptr)
+    if(coordinatesToSquaresMapping_.value(coordinates) != nullptr)
     {
         Drawer::eraseSquare(coordinates, *this);
     }
@@ -46,8 +46,6 @@ void PlacedSquares::removeSquare(const Coordinates& coordinates)
 
 void PlacedSquares::removeFullRow(int rowNumber)
 {
-    qDebug() << "REMOVING ROW";
-
     const int& y = rowNumber;
 
     if(y < GameArenaParameters::minBlockRows || y > GameArenaParameters::maxBlockRows)
@@ -72,7 +70,7 @@ QVector<int> PlacedSquares::findFullRows() const
         {
             Coordinates coordinates(column, row);
 
-            if(placedSquaresMap_.value(coordinates) == nullptr)
+            if(coordinatesToSquaresMapping_.value(coordinates) == nullptr)
             {
                 break;
             }
@@ -100,8 +98,8 @@ void PlacedSquares::dropRowsAbove(int removedRow)
             Coordinates coordinates(x, y);
             Coordinates coordinatesOneRowBelow(x, y + 1);
 
-            placedSquaresMap_[coordinatesOneRowBelow] = placedSquaresMap_[coordinates];
-            placedSquaresMap_[coordinates] = nullptr;
+            coordinatesToSquaresMapping_[coordinatesOneRowBelow] = coordinatesToSquaresMapping_[coordinates];
+            coordinatesToSquaresMapping_[coordinates] = nullptr;
         }
     }
 }

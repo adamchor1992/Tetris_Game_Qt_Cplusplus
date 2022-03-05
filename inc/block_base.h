@@ -17,12 +17,12 @@ public:
     static std::unique_ptr<BlockBase> makeBlock();
 
     QVector<QGraphicsRectItem*>& getGraphicsRectItems() {return squaresGraphicsRectItems_;}
-    const QVector<Coordinates>& getBlockCoordinates() const {return blockCoordinates_;}
+    [[nodiscard]] const QVector<Coordinates>& getBlockCoordinates() const {return blockCoordinates_;}
 
-    bool isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const;
+    [[nodiscard]] bool isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const;
 
-    bool checkForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedSquares& placedSquares) const;
-    bool checkMovePossibility(Direction direction, const PlacedSquares& placedSquares) const;
+    [[nodiscard]] bool checkForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedSquares& placedSquares) const;
+    [[nodiscard]] bool checkMovePossibility(Direction direction, const PlacedSquares& placedSquares) const;
     void dropAndPlaceBlock(const PlacedSquares& placedSquares);
     void dropBlockOneLevel();
     void moveBlock(Direction direction);
@@ -37,7 +37,7 @@ protected:
     int currentRotation_;
 
 private:
-    bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedSquares) const;
+    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedSquares) const;
 
     const QVector<QColor> colors_ = {Qt::red, Qt::blue, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
     QColor color_;

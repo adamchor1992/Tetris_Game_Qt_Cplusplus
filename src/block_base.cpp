@@ -2,7 +2,6 @@
 #include "drawer.h"
 #include "random_number_generator.h"
 #include "blocks/i_block.h"
-#include "blocks/i_block.h"
 #include "blocks/s_block.h"
 #include "blocks/z_block.h"
 #include "blocks/j_block.h"
@@ -40,7 +39,7 @@ std::unique_ptr<BlockBase> BlockBase::makeBlock()
 {
     std::unique_ptr<BlockBase> block = nullptr;
 
-    static std::map<int, QString> numberToShapeMapping = { {0, "S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
+    static std::map<unsigned int, QString> numberToShapeMapping = { {0, "S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
     static RandomNumberGenerator randomNumberGenerator(0, numberToShapeMapping.size() - 1);
 
     QString shape = numberToShapeMapping.at(randomNumberGenerator.generateRandomNumber());
@@ -75,8 +74,7 @@ std::unique_ptr<BlockBase> BlockBase::makeBlock()
     }
     else
     {
-        qDebug() << "Unknown shape";
-        assert(false);
+        throw std::runtime_error("Undefined block shape");
     }
 
     logFile << "MakeBlock at: " << (*block) << "\t\t\t";
@@ -122,10 +120,10 @@ void BlockBase::moveBlock(Direction direction)
 
 bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& placedSquares) const
 {
-    for(int i = 0; i < blockCoordinates_.size(); i++)
+    for(const auto& blockCoordinate : blockCoordinates_)
     {
-        int currentX = blockCoordinates_.at(i).getX();
-        int currentY = blockCoordinates_.at(i).getY();
+        int currentX = blockCoordinate.getX();
+        int currentY = blockCoordinate.getY();
 
         if(direction == Direction::left)
         {
@@ -141,7 +139,7 @@ bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& p
             Coordinates leftOfBlockCoordinates(leftBlockX, leftBlockY);
 
             /*Check if there is any block to the left of current block*/
-            if(placedSquares.getPlacedSquaresMap().value(leftOfBlockCoordinates) != nullptr)
+            if(placedSquares.getCoordinatesToSquaresMapping().value(leftOfBlockCoordinates) != nullptr)
             {
                 return false;
             }
@@ -160,7 +158,7 @@ bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& p
             Coordinates rightOfBlockCoordinates(rightBlockX, rightBlockY);
 
             /*Check if there is any block to the left of current block*/
-            if(placedSquares.getPlacedSquaresMap().value(rightOfBlockCoordinates) != nullptr)
+            if(placedSquares.getCoordinatesToSquaresMapping().value(rightOfBlockCoordinates) != nullptr)
             {
                 return false;
             }
@@ -189,7 +187,6 @@ bool BlockBase::checkRotationPossibility(const Coordinates& centralSquareCoordin
             !Coordinates::validateCoordinates(newSquare2X, newSquare2Y)||
             !Coordinates::validateCoordinates(newSquare3X, newSquare3Y))
     {
-        qDebug() << "WRONG COORDINATES IN CheckIfRotationIsPossible";
         return false;
     }
 
@@ -197,7 +194,6 @@ bool BlockBase::checkRotationPossibility(const Coordinates& centralSquareCoordin
 
     if(checkForOverlappingSquares(newCoordinates, placedSquares))
     {
-        qDebug() << "OVERLAPPING SQUARES";
         return false;
     }
 
@@ -208,7 +204,7 @@ bool BlockBase::checkForOverlappingSquares(const QVector<Coordinates>& blockCoor
 {
     for(auto& coordinates : blockCoordinates)
     {
-        if(placedSquares.getPlacedSquaresMap().value(coordinates) != nullptr)
+        if(placedSquares.getCoordinatesToSquaresMapping().value(coordinates) != nullptr)
         {
             return true;
         }
@@ -219,11 +215,11 @@ bool BlockBase::checkForOverlappingSquares(const QVector<Coordinates>& blockCoor
 
 void BlockBase::placeBlock(PlacedSquares& placedSquares)
 {
-    logFile << "PlaceBlock at: " << (*this) << std::endl;;
+    logFile << "PlaceBlock at: " << (*this) << std::endl;
 
-    for(int i = 0; i < blockCoordinates_.size(); i++)
+    for(const auto& blockCoordinate : blockCoordinates_)
     {
-        placedSquares.addSquare(blockCoordinates_.at(i), PlacedSquares::placedSquares_color_, placedSquares);
+        placedSquares.addSquare(blockCoordinate, PlacedSquares::placedSquares_color, placedSquares);
     }
 }
 
@@ -268,17 +264,16 @@ bool BlockBase::processRotation(const PlacedSquares& placedSquares, const QVecto
     }
     else
     {
-        qDebug() << "ROTATION REJECTED";
         return false;
     }
 }
 
 bool BlockBase::isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const
 {
-    for(int i = 0; i < blockCoordinates_.size(); i++)
+    for(const auto& blockCoordinate : blockCoordinates_)
     {
-        int currentX = blockCoordinates_.at(i).getX();
-        int currentY = blockCoordinates_.at(i).getY();
+        int currentX = blockCoordinate.getX();
+        int currentY = blockCoordinate.getY();
 
         int belowBlockX = currentX;
         int belowBlockY = currentY + 1;
@@ -292,7 +287,7 @@ bool BlockBase::isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquare
         Coordinates belowBlockCoordinates(belowBlockX, belowBlockY);
 
         /*Check if there is any block below the current block*/
-        if(placedSquares.getPlacedSquaresMap().value(belowBlockCoordinates) != nullptr)
+        if(placedSquares.getCoordinatesToSquaresMapping().value(belowBlockCoordinates) != nullptr)
         {
             return true;
         }

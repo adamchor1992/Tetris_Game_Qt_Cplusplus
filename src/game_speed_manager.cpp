@@ -1,7 +1,5 @@
 #include "game_speed_manager.h"
 
-QSlider* GameSpeedManager::speedSlider_ = nullptr;
-
 GameSpeedManager::GameSpeedManager()
 {
     connect(speedSlider_, &QSlider::valueChanged, this, &GameSpeedManager::setGameSpeed);

@@ -2,8 +2,6 @@
 #include "common.h"
 #include "coordinates.h"
 
-QGraphicsScene* Drawer::scene_ = nullptr;
-
 void Drawer::drawGameArena()
 {
     QBrush whiteBrush(GameArenaParameters::wallColor);
@@ -40,18 +38,18 @@ void Drawer::drawGameArena()
 
 void Drawer::drawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
-    placedSquares.getPlacedSquaresMap()[coordinates] = scene_->addRect((coordinates.getX() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+    placedSquares.getCoordinatesToSquaresMapping()[coordinates] = scene_->addRect((coordinates.getX() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
                                                                        (coordinates.getY() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                                                       GameArenaParameters::blockSquareSize,
-                                                                       GameArenaParameters::blockSquareSize,
-                                                                       Qt::NoPen,
-                                                                       color);
+                                                                                  GameArenaParameters::blockSquareSize,
+                                                                                  GameArenaParameters::blockSquareSize,
+                                                                                  Qt::NoPen,
+                                                                                  color);
 }
 
 void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
 {
-    scene_->removeItem(placedSquares.getPlacedSquaresMap().value(coordinates));
-    placedSquares.getPlacedSquaresMap()[coordinates] = nullptr;
+    scene_->removeItem(placedSquares.getCoordinatesToSquaresMapping().value(coordinates));
+    placedSquares.getCoordinatesToSquaresMapping()[coordinates] = nullptr;
 }
 
 void Drawer::drawBlock(BlockBase* block, QColor color)
@@ -82,13 +80,13 @@ void Drawer::eraseBlock(BlockBase* block)
 
 void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
 {
-    for(auto& coordinates : placedSquares.getPlacedSquaresMap().keys())
+    for(auto& coordinates : placedSquares.getCoordinatesToSquaresMapping().keys())
     {
         if(coordinates.getY() < removedRow)
         {
-            if(placedSquares.getPlacedSquaresMap().value(coordinates) != nullptr)
+            if(placedSquares.getCoordinatesToSquaresMapping().value(coordinates) != nullptr)
             {
-                placedSquares.getPlacedSquaresMap().value(coordinates)->moveBy(0, GameArenaParameters::blockSquareSize);
+                placedSquares.getCoordinatesToSquaresMapping().value(coordinates)->moveBy(0, GameArenaParameters::blockSquareSize);
             }
         }
     }
@@ -96,16 +94,16 @@ void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
 
 void Drawer::eraseAllPlacedSquares(PlacedSquares& placedSquares)
 {
-    for(auto& coordinates : placedSquares.getPlacedSquaresMap().keys())
+    for(auto& coordinates : placedSquares.getCoordinatesToSquaresMapping().keys())
     {
-        if(placedSquares.getPlacedSquaresMap().value(coordinates) != nullptr)
+        if(placedSquares.getCoordinatesToSquaresMapping().value(coordinates) != nullptr)
         {
             Drawer::eraseSquare(coordinates, placedSquares);
         }
     }
 }
 
-void Drawer::debugDrawAllPossibleSquares()
+[[maybe_unused]] void Drawer::debugDrawAllPossibleSquares()
 {
     QBrush redBrush(Qt::red);
     QBrush blueBrush(Qt::blue);

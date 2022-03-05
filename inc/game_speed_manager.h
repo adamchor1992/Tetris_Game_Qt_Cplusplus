@@ -20,6 +20,6 @@ public slots:
     void setGameSpeed();
 
 private:
-    static QSlider* speedSlider_;
+    inline static QSlider* speedSlider_ = nullptr;
     QTimer gameTickTimer_;
 };

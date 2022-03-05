@@ -11,10 +11,9 @@ public:
     void restartScore();
 
 private:
-    void setScore(int score) {score_ = score;}
     void increaseScore(int score) {score_ += score;}
-    void updateScoreLabel();
+    void updateScoreLabel() const;
 
-    static QLabel* scoreLabel_;
+    inline static QLabel* scoreLabel_;
     int score_;
 };

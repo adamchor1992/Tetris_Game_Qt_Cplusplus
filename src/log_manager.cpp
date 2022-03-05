@@ -1,12 +1,10 @@
 #include "log_manager.h"
 
 #include <ctime>
-#include <exception>
 #include <iomanip>
-#include <QDebug>
 
 std::ofstream logFile;
-LogManager logManager;
+[[maybe_unused]] LogManager logManager;
 
 LogManager::LogManager()
 {

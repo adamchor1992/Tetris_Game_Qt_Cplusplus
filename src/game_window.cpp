@@ -70,9 +70,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
         gameEngine_->processKey("space");
         break;
-
-    default:
-        qDebug() << "Unknown key";
     }
 }
 
