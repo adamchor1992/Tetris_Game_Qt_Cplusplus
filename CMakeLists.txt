@@ -38,15 +38,19 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp
     ${INCLUDES_DIR}/placed_squares.h ${SOURCES_DIR}/placed_squares.cpp
     ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
-    ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
-)
+    ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp)
+
+add_library(libTetris ${SOURCE_FILES})
+target_include_directories(libTetris PUBLIC ${INCLUDES_DIR} ${INCLUDES_DIR}/blocks)
+target_link_libraries(libTetris Qt${QT_VERSION_MAJOR}::Widgets)
 
 add_executable(Tetris WIN32 ${SOURCES_DIR}/main.cpp ${SOURCE_FILES})
-target_include_directories(Tetris PRIVATE ${INCLUDES_DIR} ${INCLUDES_DIR}/blocks)
-target_link_libraries(Tetris PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Tetris PRIVATE libTetris)
 
 if(WIN32)
     set_target_properties(Tetris PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_windows)
 elseif(UNIX)
     set_target_properties(Tetris PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_linux)
-endif(WIN32)
+endif()
+
+add_subdirectory(tests)
