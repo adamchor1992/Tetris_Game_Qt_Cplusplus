@@ -34,6 +34,16 @@ void Coordinates::modify(int newX, int newY)
     y_ = newY;
 }
 
+bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2)
+{
+    return (coordinates1.getX() == coordinates2.getX()) && (coordinates1.getY() == coordinates2.getY());
+}
+
+bool operator!=(const Coordinates& coordinates1, const Coordinates& coordinates2)
+{
+    return !(coordinates1 == coordinates2);
+}
+
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
     if(coordinates1.x_ < coordinates2.x_)

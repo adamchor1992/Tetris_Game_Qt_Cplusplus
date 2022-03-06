@@ -35,14 +35,17 @@ BlockBase::~BlockBase()
     Drawer::eraseBlock(this);
 }
 
-std::unique_ptr<BlockBase> BlockBase::makeBlock()
+std::unique_ptr<BlockBase> BlockBase::makeBlock(QString shape)
 {
-    std::unique_ptr<BlockBase> block = nullptr;
+    std::unique_ptr<BlockBase> block;
 
     static std::map<unsigned int, QString> numberToShapeMapping = { {0, "S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
     static RandomNumberGenerator randomNumberGenerator(0, numberToShapeMapping.size() - 1);
 
-    QString shape = numberToShapeMapping.at(randomNumberGenerator.generateRandomNumber());
+    if(shape.isEmpty())
+    {
+        shape = numberToShapeMapping.at(randomNumberGenerator.generateRandomNumber());
+    }
 
     if(shape == "S")
     {

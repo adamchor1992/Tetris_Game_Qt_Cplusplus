@@ -7,12 +7,14 @@
 #include <QGraphicsRectItem>
 #include <QColor>
 
+using CoordinatesToSquaresMapping = QMap<Coordinates, QGraphicsRectItem*>;
+
 class PlacedSquares
 {
 public:
     explicit PlacedSquares();
-    [[nodiscard]] const QMap<Coordinates, QGraphicsRectItem*>& getCoordinatesToSquaresMapping() const {return coordinatesToSquaresMapping_;}
-    QMap<Coordinates, QGraphicsRectItem*>& getCoordinatesToSquaresMapping() {return coordinatesToSquaresMapping_;}
+    [[nodiscard]] const CoordinatesToSquaresMapping& getCoordinatesToSquaresMapping() const {return coordinatesToSquaresMapping_;}
+    CoordinatesToSquaresMapping& getCoordinatesToSquaresMapping() {return coordinatesToSquaresMapping_;}
     void removeAllPlacedSquares();
     [[nodiscard]] QVector<int> findFullRows() const;
     void removeFullRow(int rowNumber);
@@ -24,5 +26,5 @@ public:
 private:
     void removeSquare(const Coordinates& coordinates);
 
-    QMap<Coordinates, QGraphicsRectItem*> coordinatesToSquaresMapping_;
+    CoordinatesToSquaresMapping coordinatesToSquaresMapping_;
 };

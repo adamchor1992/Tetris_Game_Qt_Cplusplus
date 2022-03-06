@@ -14,7 +14,7 @@ public:
 
     virtual void rotateBlock(const PlacedSquares&) = 0;
 
-    static std::unique_ptr<BlockBase> makeBlock();
+    static std::unique_ptr<BlockBase> makeBlock(QString shape="");
 
     QVector<QGraphicsRectItem*>& getGraphicsRectItems() {return squaresGraphicsRectItems_;}
     [[nodiscard]] const QVector<Coordinates>& getBlockCoordinates() const {return blockCoordinates_;}

@@ -39,7 +39,7 @@ void Drawer::drawGameArena()
 void Drawer::drawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
 {
     placedSquares.getCoordinatesToSquaresMapping()[coordinates] = scene_->addRect((coordinates.getX() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                                                       (coordinates.getY() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                                                                                  (coordinates.getY() - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
                                                                                   GameArenaParameters::blockSquareSize,
                                                                                   GameArenaParameters::blockSquareSize,
                                                                                   Qt::NoPen,

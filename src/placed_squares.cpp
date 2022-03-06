@@ -28,7 +28,7 @@ void PlacedSquares::addSquare(const Coordinates& coordinates, QColor color, Plac
     }
     else
     {
-        assert(false);
+        throw std::runtime_error("Placing square on non-empty field");
     }
 }
 
@@ -40,7 +40,7 @@ void PlacedSquares::removeSquare(const Coordinates& coordinates)
     }
     else
     {
-        assert(false);
+        throw std::runtime_error("Removing square from already empty field");
     }
 }
 
@@ -50,7 +50,7 @@ void PlacedSquares::removeFullRow(int rowNumber)
 
     if(y < GameArenaParameters::minBlockRows || y > GameArenaParameters::maxBlockRows)
     {
-        assert(false);
+        throw std::runtime_error("Wrong row number");
     }
 
     for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
