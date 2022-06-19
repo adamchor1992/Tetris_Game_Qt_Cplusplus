@@ -27,3 +27,8 @@ enum class Direction
     left = 1,
     right = 2
 };
+
+enum class BlockShape
+{
+    S, Z, I, J, L, O, T, RANDOM
+};

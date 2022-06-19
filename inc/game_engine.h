@@ -2,7 +2,7 @@
 
 #include "block_base.h"
 #include "placed_squares.h"
-#include "random_number_generator.h"
+#include "random_generator.h"
 #include "score_manager.h"
 #include "info_display_manager.h"
 #include "game_speed_manager.h"

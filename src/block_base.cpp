@@ -1,6 +1,5 @@
 #include "block_base.h"
 #include "drawer.h"
-#include "random_number_generator.h"
 #include "blocks/i_block.h"
 #include "blocks/s_block.h"
 #include "blocks/z_block.h"
@@ -10,11 +9,8 @@
 #include "blocks/t_block.h"
 #include "log_manager.h"
 
-BlockBase::BlockBase(const QVector<int>& transformationCoefficientsVsCentralSquare_) : startingCentralSquareCoordinates_(5, 1)
+BlockBase::BlockBase(const QVector<int>& transformationCoefficientsVsCentralSquare_) : color_(randomColorGenerator())
 {
-    static RandomNumberGenerator randomNumberGenerator(0, colors_.size() - 1);
-    color_ = colors_.at(randomNumberGenerator.generateRandomNumber());
-
     const Coordinates square1Coordinates(startingCentralSquareCoordinates_.getX() + transformationCoefficientsVsCentralSquare_.at(0),
                                          startingCentralSquareCoordinates_.getY() + transformationCoefficientsVsCentralSquare_.at(1));
     const Coordinates square2Coordinates(startingCentralSquareCoordinates_.getX() + transformationCoefficientsVsCentralSquare_.at(2),
@@ -35,49 +31,40 @@ BlockBase::~BlockBase()
     Drawer::eraseBlock(this);
 }
 
-std::unique_ptr<BlockBase> BlockBase::makeBlock(QString shape)
+std::unique_ptr<BlockBase> BlockBase::makeBlock(BlockShape shape)
 {
     std::unique_ptr<BlockBase> block;
 
-    static std::map<unsigned int, QString> numberToShapeMapping = { {0, "S"}, {1, "Z"}, {2, "I"}, {3, "J"}, {4, "L"}, {5, "O"}, {6, "T"} };
-    static RandomNumberGenerator randomNumberGenerator(0, numberToShapeMapping.size() - 1);
-
-    if(shape.isEmpty())
+    if(shape == BlockShape::RANDOM)
     {
-        shape = numberToShapeMapping.at(randomNumberGenerator.generateRandomNumber());
+        shape = randomShapeGenerator();
     }
 
-    if(shape == "S")
+    switch (shape)
     {
-        block = std::make_unique<SBlock>();
-    }
-    else if(shape == "Z")
-    {
-        block = std::make_unique<ZBlock>();
-    }
-    else if(shape == "I")
-    {
-        block = std::make_unique<IBlock>();
-    }
-    else if(shape == "J")
-    {
-        block = std::make_unique<JBlock>();
-    }
-    else if(shape == "L")
-    {
-        block = std::make_unique<LBlock>();
-    }
-    else if(shape == "O")
-    {
-        block = std::make_unique<OBlock>();
-    }
-    else if(shape == "T")
-    {
-        block = std::make_unique<TBlock>();
-    }
-    else
-    {
-        throw std::runtime_error("Undefined block shape");
+        case BlockShape::S:
+            block = std::make_unique<SBlock>();
+            break;
+        case BlockShape::Z:
+            block = std::make_unique<ZBlock>();
+            break;
+        case BlockShape::I:
+            block = std::make_unique<IBlock>();
+            break;
+        case BlockShape::J:
+            block = std::make_unique<JBlock>();
+            break;
+        case BlockShape::L:
+            block = std::make_unique<LBlock>();
+            break;
+        case BlockShape::O:
+            block = std::make_unique<OBlock>();
+            break;
+        case BlockShape::T:
+            block = std::make_unique<TBlock>();
+            break;
+        case BlockShape::RANDOM:
+            throw std::runtime_error("Random shape block error");
     }
 
     logFile << "MakeBlock at: " << (*block) << "\t\t\t";

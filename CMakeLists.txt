@@ -33,7 +33,7 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/blocks/z_block.h ${SOURCES_DIR}/blocks/z_block.cpp
     ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
     ${INCLUDES_DIR}/score_manager.h ${SOURCES_DIR}/score_manager.cpp
-    ${INCLUDES_DIR}/random_number_generator.h ${SOURCES_DIR}/random_number_generator.cpp
+    ${INCLUDES_DIR}/random_generator.h
     ${INCLUDES_DIR}/info_display_manager.h ${SOURCES_DIR}/info_display_manager.cpp
     ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp
     ${INCLUDES_DIR}/placed_squares.h ${SOURCES_DIR}/placed_squares.cpp
