@@ -209,7 +209,7 @@ void BlockBase::placeBlock(PlacedSquares& placedSquares)
 
     for(const auto& blockCoordinate : blockCoordinates_)
     {
-        placedSquares.addSquare(blockCoordinate, PlacedSquares::placedSquares_color, placedSquares);
+        placedSquares.addSquare(blockCoordinate, getColor(), placedSquares);
     }
 }
 

@@ -29,6 +29,7 @@ public:
     void moveBlock(Direction direction);
     void placeBlock(PlacedSquares& placedSquares);
     bool processRotation(const PlacedSquares& placedSquares, const QVector<int>& rotationCoefficients);
+    [[nodiscard]] QColor getColor() const {return color_;}
 
 protected:
     const Coordinates startingCentralSquareCoordinates_{5, 1};
