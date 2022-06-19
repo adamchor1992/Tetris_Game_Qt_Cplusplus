@@ -9,5 +9,5 @@ public:
     void rotateBlock(const PlacedSquares& placedSquares) override;
 
 private:
-    static inline const QVector<int> transformationCoefficientsVsCentralSquare_ {-1, 0, +1, 0, +2, 0};
+    inline static const QVector<TransformationCoefficients> transformationCoefficientsVsCentralSquare_ {TransformationCoefficients{-1, 0}, TransformationCoefficients{+1, 0}, TransformationCoefficients{+2, 0}};
 };

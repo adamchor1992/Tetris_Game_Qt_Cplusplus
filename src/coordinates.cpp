@@ -1,42 +1,14 @@
 #include "coordinates.h"
 #include "common.h"
 
-#include <stdexcept>
-
-Coordinates::Coordinates(int x, int y)
+bool Coordinates::validateCoordinates(const Coordinates& coordinates)
 {
-    if(validateCoordinates(x, y))
-    {
-        x_ = x;
-        y_ = y;
-    }
-    else
-    {
-        throw std::out_of_range("Error! Coordinates out of range");
-    }
-}
-
-bool Coordinates::validateCoordinates(int x, int y)
-{
-    if((x >= GameArenaParameters::minBlockColumns) && (x <= GameArenaParameters::maxBlockColumns) && (y >= GameArenaParameters::minBlockRows) && (y <= GameArenaParameters::maxBlockRows))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void Coordinates::modify(int newX, int newY)
-{
-    x_ = newX;
-    y_ = newY;
+    return (coordinates.x >= GameArenaParameters::minBlockColumns) && (coordinates.x <= GameArenaParameters::maxBlockColumns) && (coordinates.y >= GameArenaParameters::minBlockRows) && (coordinates.y <= GameArenaParameters::maxBlockRows);
 }
 
 bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
-    return (coordinates1.getX() == coordinates2.getX()) && (coordinates1.getY() == coordinates2.getY());
+    return (coordinates1.x == coordinates2.x) && (coordinates1.y == coordinates2.y);
 }
 
 bool operator!=(const Coordinates& coordinates1, const Coordinates& coordinates2)
@@ -46,23 +18,37 @@ bool operator!=(const Coordinates& coordinates1, const Coordinates& coordinates2
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
-    if(coordinates1.x_ < coordinates2.x_)
+    if(coordinates1.x < coordinates2.x)
     {
         return true;
     }
-    else if(coordinates1.x_ > coordinates2.x_)
+    else if(coordinates1.x > coordinates2.x)
     {
         return false;
     }
     else
     {
-        if(coordinates1.y_ < coordinates2.y_)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return coordinates1.y < coordinates2.y;
     }
+}
+
+void Coordinates::operator+=(const Coordinates& coordinates)
+{
+    x += coordinates.x;
+    y += coordinates.y;
+}
+
+Coordinates Coordinates::operator-(const Coordinates& coordinates) const
+{
+    return {x - coordinates.x, y - coordinates.y};
+}
+
+Coordinates Coordinates::operator+(const RotationCoefficients& rotationCoefficients) const
+{
+    return {x + rotationCoefficients.x, y + rotationCoefficients.y};
+}
+
+Coordinates Coordinates::operator+(const TransformationCoefficients& transformationCoefficients) const
+{
+    return {x + transformationCoefficients.x, y + transformationCoefficients.y};
 }

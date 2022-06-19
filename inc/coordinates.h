@@ -2,29 +2,29 @@
 
 #include <QVector>
 
-class PlacedSquares;
-
-class Coordinates
+struct TransformationCoefficients
 {
-    friend bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2);
+    int x;
+    int y;
+};
 
-public:
-    Coordinates(int x, int y);
-    Coordinates(const Coordinates&) = default;
-    Coordinates(Coordinates&&) = default;
-    Coordinates& operator=(const Coordinates&) = delete;
-    Coordinates& operator=(const Coordinates&&) = delete;
+struct RotationCoefficients
+{
+    int x;
+    int y;
+};
 
-    static bool validateCoordinates(int x, int y);
+struct Coordinates
+{
+    static bool validateCoordinates(const Coordinates& coordinates);
 
-    [[nodiscard]] int getX() const {return x_;}
-    [[nodiscard]] int getY() const {return y_;}
+    void operator+=(const Coordinates& coordinates);
+    Coordinates operator-(const Coordinates& coordinates) const;
+    Coordinates operator+(const RotationCoefficients& rotationCoefficients) const;
+    Coordinates operator+(const TransformationCoefficients& transformationCoefficients) const;
 
-    void modify(int newX, int newY);
-
-private:
-    int x_;
-    int y_;
+    int x;
+    int y;
 };
 
 bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2);

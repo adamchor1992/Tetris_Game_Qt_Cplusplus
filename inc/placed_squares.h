@@ -21,8 +21,6 @@ public:
     void dropRowsAbove(int removedRow);
     void addSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
 
-    static const Qt::GlobalColor placedSquares_color = Qt::white;
-
 private:
     void removeSquare(const Coordinates& coordinates);
 

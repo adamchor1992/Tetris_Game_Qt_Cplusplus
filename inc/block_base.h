@@ -10,7 +10,7 @@ class BlockBase
     friend std::ostream& operator<<(std::ostream& ofs, BlockBase& block);
 
 public:
-    explicit BlockBase(const QVector<int>& transformationCoefficientsVsCentralSquare_);
+    explicit BlockBase(const QVector<TransformationCoefficients>& transformationCoefficientsVsCentralSquare_);
     virtual ~BlockBase();
 
     virtual void rotateBlock(const PlacedSquares&) = 0;
@@ -28,8 +28,8 @@ public:
     void dropBlockOneLevel();
     void moveBlock(Direction direction);
     void placeBlock(PlacedSquares& placedSquares);
-    bool processRotation(const PlacedSquares& placedSquares, const QVector<int>& rotationCoefficients);
-    [[nodiscard]] QColor getColor() const {return color_;}
+    bool processRotation(const PlacedSquares& placedSquares, const QVector<RotationCoefficients>& rotationCoefficients);
+    [[nodiscard]] const QColor& getColor() const {return color_;}
 
 protected:
     const Coordinates startingCentralSquareCoordinates_{5, 1};
@@ -39,7 +39,7 @@ protected:
     int currentRotation_;
 
 private:
-    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedSquares) const;
+    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const QVector<RotationCoefficients>& rotationCoefficients, const PlacedSquares& placedSquares) const;
 
     const QColor color_;
 

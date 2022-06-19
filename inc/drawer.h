@@ -16,15 +16,14 @@ public:
     Drawer& operator=(Drawer&&) = delete;
 
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
-    static void drawBlock(BlockBase* block, QColor color);
     static void drawGameArena();
     static void dropRow(int removedRow, PlacedSquares& placedSquares);
     static void eraseAllPlacedSquares(PlacedSquares& placedSquares);
     static void eraseBlock(BlockBase* block);
     static void eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
-
-public slots:
-    static void drawSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+    static void drawBlock(BlockBase* block);
+    static QGraphicsRectItem* drawBlockSquare(const Coordinates& coordinates, QColor color);
+    static void drawPlacedSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
 
 private:
     [[maybe_unused]] static void debugDrawAllPossibleSquares();

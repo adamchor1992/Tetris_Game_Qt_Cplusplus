@@ -9,19 +9,12 @@
 #include "blocks/t_block.h"
 #include "log_manager.h"
 
-BlockBase::BlockBase(const QVector<int>& transformationCoefficientsVsCentralSquare_) : color_(randomColorGenerator())
+BlockBase::BlockBase(const QVector<TransformationCoefficients>& transformationCoefficientsVsCentralSquare_) : color_(randomColorGenerator())
 {
-    const Coordinates square1Coordinates(startingCentralSquareCoordinates_.getX() + transformationCoefficientsVsCentralSquare_.at(0),
-                                         startingCentralSquareCoordinates_.getY() + transformationCoefficientsVsCentralSquare_.at(1));
-    const Coordinates square2Coordinates(startingCentralSquareCoordinates_.getX() + transformationCoefficientsVsCentralSquare_.at(2),
-                                         startingCentralSquareCoordinates_.getY() + transformationCoefficientsVsCentralSquare_.at(3));
-    const Coordinates square3Coordinates(startingCentralSquareCoordinates_.getX() + transformationCoefficientsVsCentralSquare_.at(4),
-                                         startingCentralSquareCoordinates_.getY() + transformationCoefficientsVsCentralSquare_.at(5));
-
     blockCoordinates_.append(startingCentralSquareCoordinates_);
-    blockCoordinates_.append(square1Coordinates);
-    blockCoordinates_.append(square2Coordinates);
-    blockCoordinates_.append(square3Coordinates);
+    blockCoordinates_.append(startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare_.at(0));
+    blockCoordinates_.append(startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare_.at(1));
+    blockCoordinates_.append(startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare_.at(2));
 
     currentRotation_ = 0;
 }
@@ -69,7 +62,7 @@ std::unique_ptr<BlockBase> BlockBase::makeBlock(BlockShape shape)
 
     logFile << "MakeBlock at: " << (*block) << "\t\t\t";
 
-    Drawer::drawBlock(block.get(), block->color_);
+    Drawer::drawBlock(block.get());
 
     return block;
 }
@@ -80,14 +73,7 @@ void BlockBase::moveBlock(Direction direction)
     {
         for(int i = 0; i < blockCoordinates_.size(); i++)
         {
-            int currentX = blockCoordinates_.at(i).getX();
-            int currentY = blockCoordinates_.at(i).getY();
-
-            int newX = currentX - 1;
-            int newY = currentY;
-
-            blockCoordinates_[i].modify(newX, newY);
-
+            blockCoordinates_[i] += {-1, 0};
             squaresGraphicsRectItems_.at(i)->moveBy(-GameArenaParameters::blockSquareSize, 0);
         }
     }
@@ -95,14 +81,7 @@ void BlockBase::moveBlock(Direction direction)
     {
         for(int i = 0; i < blockCoordinates_.size(); i++)
         {
-            int currentX = blockCoordinates_.at(i).getX();
-            int currentY = blockCoordinates_.at(i).getY();
-
-            int newX = currentX + 1;
-            int newY = currentY;
-
-            blockCoordinates_[i].modify(newX, newY);
-
+            blockCoordinates_[i] += {+1, 0};
             squaresGraphicsRectItems_.at(i)->moveBy(+GameArenaParameters::blockSquareSize, 0);
         }
     }
@@ -112,8 +91,8 @@ bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& p
 {
     for(const auto& blockCoordinate : blockCoordinates_)
     {
-        int currentX = blockCoordinate.getX();
-        int currentY = blockCoordinate.getY();
+        int currentX = blockCoordinate.x;
+        int currentY = blockCoordinate.y;
 
         if(direction == Direction::left)
         {
@@ -126,7 +105,7 @@ bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& p
                 return false;
             }
 
-            Coordinates leftOfBlockCoordinates(leftBlockX, leftBlockY);
+            Coordinates leftOfBlockCoordinates{leftBlockX, leftBlockY};
 
             /*Check if there is any block to the left of current block*/
             if(placedSquares.getCoordinatesToSquaresMapping().value(leftOfBlockCoordinates) != nullptr)
@@ -145,7 +124,7 @@ bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& p
                 return false;
             }
 
-            Coordinates rightOfBlockCoordinates(rightBlockX, rightBlockY);
+            Coordinates rightOfBlockCoordinates{rightBlockX, rightBlockY};
 
             /*Check if there is any block to the left of current block*/
             if(placedSquares.getCoordinatesToSquaresMapping().value(rightOfBlockCoordinates) != nullptr)
@@ -158,29 +137,21 @@ bool BlockBase::checkMovePossibility(Direction direction, const PlacedSquares& p
     return true;
 }
 
-bool BlockBase::checkRotationPossibility(const Coordinates& centralSquareCoordinates, const QVector<int>& rotationCoefficients, const PlacedSquares& placedSquares) const
+bool BlockBase::checkRotationPossibility(const Coordinates& centralSquareCoordinates, const QVector<RotationCoefficients>& rotationCoefficients, const PlacedSquares& placedSquares) const
 {
-    int newCentralSquareX = centralSquareCoordinates.getX();
-    int newCentralSquareY = centralSquareCoordinates.getY();
+    Coordinates newSquare1 = centralSquareCoordinates + rotationCoefficients.at(0);
+    Coordinates newSquare2 = centralSquareCoordinates + rotationCoefficients.at(1);
+    Coordinates newSquare3 = centralSquareCoordinates + rotationCoefficients.at(2);
 
-    int newSquare1X = centralSquareCoordinates.getX() + rotationCoefficients.at(0);
-    int newSquare1Y = centralSquareCoordinates.getY() + rotationCoefficients.at(1);
-
-    int newSquare2X = centralSquareCoordinates.getX() + rotationCoefficients.at(2);
-    int newSquare2Y = centralSquareCoordinates.getY() + rotationCoefficients.at(3);
-
-    int newSquare3X = centralSquareCoordinates.getX() + rotationCoefficients.at(4);
-    int newSquare3Y = centralSquareCoordinates.getY() + rotationCoefficients.at(5);
-
-    if(!Coordinates::validateCoordinates(newCentralSquareX, newCentralSquareY) ||
-            !Coordinates::validateCoordinates(newSquare1X, newSquare1Y)||
-            !Coordinates::validateCoordinates(newSquare2X, newSquare2Y)||
-            !Coordinates::validateCoordinates(newSquare3X, newSquare3Y))
+    if(!Coordinates::validateCoordinates(centralSquareCoordinates) ||
+       !Coordinates::validateCoordinates(newSquare1)||
+       !Coordinates::validateCoordinates(newSquare2)||
+       !Coordinates::validateCoordinates(newSquare3))
     {
         return false;
     }
 
-    const QVector<Coordinates> newCoordinates {Coordinates(newCentralSquareX, newCentralSquareY), Coordinates(newSquare1X, newSquare1Y), Coordinates(newSquare2X, newSquare2Y), Coordinates(newSquare3X, newSquare3Y)};
+    const QVector<Coordinates> newCoordinates {centralSquareCoordinates, newSquare1, newSquare2, newSquare3};
 
     if(checkForOverlappingSquares(newCoordinates, placedSquares))
     {
@@ -213,42 +184,37 @@ void BlockBase::placeBlock(PlacedSquares& placedSquares)
     }
 }
 
-bool BlockBase::processRotation(const PlacedSquares& placedSquares, const QVector<int>& rotationCoefficients)
+bool BlockBase::processRotation(const PlacedSquares& placedSquares, const QVector<RotationCoefficients>& rotationCoefficients)
 {
-    const Coordinates centralSquare_coordinates(blockCoordinates_.at(0).getX(), blockCoordinates_.at(0).getY());
+    const Coordinates centralSquare_coordinates{blockCoordinates_.at(0).x, blockCoordinates_.at(0).y};
 
     if(checkRotationPossibility(centralSquare_coordinates, rotationCoefficients, placedSquares))
     {
-        const int newCentralSquareX = centralSquare_coordinates.getX();
-        const int newCentralSquareY = centralSquare_coordinates.getY();
-        const int newSquare1X = centralSquare_coordinates.getX() + rotationCoefficients.at(0);
-        const int newSquare1Y = centralSquare_coordinates.getY() + rotationCoefficients.at(1);
-        const int newSquare2X = centralSquare_coordinates.getX() + rotationCoefficients.at(2);
-        const int newSquare2Y = centralSquare_coordinates.getY() + rotationCoefficients.at(3);
-        const int newSquare3X = centralSquare_coordinates.getX() + rotationCoefficients.at(4);
-        const int newSquare3Y = centralSquare_coordinates.getY() + rotationCoefficients.at(5);
+        const Coordinates newSquare1 {centralSquare_coordinates + rotationCoefficients.at(0)};
+        const Coordinates newSquare2 {centralSquare_coordinates + rotationCoefficients.at(1)};
+        const Coordinates newSquare3 {centralSquare_coordinates + rotationCoefficients.at(2)};
 
-        const QPair<int, int> centralSquareCoordinatesDifference {newCentralSquareX - blockCoordinates_[0].getX(), newCentralSquareY - blockCoordinates_[0].getY()};
-        const QPair<int, int> square1CoordinatesDifference {newSquare1X - blockCoordinates_[1].getX(), newSquare1Y - blockCoordinates_[1].getY()};
-        const QPair<int, int> square2CoordinatesDifference {newSquare2X - blockCoordinates_[2].getX(), newSquare2Y - blockCoordinates_[2].getY()};
-        const QPair<int, int> square3CoordinatesDifference {newSquare3X - blockCoordinates_[3].getX(), newSquare3Y - blockCoordinates_[3].getY()};
+        Coordinates centralSquareCoordinatesDifference = centralSquare_coordinates - blockCoordinates_[0];
+        Coordinates square1CoordinatesDifference {newSquare1 - blockCoordinates_[1]};
+        Coordinates square2CoordinatesDifference {newSquare2 - blockCoordinates_[2]};
+        Coordinates square3CoordinatesDifference {newSquare3 - blockCoordinates_[3]};
 
-        squaresGraphicsRectItems_.at(0)->moveBy(centralSquareCoordinatesDifference.first * GameArenaParameters::blockSquareSize,
-                                                     centralSquareCoordinatesDifference.second * GameArenaParameters::blockSquareSize);
+        squaresGraphicsRectItems_.at(0)->moveBy(centralSquareCoordinatesDifference.x * GameArenaParameters::blockSquareSize,
+                                                     centralSquareCoordinatesDifference.y * GameArenaParameters::blockSquareSize);
 
-        squaresGraphicsRectItems_.at(1)->moveBy(square1CoordinatesDifference.first * GameArenaParameters::blockSquareSize,
-                                                     square1CoordinatesDifference.second * GameArenaParameters::blockSquareSize);
+        squaresGraphicsRectItems_.at(1)->moveBy(square1CoordinatesDifference.x * GameArenaParameters::blockSquareSize,
+                                                     square1CoordinatesDifference.y * GameArenaParameters::blockSquareSize);
 
-        squaresGraphicsRectItems_.at(2)->moveBy(square2CoordinatesDifference.first * GameArenaParameters::blockSquareSize,
-                                                     square2CoordinatesDifference.second * GameArenaParameters::blockSquareSize);
+        squaresGraphicsRectItems_.at(2)->moveBy(square2CoordinatesDifference.x * GameArenaParameters::blockSquareSize,
+                                                     square2CoordinatesDifference.y * GameArenaParameters::blockSquareSize);
 
-        squaresGraphicsRectItems_.at(3)->moveBy(square3CoordinatesDifference.first * GameArenaParameters::blockSquareSize,
-                                                     square3CoordinatesDifference.second * GameArenaParameters::blockSquareSize);
+        squaresGraphicsRectItems_.at(3)->moveBy(square3CoordinatesDifference.x * GameArenaParameters::blockSquareSize,
+                                                     square3CoordinatesDifference.y * GameArenaParameters::blockSquareSize);
 
-        blockCoordinates_[0].modify(newCentralSquareX, newCentralSquareY);
-        blockCoordinates_[1].modify(newSquare1X, newSquare1Y);
-        blockCoordinates_[2].modify(newSquare2X, newSquare2Y);
-        blockCoordinates_[3].modify(newSquare3X, newSquare3Y);
+        blockCoordinates_[0] = centralSquare_coordinates;
+        blockCoordinates_[1] = newSquare1;
+        blockCoordinates_[2] = newSquare2;
+        blockCoordinates_[3] = newSquare3;
 
         return true;
     }
@@ -260,10 +226,9 @@ bool BlockBase::processRotation(const PlacedSquares& placedSquares, const QVecto
 
 bool BlockBase::isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const
 {
-    for(const auto& blockCoordinate : blockCoordinates_)
+    for(const auto& blockCoordinates : blockCoordinates_)
     {
-        int currentX = blockCoordinate.getX();
-        int currentY = blockCoordinate.getY();
+        auto [currentX, currentY] = blockCoordinates;
 
         int belowBlockX = currentX;
         int belowBlockY = currentY + 1;
@@ -274,7 +239,7 @@ bool BlockBase::isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquare
             return true;
         }
 
-        Coordinates belowBlockCoordinates(belowBlockX, belowBlockY);
+        Coordinates belowBlockCoordinates{belowBlockX, belowBlockY};
 
         /*Check if there is any block below the current block*/
         if(placedSquares.getCoordinatesToSquaresMapping().value(belowBlockCoordinates) != nullptr)
@@ -290,11 +255,7 @@ void BlockBase::dropBlockOneLevel()
 {
     for(int i = 0; i < blockCoordinates_.size(); i++)
     {
-        int x = blockCoordinates_[i].getX();
-        int y = blockCoordinates_[i].getY();
-
-        blockCoordinates_[i].modify(x, y + 1);
-
+        blockCoordinates_[i] += {0, +1};
         squaresGraphicsRectItems_.at(i)->moveBy(0, GameArenaParameters::blockSquareSize);
     }
 }
@@ -311,7 +272,7 @@ std::ostream& operator<<(std::ostream& os, BlockBase& block)
 {
     for(auto& coordinates : block.getBlockCoordinates())
     {
-        os << "[" << coordinates.getX() << "," << coordinates.getY() << "]";
+        os << "[" << coordinates.x << "," << coordinates.y << "]";
     }
 
     return os;

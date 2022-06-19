@@ -15,7 +15,7 @@ void PlacedSquares::removeAllPlacedSquares()
     {
         for(int y = GameArenaParameters::minBlockRows; y <= GameArenaParameters::maxBlockRows; y++)
         {
-            coordinatesToSquaresMapping_.insert(Coordinates(x, y), nullptr);
+            coordinatesToSquaresMapping_.insert(Coordinates{x, y}, nullptr);
         }
     }
 }
@@ -24,7 +24,7 @@ void PlacedSquares::addSquare(const Coordinates& coordinates, QColor color, Plac
 {
     if(coordinatesToSquaresMapping_.value(coordinates) == nullptr)
     {
-        Drawer::drawSquare(coordinates, color, placedSquares);
+        Drawer::drawPlacedSquare(coordinates, color, placedSquares);
     }
     else
     {
@@ -55,7 +55,7 @@ void PlacedSquares::removeFullRow(int rowNumber)
 
     for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
     {
-        removeSquare(Coordinates(x, y));
+        removeSquare(Coordinates{x, y});
     }
 }
 
@@ -68,7 +68,7 @@ QVector<int> PlacedSquares::findFullRows() const
     {
         for(int column = 1; column <= GameArenaParameters::maxBlockColumns; column++)
         {
-            Coordinates coordinates(column, row);
+            Coordinates coordinates{column, row};
 
             if(coordinatesToSquaresMapping_.value(coordinates) == nullptr)
             {
@@ -95,8 +95,8 @@ void PlacedSquares::dropRowsAbove(int removedRow)
     {
         for(int y = removedRow - 1; y > GameArenaParameters::minBlockRows; y--)
         {
-            Coordinates coordinates(x, y);
-            Coordinates coordinatesOneRowBelow(x, y + 1);
+            Coordinates coordinates{x, y};
+            Coordinates coordinatesOneRowBelow{x, y + 1};
 
             coordinatesToSquaresMapping_[coordinatesOneRowBelow] = coordinatesToSquaresMapping_[coordinates];
             coordinatesToSquaresMapping_[coordinates] = nullptr;
