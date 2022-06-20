@@ -46,16 +46,6 @@ QGraphicsRectItem* Drawer::drawBlockSquare(const Coordinates& coordinates, QColo
                                                          color);
 }
 
-void Drawer::drawPlacedSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
-{
-    placedSquares.getCoordinatesToSquaresMapping()[coordinates] = scene_->addRect((coordinates.x - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                                                                  (coordinates.y - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                                                                  GameArenaParameters::blockSquareSize,
-                                                                                  GameArenaParameters::blockSquareSize,
-                                                                                  color,
-                                                                                  color);
-}
-
 void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
 {
     scene_->removeItem(placedSquares.getCoordinatesToSquaresMapping().value(coordinates));
@@ -74,10 +64,11 @@ void Drawer::eraseBlock(BlockBase* block)
 {
     for(auto& graphicsRectItem : block->getGraphicsRectItems())
     {
-        scene_->removeItem(graphicsRectItem);
+        if(graphicsRectItem)
+        {
+             scene_->removeItem(graphicsRectItem);
+        }
     }
-
-    block->getGraphicsRectItems().clear();
 }
 
 void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)

@@ -20,15 +20,21 @@ void PlacedSquares::removeAllPlacedSquares()
     }
 }
 
-void PlacedSquares::addSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares)
+void PlacedSquares::stealSquaresFromBlock(const QVector<Coordinates>& blockCoordinates, QVector<QGraphicsRectItem*>& squaresGraphicsRectItems, QColor color, PlacedSquares& placedSquares)
 {
-    if(coordinatesToSquaresMapping_.value(coordinates) == nullptr)
+    for (int i = 0; i < blockCoordinates.size(); ++i)
     {
-        Drawer::drawPlacedSquare(coordinates, color, placedSquares);
-    }
-    else
-    {
-        throw std::runtime_error("Placing square on non-empty field");
+        const Coordinates& coordinates = blockCoordinates.at(i);
+
+        if(coordinatesToSquaresMapping_.value(coordinates) == nullptr)
+        {
+            placedSquares.getCoordinatesToSquaresMapping()[coordinates] = squaresGraphicsRectItems.at(i);
+            squaresGraphicsRectItems[i] = nullptr;
+        }
+        else
+        {
+            throw std::runtime_error("Placing square on non-empty field");
+        }
     }
 }
 

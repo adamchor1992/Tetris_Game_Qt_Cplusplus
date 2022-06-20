@@ -19,7 +19,7 @@ public:
     [[nodiscard]] QVector<int> findFullRows() const;
     void removeFullRow(int rowNumber);
     void dropRowsAbove(int removedRow);
-    void addSquare(const Coordinates& coordinates, QColor color, PlacedSquares& placedSquares);
+    void stealSquaresFromBlock(const QVector<Coordinates>& blockCoordinates, QVector<QGraphicsRectItem*>& squaresGraphicsRectItems, QColor color, PlacedSquares& placedSquares);
 
 private:
     void removeSquare(const Coordinates& coordinates);

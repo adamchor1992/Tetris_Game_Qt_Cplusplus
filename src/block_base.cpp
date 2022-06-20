@@ -177,11 +177,7 @@ bool BlockBase::checkForOverlappingSquares(const QVector<Coordinates>& blockCoor
 void BlockBase::placeBlock(PlacedSquares& placedSquares)
 {
     logFile << "PlaceBlock at: " << (*this) << std::endl;
-
-    for(const auto& blockCoordinate : blockCoordinates_)
-    {
-        placedSquares.addSquare(blockCoordinate, getColor(), placedSquares);
-    }
+    placedSquares.stealSquaresFromBlock(blockCoordinates_, squaresGraphicsRectItems_, getColor(), placedSquares);
 }
 
 bool BlockBase::processRotation(const PlacedSquares& placedSquares, const QVector<RotationCoefficients>& rotationCoefficients)
