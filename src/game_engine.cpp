@@ -9,15 +9,15 @@ GameEngine::GameEngine()
 
 void GameEngine::startGame()
 {
-    logFile << "\n\n" << "NEW GAME" << "\n\n";
+    logFile << "====================";
+    logFile << "\n\nSTART GAME\n\n";
 
-    placedSquares_.removeAllPlacedSquares();
+    placedSquares_ = std::make_unique<PlacedSquares>();
 
     gameSpeedManager_.setGameSpeed();
-    scoreManager_.restartScore();
+    scoreManager_ =std::make_unique<ScoreManager>();
     infoDisplayManager_.hideInfo();
 
-    activeBlock_.reset();
     activeBlock_ = BlockBase::makeBlock();
 
     gameSpeedManager_.start();
@@ -26,10 +26,12 @@ void GameEngine::startGame()
 
 void GameEngine::endGame()
 {
+    logFile << "\n\nEND GAME\n\n";
+    logFile << "====================";
+
     gameState_ = GameState::GameStopped;
     gameSpeedManager_.stop();
-
-    infoDisplayManager_.setLabel("GAME OVER\nPRESS SPACE TO RESTART");
+    infoDisplayManager_.showRestartInfo();
 }
 
 void GameEngine::togglePause()
@@ -50,33 +52,28 @@ void GameEngine::gameTickHandler()
 {
     if(gameState_ == GameState::GameRunning)
     {
-        if(activeBlock_->isSquareOrBottomWallUnderBlock(placedSquares_))
+        if(activeBlock_->isSquareOrBottomWallUnderBlock(*placedSquares_))
         {
-            activeBlock_->placeBlock(placedSquares_);
+            activeBlock_->placeBlock(*placedSquares_);
 
-            activeBlock_.reset();
-
-            QVector<int> fullRows = placedSquares_.findFullRows();
-
-            if(!fullRows.empty())
+            if(QVector<int> fullRows = placedSquares_->findFullRows(); !fullRows.empty())
             {
-                scoreManager_.rewardPlayerForFullRows(fullRows.size());
+                scoreManager_->rewardPlayerForFullRows(fullRows.size());
 
-                for(auto row : fullRows)
+                for(auto rowNumber : fullRows)
                 {
-                    placedSquares_.removeFullRow(row);
-                    placedSquares_.dropRowsAbove(row);
+                    placedSquares_->removeFullRow(rowNumber);
+                    placedSquares_->dropRowsAbove(rowNumber);
                 }
             }
 
             activeBlock_ = BlockBase::makeBlock();
 
-            if(activeBlock_->checkForOverlappingSquares(activeBlock_->getBlockCoordinates(), placedSquares_))
+            if(activeBlock_->checkForOverlappingSquares(activeBlock_->getBlockCoordinates(), *placedSquares_))
             {
                 endGame();
             }
         }
-
         else
         {
             activeBlock_->dropBlockOneLevel();
@@ -84,55 +81,49 @@ void GameEngine::gameTickHandler()
     }
 }
 
-void GameEngine::processKey(const QString& key)
+void GameEngine::processKey(const Key key)
 {
     if(gameState_ == GameState::GameRunning)
     {
-        if(key == "left")
+        if(key == Key::left)
         {
-            if(activeBlock_->checkMovePossibility(Direction::left, placedSquares_))
-            {
-                activeBlock_->moveBlock(Direction::left);
-            }
+            activeBlock_->processMove(Direction::left, *placedSquares_);
         }
-        else if(key == "right")
+        else if(key == Key::right)
         {
-            if(activeBlock_->checkMovePossibility(Direction::right, placedSquares_))
-            {
-                activeBlock_->moveBlock(Direction::right);
-            }
+            activeBlock_->processMove(Direction::right, *placedSquares_);
         }
-        else if(key == "up")
+        else if(key == Key::up)
         {
-            activeBlock_->rotateBlock(placedSquares_);
+            activeBlock_->rotate(*placedSquares_);
         }
-        else if(key == "down")
+        else if(key == Key::down)
         {
-            activeBlock_->dropAndPlaceBlock(placedSquares_);
+            activeBlock_->dropAndPlaceBlock(*placedSquares_);
         }
-        else if(key == "plus")
+        else if(key == Key::plus)
         {
             gameSpeedManager_.incrementSpeed();
         }
-        else if(key == "minus")
+        else if(key == Key::minus)
         {
             gameSpeedManager_.decrementSpeed();
         }
-        else if(key == "pause")
+        else if(key == Key::pause)
         {
             togglePause();
         }
     }
     else if(gameState_ == GameState::GameStopped)
     {
-        if(key == "space")
+        if(key == Key::space)
         {
             startGame();
         }
     }
     else if(gameState_ == GameState::GamePaused)
     {
-        if(key == "pause")
+        if(key == Key::pause)
         {
             togglePause();
         }

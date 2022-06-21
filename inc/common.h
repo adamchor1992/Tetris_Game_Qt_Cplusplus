@@ -24,11 +24,21 @@ namespace GameArenaParameters
 
 enum class Direction
 {
-    left = 1,
-    right = 2
+    left = 1, right = 2
 };
 
 enum class BlockShape
 {
     S, Z, I, J, L, O, T, RANDOM
 };
+
+enum class Key
+{
+    left, right, up, down, plus, minus, pause, space
+};
+
+namespace GameParameters
+{
+    const QVector<QColor> blockColors = {Qt::red, Qt::blue, Qt::green, Qt::yellow, Qt::cyan, Qt::magenta};
+    const QVector<BlockShape> blockShapes = {BlockShape::S, BlockShape::Z, BlockShape::I, BlockShape::J, BlockShape::L, BlockShape::O, BlockShape::T};
+}

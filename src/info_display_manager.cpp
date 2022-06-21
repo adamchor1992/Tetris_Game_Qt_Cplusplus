@@ -2,7 +2,7 @@
 
 InfoDisplayManager::InfoDisplayManager()
 {
-    setLabel("PRESS SPACE TO START");
+    setLabel(startText);
 }
 
 void InfoDisplayManager::connectInfoLabel(QLabel* infoLabel)
@@ -13,6 +13,11 @@ void InfoDisplayManager::connectInfoLabel(QLabel* infoLabel)
 void InfoDisplayManager::hideInfo()
 {
     infoLabel_->hide();
+}
+
+void InfoDisplayManager::showRestartInfo()
+{
+    setLabel(restartText);
 }
 
 void InfoDisplayManager::setLabel(const QString& text)

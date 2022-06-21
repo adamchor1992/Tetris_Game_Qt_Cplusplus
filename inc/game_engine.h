@@ -13,7 +13,7 @@ class GameEngine : public QObject
 
 public:
     GameEngine();
-    void processKey(const QString& key);
+    void processKey(Key key);
 
 private:
     void startGame();
@@ -27,8 +27,8 @@ private:
         GameStopped
     };
 
-    PlacedSquares placedSquares_;
-    ScoreManager scoreManager_;
+    std::unique_ptr<PlacedSquares> placedSquares_;
+    std::unique_ptr<ScoreManager> scoreManager_;
     InfoDisplayManager infoDisplayManager_;
     GameSpeedManager gameSpeedManager_;
     std::unique_ptr<BlockBase> activeBlock_;

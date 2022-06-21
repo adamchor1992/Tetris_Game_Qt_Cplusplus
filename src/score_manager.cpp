@@ -11,7 +11,7 @@ void ScoreManager::connectScoreLabel(QLabel* scoreLabel)
     scoreLabel_ = scoreLabel;
 }
 
-void ScoreManager::rewardPlayerForFullRows(int fullRowsCount)
+void ScoreManager::rewardPlayerForFullRows(qsizetype fullRowsCount)
 {
     switch(fullRowsCount)
     {
@@ -28,15 +28,9 @@ void ScoreManager::rewardPlayerForFullRows(int fullRowsCount)
         increaseScore(10);
         break;
     default:
-        throw std::runtime_error("Wrong full rows number");
+        throw std::runtime_error("Wrong full rows count");
     }
 
-    updateScoreLabel();
-}
-
-void ScoreManager::restartScore()
-{
-    score_ = 0;
     updateScoreLabel();
 }
 

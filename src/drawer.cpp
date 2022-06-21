@@ -39,22 +39,27 @@ void Drawer::drawGameArena()
 QGraphicsRectItem* Drawer::drawBlockSquare(const Coordinates& coordinates, QColor color)
 {
     return scene_->addRect((coordinates.x - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                                         (coordinates.y - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                                         GameArenaParameters::blockSquareSize,
-                                                         GameArenaParameters::blockSquareSize,
-                                                         color,
-                                                         color);
+                           (coordinates.y - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
+                           GameArenaParameters::blockSquareSize,
+                           GameArenaParameters::blockSquareSize,
+                           Qt::NoPen,
+                           color);
+}
+
+void Drawer::eraseSquare(QGraphicsRectItem* graphicsRectItem)
+{
+    scene_->removeItem(graphicsRectItem);
 }
 
 void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
 {
     scene_->removeItem(placedSquares.getCoordinatesToSquaresMapping().value(coordinates));
-    placedSquares.getCoordinatesToSquaresMapping()[coordinates] = nullptr;
+    placedSquares.getCoordinatesToSquaresMapping().remove(coordinates);
 }
 
 void Drawer::drawBlock(BlockBase* block)
 {
-    for(int i = 0 ; i < block->getBlockCoordinates().size(); i++)
+    for (int i = 0; i < block->getBlockCoordinates().size(); i++)
     {
         block->getGraphicsRectItems().append(drawBlockSquare(block->getBlockCoordinates().at(i), block->getColor()));
     }
@@ -62,22 +67,22 @@ void Drawer::drawBlock(BlockBase* block)
 
 void Drawer::eraseBlock(BlockBase* block)
 {
-    for(auto& graphicsRectItem : block->getGraphicsRectItems())
+    for (auto& graphicsRectItem: block->getGraphicsRectItems())
     {
-        if(graphicsRectItem)
+        if (graphicsRectItem)
         {
-             scene_->removeItem(graphicsRectItem);
+            scene_->removeItem(graphicsRectItem);
         }
     }
 }
 
 void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
 {
-    for(auto& coordinates : placedSquares.getCoordinatesToSquaresMapping().keys())
+    for (const Coordinates& coordinates : placedSquares.getCoordinatesToSquaresMapping().keys())
     {
-        if(coordinates.y < removedRow)
+        if (coordinates.y < removedRow)
         {
-            if(placedSquares.getCoordinatesToSquaresMapping().value(coordinates) != nullptr)
+            if (placedSquares.getCoordinatesToSquaresMapping().contains(coordinates))
             {
                 placedSquares.getCoordinatesToSquaresMapping().value(coordinates)->moveBy(0, GameArenaParameters::blockSquareSize);
             }
@@ -85,67 +90,37 @@ void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
     }
 }
 
-void Drawer::eraseAllPlacedSquares(PlacedSquares& placedSquares)
-{
-    for(auto& coordinates : placedSquares.getCoordinatesToSquaresMapping().keys())
-    {
-        if(placedSquares.getCoordinatesToSquaresMapping().value(coordinates) != nullptr)
-        {
-            Drawer::eraseSquare(coordinates, placedSquares);
-        }
-    }
-}
-
 [[maybe_unused]] void Drawer::debugDrawAllPossibleSquares()
 {
-    QBrush redBrush(Qt::red);
-    QBrush blueBrush(Qt::blue);
+    QColor red(Qt::red);
+    QColor blue(Qt::blue);
 
-    for(int column = 0; column < GameArenaParameters::maxBlockColumns; ++column)
+    for (int column = 1; column <= GameArenaParameters::maxBlockColumns; ++column)
     {
-        for(int row = 0; row < GameArenaParameters::maxBlockRows; ++row)
+        for (int row = 1; row <= GameArenaParameters::maxBlockRows; ++row)
         {
             /*Different block color every second column*/
-            if(column % 2 == 0)
+            if (column % 2 == 0)
             {
-                if(row % 2 == 0) /*Different block color every second row*/
+                /*Different block color every second row*/
+                if (row % 2 == 0)
                 {
-                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    GameArenaParameters::blockSquareSize,
-                                    GameArenaParameters::blockSquareSize,
-                                    Qt::NoPen,
-                                    blueBrush);
+                    drawBlockSquare(Coordinates{column, row}, blue);
                 }
                 else
                 {
-                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    GameArenaParameters::blockSquareSize,
-                                    GameArenaParameters::blockSquareSize,
-                                    Qt::NoPen,
-                                    redBrush);
+                    drawBlockSquare(Coordinates{column, row}, red);
                 }
             }
             else
             {
-                if(row % 2 != 0)
+                if (row % 2 != 0)
                 {
-                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    GameArenaParameters::blockSquareSize,
-                                    GameArenaParameters::blockSquareSize,
-                                    Qt::NoPen,
-                                    blueBrush);
+                    drawBlockSquare(Coordinates{column, row}, blue);
                 }
                 else
                 {
-                    scene_->addRect(column * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    row * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                                    GameArenaParameters::blockSquareSize,
-                                    GameArenaParameters::blockSquareSize,
-                                    Qt::NoPen,
-                                    redBrush);
+                    drawBlockSquare(Coordinates{column, row}, red);
                 }
             }
         }

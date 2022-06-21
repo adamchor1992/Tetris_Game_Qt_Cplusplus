@@ -7,8 +7,7 @@ class ScoreManager
 public:
     ScoreManager();
     static void connectScoreLabel(QLabel* scoreLabel);
-    void rewardPlayerForFullRows(int fullRowsCount);
-    void restartScore();
+    void rewardPlayerForFullRows(qsizetype fullRowsCount);
 
 private:
     void increaseScore(int score) {score_ += score;}

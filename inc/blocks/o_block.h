@@ -6,8 +6,8 @@ class OBlock : public BlockBase
 {
 public:
     explicit OBlock();
-    void rotateBlock(const PlacedSquares&) override;
+    void rotate(const PlacedSquares&) override;
 
 private:
-    inline static const QVector<TransformationCoefficients> transformationCoefficientsVsCentralSquare_ {TransformationCoefficients{0, +1}, TransformationCoefficients{+1, +1}, TransformationCoefficients{+1, 0}};
+    inline static const std::array<TransformationCoefficients, 3> transformationCoefficientsVsCentralSquare_ {TransformationCoefficients{0, +1}, TransformationCoefficients{+1, +1}, TransformationCoefficients{+1, 0}};
 };
