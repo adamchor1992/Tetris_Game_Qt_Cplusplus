@@ -38,12 +38,12 @@ void Drawer::drawGameArena()
 
 Square* Drawer::drawBlockSquare(const Coordinates& coordinates, QColor color)
 {
-    Square* square = new Square(coordinates, color);
+    auto* square = new Square(coordinates, color);
     scene_->addItem(square);
     return square;
 }
 
-void Drawer::drawBlock(BlockBase* block, std::array<Coordinates, 4>& blockCoordinates)
+void Drawer::drawBlock(BlockBase* block, std::array<Coordinates, BlockBase::blockSize>& blockCoordinates)
 {
     for(int i = 0; i < blockCoordinates.size(); i++)
     {
@@ -51,15 +51,11 @@ void Drawer::drawBlock(BlockBase* block, std::array<Coordinates, 4>& blockCoordi
     }
 }
 
-void Drawer::eraseSquare(Square* square)
+void Drawer::eraseSquare(Square* square, PlacedSquares& placedSquares)
 {
     scene_->removeItem(square);
-}
-
-void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
-{
-    scene_->removeItem(placedSquares.getCoordinatesToSquaresMapping().value(coordinates));
-    placedSquares.getCoordinatesToSquaresMapping().remove(coordinates);
+    placedSquares.getCoordinatesToSquaresMapping().remove(square->getCoordinates());
+    delete square;
 }
 
 void Drawer::eraseBlock(BlockBase* block)

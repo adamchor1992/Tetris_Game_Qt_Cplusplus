@@ -12,7 +12,7 @@
 BlockBase::BlockBase(const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount) :
         color_(randomColorGenerator()), nextRotationStateGenerator_(rotationCount)
 {
-    std::array<Coordinates, 4> blockCoordinates{startingCentralSquareCoordinates_,
+    std::array<Coordinates, BlockBase::blockSize> blockCoordinates{startingCentralSquareCoordinates_,
                                                 startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(0),
                                                 startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(1),
                                                 startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(2)};

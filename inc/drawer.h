@@ -18,10 +18,9 @@ public:
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
     static void drawGameArena();
     static Square* drawBlockSquare(const Coordinates& coordinates, QColor color);
-    static void drawBlock(BlockBase* block, std::array<Coordinates, 4>& blockCoordinates);
+    static void drawBlock(BlockBase* block, std::array<Coordinates, BlockBase::blockSize>& blockCoordinates);
     static void eraseBlock(BlockBase* block);
-    static void eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
-    static void eraseSquare(Square* square);
+    static void eraseSquare(Square* square, PlacedSquares& placedSquares);
 
 private:
     [[maybe_unused]] static void debugDrawAllPossibleSquares();

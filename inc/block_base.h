@@ -33,12 +33,12 @@ public:
     void processRotation(const PlacedSquares& placedSquares, const RotationCoefficients& rotationCoefficients);
     [[nodiscard]] const QColor& getColor() const {return color_;}
 
+    static const int blockSize = 4;
+
 protected:
     int currentRotation_ = 0;
 
 private:
-    static const int blockSize = 4;
-
     const QColor color_;
     static constexpr Coordinates startingCentralSquareCoordinates_{5, 1};
     QVector<Square*> squares_;

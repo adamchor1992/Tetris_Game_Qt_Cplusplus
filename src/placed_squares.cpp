@@ -11,7 +11,7 @@ void PlacedSquares::removeAllPlacedSquares()
 {
     for(Square* square: coordinatesToSquaresMapping_)
     {
-        Drawer::eraseSquare(square);
+        Drawer::eraseSquare(square, *this);
     }
 
     coordinatesToSquaresMapping_.clear();
@@ -41,7 +41,7 @@ void PlacedSquares::removeSquare(const Coordinates& coordinates)
 {
     if(coordinatesToSquaresMapping_.contains(coordinates))
     {
-        Drawer::eraseSquare(coordinates, *this);
+        Drawer::eraseSquare(coordinatesToSquaresMapping_.value(coordinates), *this);
     }
     else
     {
