@@ -43,12 +43,7 @@ Coordinates Coordinates::operator-(const Coordinates& coordinates) const
     return {x - coordinates.x, y - coordinates.y};
 }
 
-Coordinates Coordinates::operator+(const RotationCoefficients& rotationCoefficients) const
+Coordinates Coordinates::operator+(const std::pair<int, int>& coefficientsPair) const
 {
-    return {x + rotationCoefficients.x, y + rotationCoefficients.y};
-}
-
-Coordinates Coordinates::operator+(const TransformationCoefficients& transformationCoefficients) const
-{
-    return {x + transformationCoefficients.x, y + transformationCoefficients.y};
+    return {x + coefficientsPair.first, y + coefficientsPair.second};
 }

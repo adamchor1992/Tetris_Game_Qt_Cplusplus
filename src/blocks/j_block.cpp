@@ -5,5 +5,5 @@ JBlock::JBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, rotatio
 
 void JBlock::rotate(const PlacedSquares& placedSquares)
 {
-    processRotation(placedSquares, rotationCoefficients_.value(currentRotation_));
+    processRotation(placedSquares, rotationCoefficients_.at(currentRotation_));
 }

@@ -5,5 +5,5 @@ ZBlock::ZBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, rotatio
 
 void ZBlock::rotate(const PlacedSquares& placedSquares)
 {
-    processRotation(placedSquares, rotationCoefficients_.value(currentRotation_));
+    processRotation(placedSquares, rotationCoefficients_.at(currentRotation_));
 }

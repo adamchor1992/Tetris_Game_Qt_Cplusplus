@@ -9,13 +9,13 @@
 #include "blocks/t_block.h"
 #include "log_manager.h"
 
-BlockBase::BlockBase(const std::array<TransformationCoefficients, 3>& transformationCoefficientsVsCentralSquare_, int rotationCount) :
+BlockBase::BlockBase(const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount) :
         color_(randomColorGenerator()), nextRotationStateGenerator_(rotationCount)
 {
     std::array<Coordinates, 4> blockCoordinates{startingCentralSquareCoordinates_,
-                                                startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare_.at(0),
-                                                startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare_.at(1),
-                                                startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare_.at(2)};
+                                                startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(0),
+                                                startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(1),
+                                                startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(2)};
 
     Drawer::drawBlock(this, blockCoordinates);
 }
@@ -151,12 +151,12 @@ void BlockBase::processMove(Direction direction, const PlacedSquares& placedSqua
 }
 
 bool BlockBase::checkRotationPossibility(const Coordinates& centralSquareCoordinates,
-                                         const std::array<RotationCoefficients, 3>& rotationCoefficients,
+                                         const RotationCoefficients& rotationCoefficients,
                                          const PlacedSquares& placedSquares) const
 {
-    Coordinates newSquare1 = centralSquareCoordinates + rotationCoefficients.at(0);
-    Coordinates newSquare2 = centralSquareCoordinates + rotationCoefficients.at(1);
-    Coordinates newSquare3 = centralSquareCoordinates + rotationCoefficients.at(2);
+    Coordinates newSquare1 = centralSquareCoordinates + rotationCoefficients.getCoefficientsPair(0);
+    Coordinates newSquare2 = centralSquareCoordinates + rotationCoefficients.getCoefficientsPair(1);
+    Coordinates newSquare3 = centralSquareCoordinates + rotationCoefficients.getCoefficientsPair(2);
 
     if(!Coordinates::validateCoordinates(centralSquareCoordinates) || !Coordinates::validateCoordinates(newSquare1) ||
        !Coordinates::validateCoordinates(newSquare2) || !Coordinates::validateCoordinates(newSquare3))
@@ -174,15 +174,15 @@ bool BlockBase::checkRotationPossibility(const Coordinates& centralSquareCoordin
     return true;
 }
 
-void BlockBase::processRotation(const PlacedSquares& placedSquares, const std::array<RotationCoefficients, 3>& rotationCoefficients)
+void BlockBase::processRotation(const PlacedSquares& placedSquares, const RotationCoefficients& rotationCoefficients)
 {
     const Coordinates centralSquare_coordinates{getSquareCoordinates(0)};
 
     if(checkRotationPossibility(centralSquare_coordinates, rotationCoefficients, placedSquares))
     {
-        const Coordinates newSquare1{centralSquare_coordinates + rotationCoefficients.at(0)};
-        const Coordinates newSquare2{centralSquare_coordinates + rotationCoefficients.at(1)};
-        const Coordinates newSquare3{centralSquare_coordinates + rotationCoefficients.at(2)};
+        const Coordinates newSquare1{centralSquare_coordinates + rotationCoefficients.getCoefficientsPair(0)};
+        const Coordinates newSquare2{centralSquare_coordinates + rotationCoefficients.getCoefficientsPair(1)};
+        const Coordinates newSquare3{centralSquare_coordinates + rotationCoefficients.getCoefficientsPair(2)};
 
         Coordinates centralSquareCoordinatesDifference = centralSquare_coordinates - getSquareCoordinates(0);
         Coordinates square1CoordinatesDifference{newSquare1 - getSquareCoordinates(1)};
@@ -208,7 +208,7 @@ bool BlockBase::checkForOverlappingSquares(const QVector<Coordinates>& blockCoor
 
 bool BlockBase::isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const
 {
-    for(const auto& blockCoordinates : extractAllSquareCoordinates())
+    for(const auto& blockCoordinates: extractAllSquareCoordinates())
     {
         auto [currentX, currentY] = blockCoordinates;
 

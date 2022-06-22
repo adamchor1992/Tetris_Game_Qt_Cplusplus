@@ -5,5 +5,5 @@ IBlock::IBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, rotatio
 
 void IBlock::rotate(const PlacedSquares& placedSquares)
 {
-    processRotation(placedSquares, rotationCoefficients_.value(currentRotation_));
+    processRotation(placedSquares, rotationCoefficients_.at(currentRotation_));
 }

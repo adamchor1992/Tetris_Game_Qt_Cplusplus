@@ -1,18 +1,8 @@
 #pragma once
 
+#include "coefficients.h"
+
 #include <QVector>
-
-struct TransformationCoefficients
-{
-    int x;
-    int y;
-};
-
-struct RotationCoefficients
-{
-    int x;
-    int y;
-};
 
 struct Coordinates
 {
@@ -20,8 +10,7 @@ struct Coordinates
 
     void operator+=(const Coordinates& coordinates);
     Coordinates operator-(const Coordinates& coordinates) const;
-    Coordinates operator+(const RotationCoefficients& rotationCoefficients) const;
-    Coordinates operator+(const TransformationCoefficients& transformationCoefficients) const;
+    Coordinates operator+(const std::pair<int, int>& coefficientsPair) const;
 
     int x;
     int y;

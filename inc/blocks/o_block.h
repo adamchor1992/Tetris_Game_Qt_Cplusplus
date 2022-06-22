@@ -9,5 +9,5 @@ public:
     void rotate(const PlacedSquares&) override;
 
 private:
-    inline static const std::array<TransformationCoefficients, 3> transformationCoefficientsVsCentralSquare_ {TransformationCoefficients{0, +1}, TransformationCoefficients{+1, +1}, TransformationCoefficients{+1, 0}};
+    inline static const TransformationCoefficients transformationCoefficientsVsCentralSquare_ {0, +1, +1, +1, +1, 0};
 };

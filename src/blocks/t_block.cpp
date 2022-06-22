@@ -5,5 +5,5 @@ TBlock::TBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, rotatio
 
 void TBlock::rotate(const PlacedSquares& placedSquares)
 {
-    processRotation(placedSquares, rotationCoefficients_.value(currentRotation_));
+    processRotation(placedSquares, rotationCoefficients_.at(currentRotation_));
 }

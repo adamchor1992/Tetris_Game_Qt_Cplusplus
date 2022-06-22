@@ -13,7 +13,7 @@ class BlockBase
     friend std::ostream& operator<<(std::ostream& ofs, BlockBase& block);
 
 public:
-    explicit BlockBase(const std::array<TransformationCoefficients, 3>& transformationCoefficientsVsCentralSquare_, int rotationCount);
+    explicit BlockBase(const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount);
     virtual ~BlockBase() = 0;
 
     virtual void rotate(const PlacedSquares& placedSquares) = 0;
@@ -30,7 +30,7 @@ public:
     void dropBlockOneLevel();
     void processMove(Direction direction, const PlacedSquares& placedSquares);
     void placeBlock(PlacedSquares& placedSquares);
-    void processRotation(const PlacedSquares& placedSquares, const std::array<RotationCoefficients, 3>& rotationCoefficients);
+    void processRotation(const PlacedSquares& placedSquares, const RotationCoefficients& rotationCoefficients);
     [[nodiscard]] const QColor& getColor() const {return color_;}
 
 protected:
@@ -46,5 +46,5 @@ private:
     inline static RandomGenerator<QColor> randomColorGenerator{GameParameters::blockColors};
     inline static RandomGenerator<BlockShape> randomShapeGenerator{GameParameters::blockShapes};
 
-    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const std::array<RotationCoefficients, 3>& rotationCoefficients, const PlacedSquares& placedSquares) const;
+    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const RotationCoefficients& rotationCoefficients, const PlacedSquares& placedSquares) const;
 };

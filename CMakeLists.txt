@@ -39,6 +39,7 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/game_speed_manager.h ${SOURCES_DIR}/game_speed_manager.cpp
     ${INCLUDES_DIR}/placed_squares.h ${SOURCES_DIR}/placed_squares.cpp
     ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
+    ${INCLUDES_DIR}/coefficients.h ${SOURCES_DIR}/coefficients.cpp
     ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp)
 
 add_library(libTetris ${SOURCE_FILES})
