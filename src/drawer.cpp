@@ -36,19 +36,24 @@ void Drawer::drawGameArena()
                     wallPen);
 }
 
-QGraphicsRectItem* Drawer::drawBlockSquare(const Coordinates& coordinates, QColor color)
+Square* Drawer::drawBlockSquare(const Coordinates& coordinates, QColor color)
 {
-    return scene_->addRect((coordinates.x - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                           (coordinates.y - 1) * GameArenaParameters::blockSquareSize + GameArenaParameters::wallOffset,
-                           GameArenaParameters::blockSquareSize,
-                           GameArenaParameters::blockSquareSize,
-                           Qt::NoPen,
-                           color);
+    Square* square = new Square(coordinates, color);
+    scene_->addItem(square);
+    return square;
 }
 
-void Drawer::eraseSquare(QGraphicsRectItem* graphicsRectItem)
+void Drawer::drawBlock(BlockBase* block, std::array<Coordinates, 4>& blockCoordinates)
 {
-    scene_->removeItem(graphicsRectItem);
+    for(int i = 0; i < blockCoordinates.size(); i++)
+    {
+        block->getSquares().append(drawBlockSquare(blockCoordinates.at(i), block->getColor()));
+    }
+}
+
+void Drawer::eraseSquare(Square* square)
+{
+    scene_->removeItem(square);
 }
 
 void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares)
@@ -57,35 +62,13 @@ void Drawer::eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSq
     placedSquares.getCoordinatesToSquaresMapping().remove(coordinates);
 }
 
-void Drawer::drawBlock(BlockBase* block)
-{
-    for (int i = 0; i < block->getBlockCoordinates().size(); i++)
-    {
-        block->getGraphicsRectItems().append(drawBlockSquare(block->getBlockCoordinates().at(i), block->getColor()));
-    }
-}
-
 void Drawer::eraseBlock(BlockBase* block)
 {
-    for (auto& graphicsRectItem: block->getGraphicsRectItems())
+    for(auto& graphicsRectItem: block->getSquares())
     {
-        if (graphicsRectItem)
+        if(graphicsRectItem)
         {
             scene_->removeItem(graphicsRectItem);
-        }
-    }
-}
-
-void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
-{
-    for (const Coordinates& coordinates : placedSquares.getCoordinatesToSquaresMapping().keys())
-    {
-        if (coordinates.y < removedRow)
-        {
-            if (placedSquares.getCoordinatesToSquaresMapping().contains(coordinates))
-            {
-                placedSquares.getCoordinatesToSquaresMapping().value(coordinates)->moveBy(0, GameArenaParameters::blockSquareSize);
-            }
         }
     }
 }
@@ -95,15 +78,15 @@ void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
     QColor red(Qt::red);
     QColor blue(Qt::blue);
 
-    for (int column = 1; column <= GameArenaParameters::maxBlockColumns; ++column)
+    for(int column = 1; column <= GameArenaParameters::maxBlockColumns; ++column)
     {
-        for (int row = 1; row <= GameArenaParameters::maxBlockRows; ++row)
+        for(int row = 1; row <= GameArenaParameters::maxBlockRows; ++row)
         {
             /*Different block color every second column*/
-            if (column % 2 == 0)
+            if(column % 2 == 0)
             {
                 /*Different block color every second row*/
-                if (row % 2 == 0)
+                if(row % 2 == 0)
                 {
                     drawBlockSquare(Coordinates{column, row}, blue);
                 }
@@ -114,7 +97,7 @@ void Drawer::dropRow(int removedRow, PlacedSquares& placedSquares)
             }
             else
             {
-                if (row % 2 != 0)
+                if(row % 2 != 0)
                 {
                     drawBlockSquare(Coordinates{column, row}, blue);
                 }

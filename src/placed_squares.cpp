@@ -9,7 +9,7 @@ PlacedSquares::~PlacedSquares()
 
 void PlacedSquares::removeAllPlacedSquares()
 {
-    for(QGraphicsRectItem* square : coordinatesToSquaresMapping_)
+    for(Square* square: coordinatesToSquaresMapping_)
     {
         Drawer::eraseSquare(square);
     }
@@ -17,9 +17,11 @@ void PlacedSquares::removeAllPlacedSquares()
     coordinatesToSquaresMapping_.clear();
 }
 
-void PlacedSquares::stealSquaresFromBlock(const QVector<Coordinates>& blockCoordinates, QVector<QGraphicsRectItem*>& squaresGraphicsRectItems, PlacedSquares& placedSquares)
+void PlacedSquares::stealSquaresFromBlock(const QVector<Coordinates>& blockCoordinates,
+                                          QVector<Square*>& squaresGraphicsRectItems,
+                                          PlacedSquares& placedSquares)
 {
-    for (int i = 0; i < blockCoordinates.size(); ++i)
+    for(int i = 0; i < blockCoordinates.size(); ++i)
     {
         const Coordinates& coordinates = blockCoordinates.at(i);
 
@@ -47,18 +49,16 @@ void PlacedSquares::removeSquare(const Coordinates& coordinates)
     }
 }
 
-void PlacedSquares::removeFullRow(int rowNumber)
+void PlacedSquares::removeRow(int rowNumber)
 {
-    const int& y = rowNumber;
-
-    if(y < GameArenaParameters::minBlockRows || y > GameArenaParameters::maxBlockRows)
+    if(rowNumber < GameArenaParameters::minBlockRows || rowNumber > GameArenaParameters::maxBlockRows)
     {
         throw std::runtime_error("Wrong row number");
     }
 
-    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
+    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; ++x)
     {
-        removeSquare(Coordinates{x, y});
+        removeSquare(Coordinates{x, rowNumber});
     }
 }
 
@@ -92,22 +92,30 @@ QVector<int> PlacedSquares::findFullRows() const
 }
 
 /*Drop all rows above deleted row*/
-void PlacedSquares::dropRowsAbove(int removedRow)
+void PlacedSquares::dropRowsAboveRow(int removedRow)
 {
-    Drawer::dropRow(removedRow, *this);
-
-    /*Drop all rows by one*/
-    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; x++)
+    /*For all columns*/
+    for(int x = GameArenaParameters::minBlockColumns; x <= GameArenaParameters::maxBlockColumns; ++x)
     {
+        /*For rows above given row*/
         for(int y = removedRow - 1; y > GameArenaParameters::minBlockRows; --y)
         {
             Coordinates coordinates{x, y};
-            Coordinates coordinatesOneRowBelow{x, y + 1};
 
             if(coordinatesToSquaresMapping_.contains(coordinates))
             {
-                coordinatesToSquaresMapping_.insert(coordinatesOneRowBelow, coordinatesToSquaresMapping_.value(coordinates));
-                coordinatesToSquaresMapping_.remove(coordinates);
+                Coordinates coordinatesOneRowBelow{x, y + 1};
+
+                if(!coordinatesToSquaresMapping_.contains(coordinatesOneRowBelow))
+                {
+                    coordinatesToSquaresMapping_[coordinates]->move(0, +1);
+                    coordinatesToSquaresMapping_[coordinatesOneRowBelow] = coordinatesToSquaresMapping_[coordinates];
+                    coordinatesToSquaresMapping_.remove(coordinates);
+                }
+                else
+                {
+                    throw std::runtime_error("Drop rows above error. Square one row below is not empty.");
+                }
             }
         }
     }

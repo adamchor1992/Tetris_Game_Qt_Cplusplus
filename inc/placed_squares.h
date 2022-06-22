@@ -1,13 +1,14 @@
 #pragma once
 
 #include "coordinates.h"
+#include "square.h"
 
 #include <QVector>
 #include <QMap>
 #include <QGraphicsRectItem>
 #include <QColor>
 
-using CoordinatesToSquaresMapping = QMap<Coordinates, QGraphicsRectItem*>;
+using CoordinatesToSquaresMapping = QMap<Coordinates, Square*>;
 
 class PlacedSquares
 {
@@ -19,9 +20,9 @@ public:
     CoordinatesToSquaresMapping& getCoordinatesToSquaresMapping() {return coordinatesToSquaresMapping_;}
     void removeAllPlacedSquares();
     [[nodiscard]] QVector<int> findFullRows() const;
-    void removeFullRow(int rowNumber);
-    void dropRowsAbove(int removedRow);
-    void stealSquaresFromBlock(const QVector<Coordinates>& blockCoordinates, QVector<QGraphicsRectItem*>& squaresGraphicsRectItems, PlacedSquares& placedSquares);
+    void removeRow(int rowNumber);
+    void dropRowsAboveRow(int removedRow);
+    void stealSquaresFromBlock(const QVector<Coordinates>& blockCoordinates, QVector<Square*>& squaresGraphicsRectItems, PlacedSquares& placedSquares);
 
 private:
     void removeSquare(const Coordinates& coordinates);

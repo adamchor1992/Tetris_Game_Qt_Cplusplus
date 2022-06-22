@@ -18,7 +18,7 @@ void GameEngine::startGame()
     scoreManager_ =std::make_unique<ScoreManager>();
     infoDisplayManager_.hideInfo();
 
-    activeBlock_ = BlockBase::makeBlock();
+    activeBlock_ = BlockBase::makeBlock(BlockShape::I);
 
     gameSpeedManager_.start();
     gameState_ = GameState::GameRunning;
@@ -60,16 +60,16 @@ void GameEngine::gameTickHandler()
             {
                 scoreManager_->rewardPlayerForFullRows(fullRows.size());
 
-                for(auto rowNumber : fullRows)
+                for(int rowNumber : fullRows)
                 {
-                    placedSquares_->removeFullRow(rowNumber);
-                    placedSquares_->dropRowsAbove(rowNumber);
+                    placedSquares_->removeRow(rowNumber);
+                    placedSquares_->dropRowsAboveRow(rowNumber);
                 }
             }
 
             activeBlock_ = BlockBase::makeBlock();
 
-            if(activeBlock_->checkForOverlappingSquares(activeBlock_->getBlockCoordinates(), *placedSquares_))
+            if(activeBlock_->checkForOverlappingSquares(activeBlock_->extractAllSquareCoordinates(), *placedSquares_))
             {
                 endGame();
             }

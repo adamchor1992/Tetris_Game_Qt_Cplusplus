@@ -20,11 +20,10 @@ public:
 
     static std::unique_ptr<BlockBase> makeBlock(BlockShape shape = BlockShape::RANDOM);
 
-    QVector<QGraphicsRectItem*>& getGraphicsRectItems() {return squaresGraphicsRectItems_;}
-    [[nodiscard]] const QVector<Coordinates>& getBlockCoordinates() const {return blockCoordinates_;}
-
+    QVector<Square*>& getSquares() {return squares_;}
+    [[nodiscard]] QVector<Coordinates> extractAllSquareCoordinates() const;
+    [[nodiscard]] Coordinates& getSquareCoordinates(int i) const;
     [[nodiscard]] bool isSquareOrBottomWallUnderBlock(const PlacedSquares& placedSquares) const;
-
     [[nodiscard]] bool checkForOverlappingSquares(const QVector<Coordinates>& blockCoordinates, const PlacedSquares& placedSquares) const;
     [[nodiscard]] bool checkMovePossibility(Direction direction, const PlacedSquares& placedSquares) const;
     void dropAndPlaceBlock(const PlacedSquares& placedSquares);
@@ -35,18 +34,17 @@ public:
     [[nodiscard]] const QColor& getColor() const {return color_;}
 
 protected:
-    const Coordinates startingCentralSquareCoordinates_{5, 1};
-
-    QVector<QGraphicsRectItem*> squaresGraphicsRectItems_;
-    QVector<Coordinates> blockCoordinates_;
-    int currentRotation_;
-    NextRotationStateGenerator nextRotationStateGenerator_;
+    int currentRotation_ = 0;
 
 private:
-    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const std::array<RotationCoefficients, 3>& rotationCoefficients, const PlacedSquares& placedSquares) const;
+    static const int blockSize = 4;
 
     const QColor color_;
-
+    static constexpr Coordinates startingCentralSquareCoordinates_{5, 1};
+    QVector<Square*> squares_;
+    NextRotationStateGenerator nextRotationStateGenerator_;
     inline static RandomGenerator<QColor> randomColorGenerator{GameParameters::blockColors};
     inline static RandomGenerator<BlockShape> randomShapeGenerator{GameParameters::blockShapes};
+
+    [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const std::array<RotationCoefficients, 3>& rotationCoefficients, const PlacedSquares& placedSquares) const;
 };

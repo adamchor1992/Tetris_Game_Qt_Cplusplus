@@ -17,12 +17,11 @@ public:
 
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
     static void drawGameArena();
-    static void dropRow(int removedRow, PlacedSquares& placedSquares);
+    static Square* drawBlockSquare(const Coordinates& coordinates, QColor color);
+    static void drawBlock(BlockBase* block, std::array<Coordinates, 4>& blockCoordinates);
     static void eraseBlock(BlockBase* block);
-    static void eraseSquare(QGraphicsRectItem* graphicsRectItem);
     static void eraseSquare(const Coordinates& coordinates, PlacedSquares& placedSquares);
-    static void drawBlock(BlockBase* block);
-    static QGraphicsRectItem* drawBlockSquare(const Coordinates& coordinates, QColor color);
+    static void eraseSquare(Square* square);
 
 private:
     [[maybe_unused]] static void debugDrawAllPossibleSquares();
