@@ -10,10 +10,6 @@ class Drawer
 {
 public:
     Drawer() = delete;
-    Drawer(const Drawer&) = delete;
-    Drawer& operator=(Drawer&) = delete;
-    Drawer(const Drawer&&) = delete;
-    Drawer& operator=(Drawer&&) = delete;
 
     static void setScene(QGraphicsScene* scene) {scene_ = scene;}
     static void drawGameArena();

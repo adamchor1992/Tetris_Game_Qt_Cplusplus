@@ -45,9 +45,9 @@ Square* Drawer::drawBlockSquare(const Coordinates& coordinates, QColor color)
 
 void Drawer::drawBlock(BlockBase* block, std::array<Coordinates, BlockBase::blockSize>& blockCoordinates)
 {
-    for(int i = 0; i < blockCoordinates.size(); i++)
+    for(const auto& blockCoordinate : blockCoordinates)
     {
-        block->getSquares().append(drawBlockSquare(blockCoordinates.at(i), block->getColor()));
+        block->getSquares().append(drawBlockSquare(blockCoordinate, block->getColor()));
     }
 }
 

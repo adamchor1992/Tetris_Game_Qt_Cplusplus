@@ -8,5 +8,5 @@ int main(int argc, char *argv[])
     GameWindow gameWindow;
     gameWindow.show();
 
-    return application.exec();
+    return QApplication::exec();
 }
