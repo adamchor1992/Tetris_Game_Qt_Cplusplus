@@ -13,12 +13,10 @@ class BlockBase
     friend std::ostream& operator<<(std::ostream& ofs, BlockBase& block);
 
 public:
-    explicit BlockBase(const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount);
+    explicit BlockBase(const QColor& color, const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount);
     virtual ~BlockBase() = 0;
 
     virtual void rotate(const PlacedSquares& placedSquares) = 0;
-
-    static std::unique_ptr<BlockBase> makeBlock(BlockShape shape = BlockShape::RANDOM);
 
     QVector<Square*>& getSquares() {return squares_;}
     [[nodiscard]] QVector<Coordinates> extractAllSquareCoordinates() const;
@@ -43,8 +41,6 @@ private:
     static constexpr Coordinates startingCentralSquareCoordinates_{5, 1};
     QVector<Square*> squares_;
     NextRotationStateGenerator nextRotationStateGenerator_;
-    inline static RandomGenerator<QColor> randomColorGenerator{GameParameters::blockColors};
-    inline static RandomGenerator<BlockShape> randomShapeGenerator{GameParameters::blockShapes};
 
     [[nodiscard]] bool checkRotationPossibility(const Coordinates& centralSquareCoordinates, const RotationCoefficients& rotationCoefficients, const PlacedSquares& placedSquares) const;
 };

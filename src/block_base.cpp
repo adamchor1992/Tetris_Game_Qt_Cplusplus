@@ -1,16 +1,9 @@
 #include "block_base.h"
 #include "drawer.h"
-#include "blocks/i_block.h"
-#include "blocks/s_block.h"
-#include "blocks/z_block.h"
-#include "blocks/j_block.h"
-#include "blocks/l_block.h"
-#include "blocks/o_block.h"
-#include "blocks/t_block.h"
 #include "log_manager.h"
 
-BlockBase::BlockBase(const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount) :
-        color_(randomColorGenerator()), nextRotationStateGenerator_(rotationCount)
+BlockBase::BlockBase(const QColor& color, const TransformationCoefficients& transformationCoefficientsVsCentralSquare, int rotationCount) :
+        color_(color), nextRotationStateGenerator_(rotationCount)
 {
     std::array<Coordinates, BlockBase::blockSize> blockCoordinates{startingCentralSquareCoordinates_,
                                                 startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(0),
@@ -18,52 +11,13 @@ BlockBase::BlockBase(const TransformationCoefficients& transformationCoefficient
                                                 startingCentralSquareCoordinates_ + transformationCoefficientsVsCentralSquare.getCoefficientsPair(2)};
 
     Drawer::drawBlock(this, blockCoordinates);
+
+    logFile << "Block created at " << *this << std::endl;
 }
 
 BlockBase::~BlockBase()
 {
     Drawer::eraseBlock(this);
-}
-
-std::unique_ptr<BlockBase> BlockBase::makeBlock(BlockShape shape)
-{
-    std::unique_ptr<BlockBase> block;
-
-    if(shape == BlockShape::RANDOM)
-    {
-        shape = randomShapeGenerator();
-    }
-
-    switch(shape)
-    {
-        case BlockShape::S:
-            block = std::make_unique<SBlock>();
-            break;
-        case BlockShape::Z:
-            block = std::make_unique<ZBlock>();
-            break;
-        case BlockShape::I:
-            block = std::make_unique<IBlock>();
-            break;
-        case BlockShape::J:
-            block = std::make_unique<JBlock>();
-            break;
-        case BlockShape::L:
-            block = std::make_unique<LBlock>();
-            break;
-        case BlockShape::O:
-            block = std::make_unique<OBlock>();
-            break;
-        case BlockShape::T:
-            block = std::make_unique<TBlock>();
-            break;
-        case BlockShape::RANDOM:
-            throw std::runtime_error("Random shape block error");
-    }
-
-    logFile << "Make block at " << (*block) << std::endl;
-
-    return block;
 }
 
 [[nodiscard]] QVector<Coordinates> BlockBase::extractAllSquareCoordinates() const

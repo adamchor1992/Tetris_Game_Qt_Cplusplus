@@ -5,7 +5,7 @@
 class LBlock : public BlockBase
 {
 public:
-    explicit LBlock();
+    explicit LBlock(const QColor& color);
     void rotate(const PlacedSquares& placedSquares) override;
 
 private:

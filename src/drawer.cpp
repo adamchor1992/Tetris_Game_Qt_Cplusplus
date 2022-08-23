@@ -36,7 +36,7 @@ void Drawer::drawGameArena()
                     wallPen);
 }
 
-Square* Drawer::drawBlockSquare(const Coordinates& coordinates, QColor color)
+Square* Drawer::drawBlockSquare(const Coordinates& coordinates, const QColor& color)
 {
     auto* square = new Square(coordinates, color);
     scene_->addItem(square);

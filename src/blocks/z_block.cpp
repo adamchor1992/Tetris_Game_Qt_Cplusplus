@@ -1,6 +1,6 @@
 #include "z_block.h"
 
-ZBlock::ZBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
+ZBlock::ZBlock(const QColor& color) : BlockBase(color, transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
 {}
 
 void ZBlock::rotate(const PlacedSquares& placedSquares)

@@ -5,7 +5,7 @@
 class IBlock : public BlockBase
 {
 public:
-    explicit IBlock();
+    explicit IBlock(const QColor& color);
     void rotate(const PlacedSquares& placedSquares) override;
 
 private:

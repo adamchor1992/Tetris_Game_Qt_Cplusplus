@@ -1,6 +1,6 @@
 #include "j_block.h"
 
-JBlock::JBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
+JBlock::JBlock(const QColor& color) : BlockBase(color, transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
 {}
 
 void JBlock::rotate(const PlacedSquares& placedSquares)

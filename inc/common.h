@@ -29,7 +29,7 @@ enum class Direction
 
 enum class BlockShape
 {
-    S, Z, I, J, L, O, T, RANDOM
+    S, Z, I, J, L, O, T
 };
 
 enum class Key

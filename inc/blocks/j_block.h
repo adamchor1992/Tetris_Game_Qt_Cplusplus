@@ -5,7 +5,7 @@
 class JBlock : public BlockBase
 {
 public:
-    explicit JBlock();
+    explicit JBlock(const QColor& color);
     void rotate(const PlacedSquares& placedSquares) override;
 
 private:

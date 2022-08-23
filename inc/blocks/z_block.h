@@ -5,7 +5,7 @@
 class ZBlock : public BlockBase
 {
 public:
-    explicit ZBlock();
+    explicit ZBlock(const QColor& color);
     void rotate(const PlacedSquares& placedSquares) override;
 
 private:

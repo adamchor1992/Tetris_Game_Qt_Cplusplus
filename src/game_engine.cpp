@@ -3,7 +3,7 @@
 
 GameEngine::GameEngine()
 {
-    gameState_ = GameState::GameStopped;
+    gameState_ = GameState::Stopped;
     QObject::connect(&gameSpeedManager_.getGameTickTimer(), &QTimer::timeout, this, &GameEngine::gameTickHandler);
 }
 
@@ -18,10 +18,10 @@ void GameEngine::startGame()
     scoreManager_ =std::make_unique<ScoreManager>();
     infoDisplayManager_.hideInfo();
 
-    activeBlock_ = BlockBase::makeBlock(BlockShape::I);
+    activeBlock_ = blockFactory_.makeRandomBlock();
 
     gameSpeedManager_.start();
-    gameState_ = GameState::GameRunning;
+    gameState_ = GameState::Running;
 }
 
 void GameEngine::endGame()
@@ -29,28 +29,28 @@ void GameEngine::endGame()
     logFile << "\n\nEND GAME\n\n";
     logFile << "====================";
 
-    gameState_ = GameState::GameStopped;
+    gameState_ = GameState::Stopped;
     gameSpeedManager_.stop();
     infoDisplayManager_.showRestartInfo();
 }
 
 void GameEngine::togglePause()
 {
-    if(gameState_ == GameState::GameRunning)
+    if(gameState_ == GameState::Running)
     {
         gameSpeedManager_.stop();
-        gameState_ = GameState::GamePaused;
+        gameState_ = GameState::Paused;
     }
-    else if(gameState_ == GameState::GamePaused)
+    else if(gameState_ == GameState::Paused)
     {
         gameSpeedManager_.start();
-        gameState_ = GameState::GameRunning;
+        gameState_ = GameState::Running;
     }
 }
 
 void GameEngine::gameTickHandler()
 {
-    if(gameState_ == GameState::GameRunning)
+    if(gameState_ == GameState::Running)
     {
         if(activeBlock_->isSquareOrBottomWallUnderBlock(*placedSquares_))
         {
@@ -67,7 +67,7 @@ void GameEngine::gameTickHandler()
                 }
             }
 
-            activeBlock_ = BlockBase::makeBlock();
+            activeBlock_ = blockFactory_.makeRandomBlock();
 
             if(activeBlock_->checkForOverlappingSquares(activeBlock_->extractAllSquareCoordinates(), *placedSquares_))
             {
@@ -83,7 +83,7 @@ void GameEngine::gameTickHandler()
 
 void GameEngine::processKey(const Key key)
 {
-    if(gameState_ == GameState::GameRunning)
+    if(gameState_ == GameState::Running)
     {
         if(key == Key::left)
         {
@@ -114,14 +114,14 @@ void GameEngine::processKey(const Key key)
             togglePause();
         }
     }
-    else if(gameState_ == GameState::GameStopped)
+    else if(gameState_ == GameState::Stopped)
     {
         if(key == Key::space)
         {
             startGame();
         }
     }
-    else if(gameState_ == GameState::GamePaused)
+    else if(gameState_ == GameState::Paused)
     {
         if(key == Key::pause)
         {

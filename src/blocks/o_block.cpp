@@ -1,6 +1,6 @@
 #include "o_block.h"
 
-OBlock::OBlock() : BlockBase(transformationCoefficientsVsCentralSquare_, 0)
+OBlock::OBlock(const QColor& color) : BlockBase(color, transformationCoefficientsVsCentralSquare_, 0)
 {}
 
 void OBlock::rotate(const PlacedSquares&)

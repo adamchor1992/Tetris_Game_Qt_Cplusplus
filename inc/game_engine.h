@@ -1,5 +1,6 @@
 #pragma once
 
+#include "block_factory.h"
 #include "block_base.h"
 #include "placed_squares.h"
 #include "random_generator.h"
@@ -22,15 +23,16 @@ private:
 
     enum class GameState
     {
-        GameRunning,
-        GamePaused,
-        GameStopped
+        Running,
+        Paused,
+        Stopped
     };
 
     std::unique_ptr<PlacedSquares> placedSquares_;
     std::unique_ptr<ScoreManager> scoreManager_;
     InfoDisplayManager infoDisplayManager_;
     GameSpeedManager gameSpeedManager_;
+    BlockFactory blockFactory_;
     std::unique_ptr<BlockBase> activeBlock_;
     GameState gameState_;
 

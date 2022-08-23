@@ -5,7 +5,7 @@
 class SBlock : public BlockBase
 {
 public:
-    explicit SBlock();
+    explicit SBlock(const QColor& color);
     void rotate(const PlacedSquares& placedSquares) override;
 
 private:
