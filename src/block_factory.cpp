@@ -6,34 +6,42 @@
 #include "blocks/l_block.h"
 #include "blocks/o_block.h"
 #include "blocks/t_block.h"
-#include "log_manager.h"
 
-#include "random_generator.h"
-
-std::unique_ptr <BlockBase> BlockFactory::makeBlock(const BlockShape& shape, const QColor& color)
+std::unique_ptr<AbstractBlock> BlockFactory::makeBlock(const BlockShape& shape, const QColor& color)
 {
+    std::unique_ptr<AbstractBlock> ptr;
+
     switch(shape)
     {
         case BlockShape::S:
-            return std::make_unique<SBlock>(color);
+            ptr = std::make_unique<SBlock>(color);
+            break;
         case BlockShape::Z:
-            return std::make_unique<ZBlock>(color);
+            ptr = std::make_unique<ZBlock>(color);
+            break;
         case BlockShape::I:
-            return std::make_unique<IBlock>(color);
+            ptr = std::make_unique<IBlock>(color);
+            break;
         case BlockShape::J:
-            return std::make_unique<JBlock>(color);
+            ptr = std::make_unique<JBlock>(color);
+            break;
         case BlockShape::L:
-            return std::make_unique<LBlock>(color);
+            ptr = std::make_unique<LBlock>(color);
+            break;
         case BlockShape::O:
-            return std::make_unique<OBlock>(color);
+            ptr = std::make_unique<OBlock>(color);
+            break;
         case BlockShape::T:
-            return std::make_unique<TBlock>(color);
+            ptr = std::make_unique<TBlock>(color);
+            break;
         default:
             throw std::runtime_error("Unsupported block shape");
     }
+
+    return ptr;
 }
 
-std::unique_ptr<BlockBase> BlockFactory::makeRandomBlock()
+std::unique_ptr<AbstractBlock> BlockFactory::makeRandomBlock()
 {
     return makeBlock(randomShapeGenerator(), randomColorGenerator());
 }

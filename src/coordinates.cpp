@@ -3,7 +3,7 @@
 
 bool Coordinates::validateCoordinates(const Coordinates& coordinates)
 {
-    return (coordinates.x >= GameArenaParameters::minBlockColumns) && (coordinates.x <= GameArenaParameters::maxBlockColumns) && (coordinates.y >= GameArenaParameters::minBlockRows) && (coordinates.y <= GameArenaParameters::maxBlockRows);
+    return (coordinates.x >= GameParameters::Arena::minBlockColumns) && (coordinates.x <= GameParameters::Arena::maxBlockColumns) && (coordinates.y >= GameParameters::Arena::minBlockRows) && (coordinates.y <= GameParameters::Arena::maxBlockRows);
 }
 
 bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2)
@@ -46,4 +46,20 @@ Coordinates Coordinates::operator-(const Coordinates& coordinates) const
 Coordinates Coordinates::operator+(const std::pair<int, int>& coefficientsPair) const
 {
     return {x + coefficientsPair.first, y + coefficientsPair.second};
+}
+
+std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates)
+{
+    os << "[" << coordinates.x << "," << coordinates.y << "]";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const QVector<Coordinates>& coordinatesVector)
+{
+    for(const Coordinates& coordinates : coordinatesVector)
+    {
+        os << "[" << coordinates.x << "," << coordinates.y << "]";
+    }
+
+    return os;
 }

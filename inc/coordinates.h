@@ -6,6 +6,9 @@
 
 struct Coordinates
 {
+    friend std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates);
+    friend std::ostream& operator<<(std::ostream& os, const QVector<Coordinates>& coordinatesVector);
+
     static bool validateCoordinates(const Coordinates& coordinates);
 
     void operator+=(const Coordinates& coordinates);

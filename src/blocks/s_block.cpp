@@ -1,6 +1,6 @@
 #include "s_block.h"
 
-SBlock::SBlock(const QColor& color) : BlockBase(color, transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
+SBlock::SBlock(const QColor& color) : AbstractBlock(color, transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
 {}
 
 void SBlock::rotate(const PlacedSquares& placedSquares)

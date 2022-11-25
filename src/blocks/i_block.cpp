@@ -1,6 +1,6 @@
 #include "i_block.h"
 
-IBlock::IBlock(const QColor& color) : BlockBase(color, transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
+IBlock::IBlock(const QColor& color) : AbstractBlock(color, transformationCoefficientsVsCentralSquare_, rotationCoefficients_.size())
 {}
 
 void IBlock::rotate(const PlacedSquares& placedSquares)

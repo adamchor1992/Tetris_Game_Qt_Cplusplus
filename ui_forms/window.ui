@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GameWindow</class>
- <widget class="QMainWindow" name="GameWindow">
+ <class>Window</class>
+ <widget class="QMainWindow" name="Window">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>846</height>
+    <height>850</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -462,52 +468,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="graphics_view">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>310</width>
-      <height>610</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>310</width>
-      <height>610</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>1000</width>
-      <height>1000</height>
-     </size>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="lineWidth">
-     <number>0</number>
-    </property>
-    <property name="midLineWidth">
-     <number>0</number>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-   </widget>
    <widget class="QLabel" name="score_display_label">
     <property name="geometry">
      <rect>
@@ -519,9 +479,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Arial</family>
       <pointsize>16</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -543,9 +501,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Arial</family>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -562,7 +518,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>86</x>
       <y>780</y>
       <width>160</width>
       <height>18</height>
@@ -1013,6 +969,9 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
     <property name="maximum">
      <number>10</number>
     </property>
@@ -1023,10 +982,16 @@
      <enum>Qt::Horizontal</enum>
     </property>
     <property name="invertedAppearance">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="invertedControls">
      <bool>false</bool>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksBelow</enum>
+    </property>
+    <property name="tickInterval">
+     <number>1</number>
     </property>
    </widget>
    <widget class="QLabel" name="speed_slider_label">
@@ -1040,9 +1005,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Arial</family>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -1065,7 +1028,6 @@
     <property name="font">
      <font>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -1085,12 +1047,11 @@
     <property name="font">
      <font>
       <pointsize>12</pointsize>
-      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>0</string>
+     <string>1</string>
     </property>
    </widget>
   </widget>

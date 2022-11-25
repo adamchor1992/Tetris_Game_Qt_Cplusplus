@@ -1,8 +1,8 @@
 #pragma once
 
-#include "block_base.h"
+#include "abstract_block.h"
 
-class JBlock : public BlockBase
+class JBlock : public AbstractBlock
 {
 public:
     explicit JBlock(const QColor& color);

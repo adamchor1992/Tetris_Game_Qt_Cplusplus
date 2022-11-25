@@ -1,13 +1,10 @@
+#include <QMap>
 #include "game_speed_manager.h"
+#include "common.h"
 
 GameSpeedManager::GameSpeedManager()
 {
-    connect(speedSlider_, &QSlider::valueChanged, this, &GameSpeedManager::setGameSpeed);
-}
-
-void GameSpeedManager::connectSpeedSlider(QSlider* speedSlider)
-{
-    speedSlider_ = speedSlider;
+    speedLevel_ = Config::Speed::DEFAULT_SPEED_LEVEL;
 }
 
 void GameSpeedManager::start()
@@ -20,21 +17,28 @@ void GameSpeedManager::stop()
     gameTickTimer_.stop();
 }
 
-void GameSpeedManager::setGameSpeed()
+void GameSpeedManager::setSpeedLevel(int speedLevel)
 {
-    const int timeOffset = 50;
-    const int speedLevel = speedSlider_->value();
-    gameTickTimer_.setInterval(timeOffset + speedLevel * 20);
+    gameTickTimer_.setInterval(speedLevelToDelayMsMap_.value(speedLevel));
 }
 
 void GameSpeedManager::incrementSpeed()
 {
-    /*Subtracting means increasing speed*/
-    speedSlider_->setValue(speedSlider_->value() - 1);
+    if(speedLevel_ < Config::Speed::MAX_SPEED_LEVEL)
+    {
+        ++speedLevel_;
+    }
 }
 
 void GameSpeedManager::decrementSpeed()
 {
-    /*Adding means decreasing speed*/
-    speedSlider_->setValue(speedSlider_->value() + 1);
+    if(speedLevel_ > Config::Speed::MIN_SPEED_LEVEL)
+    {
+        --speedLevel_;
+    }
+}
+
+int GameSpeedManager::getSpeedLevel() const
+{
+    return speedLevel_;
 }

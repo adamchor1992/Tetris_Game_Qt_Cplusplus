@@ -1,12 +1,9 @@
-#include "game_window.h"
-
-#include <QApplication>
+#include "tetris.h"
 
 int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
-    GameWindow gameWindow;
-    gameWindow.show();
+    Tetris tetris;
 
     return QApplication::exec();
 }

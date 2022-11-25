@@ -1,40 +1,37 @@
 #include "score_manager.h"
+#include "log_manager.h"
 
 ScoreManager::ScoreManager()
 {
     score_ = 0;
-    updateScoreLabel();
-}
-
-void ScoreManager::connectScoreLabel(QLabel* scoreLabel)
-{
-    scoreLabel_ = scoreLabel;
+    emit scoreUpdatedEvent(score_);
 }
 
 void ScoreManager::rewardPlayerForFullRows(qsizetype fullRowsCount)
 {
     switch(fullRowsCount)
     {
-    case 1:
-        increaseScore(1);
-        break;
-    case 2:
-        increaseScore(3);
-        break;
-    case 3:
-        increaseScore(7);
-        break;
-    case 4:
-        increaseScore(10);
-        break;
-    default:
-        throw std::runtime_error("Wrong full rows count");
+        case 1:
+            increaseScore(1);
+            break;
+        case 2:
+            increaseScore(3);
+            break;
+        case 3:
+            increaseScore(7);
+            break;
+        case 4:
+            increaseScore(10);
+            break;
+        default:
+            throw std::runtime_error("Wrong full rows count");
     }
 
-    updateScoreLabel();
+    emit scoreUpdatedEvent(score_);
 }
 
-void ScoreManager::updateScoreLabel() const
+void ScoreManager::resetScore()
 {
-    scoreLabel_->setText("SCORE: " + QString::number(score_));
+    score_ = 0;
+    emit scoreUpdatedEvent(score_);
 }

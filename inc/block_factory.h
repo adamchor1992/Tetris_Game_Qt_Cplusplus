@@ -1,14 +1,14 @@
 #pragma once
 
-#include "block_base.h"
+#include "abstract_block.h"
 
 class BlockFactory
 {
 public:
-    std::unique_ptr<BlockBase> makeBlock(const BlockShape& shape, const QColor& color);
-    std::unique_ptr<BlockBase> makeRandomBlock();
+    std::unique_ptr<AbstractBlock> makeBlock(const BlockShape& shape, const QColor& color);
+    std::unique_ptr<AbstractBlock> makeRandomBlock();
 
 private:
-    RandomGenerator<QColor> randomColorGenerator{GameParameters::blockColors};
-    RandomGenerator<BlockShape> randomShapeGenerator{GameParameters::blockShapes};
+    RandomGenerator<QColor> randomColorGenerator{GameParameters::Block::blockColors};
+    RandomGenerator<BlockShape> randomShapeGenerator{GameParameters::Block::blockShapes};
 };

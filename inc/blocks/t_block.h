@@ -1,8 +1,8 @@
 #pragma once
 
-#include "block_base.h"
+#include "abstract_block.h"
 
-class TBlock : public BlockBase
+class TBlock : public AbstractBlock
 {
 public:
     explicit TBlock(const QColor& color);

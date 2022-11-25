@@ -2,17 +2,25 @@
 
 #include <QLabel>
 
-class ScoreManager
+class ScoreManager : public QObject
 {
+Q_OBJECT
+
+signals:
+    void scoreUpdatedEvent(int score);
+
 public:
     ScoreManager();
-    static void connectScoreLabel(QLabel* scoreLabel);
     void rewardPlayerForFullRows(qsizetype fullRowsCount);
 
-private:
-    void increaseScore(int score) {score_ += score;}
-    void updateScoreLabel() const;
+    [[nodiscard]] int getScore() const
+    { return score_; }
 
-    inline static QLabel* scoreLabel_;
+    void resetScore();
+
+private:
+    void increaseScore(int score)
+    { score_ += score; }
+
     int score_;
 };

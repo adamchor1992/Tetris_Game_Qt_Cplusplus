@@ -1,25 +1,34 @@
 #pragma once
 
-#include <QSlider>
 #include <QTimer>
 
-class GameSpeedManager : public QObject
+class GameSpeedManager
 {
-    Q_OBJECT
-
 public:
     GameSpeedManager();
-    static void connectSpeedSlider(QSlider* speedSlider);
-    const QTimer& getGameTickTimer() {return gameTickTimer_;}
+
+    const QTimer& getGameTickTimer()
+    { return gameTickTimer_; }
+
     void start();
     void stop();
     void incrementSpeed();
     void decrementSpeed();
-
-public slots:
-    void setGameSpeed();
+    [[nodiscard]] int getSpeedLevel() const;
+    void setSpeedLevel(int speedLevel);
 
 private:
-    inline static QSlider* speedSlider_ = nullptr;
     QTimer gameTickTimer_;
+    int speedLevel_;
+
+    const QMap<int, int> speedLevelToDelayMsMap_{{1,  250},
+                                                 {2,  230},
+                                                 {3,  210},
+                                                 {4,  190},
+                                                 {5,  170},
+                                                 {6,  150},
+                                                 {7,  130},
+                                                 {8,  110},
+                                                 {9,  90},
+                                                 {10, 70}};
 };
