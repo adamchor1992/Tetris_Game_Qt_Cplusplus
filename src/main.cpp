@@ -1,9 +1,10 @@
-#include "tetris.h"
+#include "game.h"
+#include <QApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication application(argc, argv);
-    Tetris tetris;
+    Game game;
 
     return QApplication::exec();
 }
